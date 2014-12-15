@@ -20,6 +20,12 @@
     public $successful = true;
     public $retvalue = 0;
     public static $prefix_number = 0;
+    private $_string;
+    public $yymajor;
+    public $last_index;
+    public $last_variable;
+    public $root_buffer;
+    public $current_buffer;
     private $lex;
     private $internalError = false;
     private $strip = false;
@@ -43,7 +49,7 @@
     }
 
     public static function escape_start_tag($tag_text) {
-        $tag = preg_replace('/\A<\?(.*)\z/', '<<?php ?>?\1', $tag_text, -1 , $count); //Escape tag
+        $tag = preg_replace(array('/\A<\?(.*)\z/', '/(language\s*=\s*[\"\']?\s*php\s*[\"\']?)/'), array('<<?php ?>?\1', '<?php echo \'\1\'; ?>'), addcslashes($tag_text, "'"), -1 , $count); //Escape tag
         return $tag;
     }
 
@@ -142,8 +148,11 @@ template_element(res) ::= literal(l). {
     res = new _smarty_text($this, l);
 }
 
-                      // '<?php' tag
+                      // '<?php' | '<script language=php>' tag
 template_element(res)::= PHPSTARTTAG(st). {
+    if (strpos(st, '<s') === 0) {
+        $this->lex->is_phpScript = true;
+    }
     if ($this->php_handling == Smarty::PHP_PASSTHRU) {
         res = new _smarty_text($this, self::escape_start_tag(st));
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
@@ -152,7 +161,7 @@ template_element(res)::= PHPSTARTTAG(st). {
         if (!($this->smarty instanceof SmartyBC)) {
             $this->compiler->trigger_template_error (self::Err3);
         }
-        res = new _smarty_text($this, $this->compiler->processNocacheCode('<?php', true));
+        res = new _smarty_text($this, $this->compiler->processNocacheCode('<?php ', true));
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         res = null;
     }
@@ -174,6 +183,23 @@ template_element(res)::= PHPENDTAG. {
         res = new _smarty_text($this, $this->compiler->processNocacheCode('?>', true));
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         res = null;
+    }
+}
+                      // '</script>' tag (only for PHP)
+template_element(res)::= PHPENDSCRIPT(st). {
+    if (!$this->lex->is_phpScript) {
+        res = new _smarty_text($this, st);
+    } else {
+        $this->lex->is_phpScript = false;
+        if ($this->php_handling == Smarty::PHP_PASSTHRU) {
+            res = new _smarty_text($this, st);
+        } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
+            res = new _smarty_text($this, htmlspecialchars(st, ENT_QUOTES));
+        } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
+            res = new _smarty_text($this, $this->compiler->processNocacheCode('?>', true));
+        } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
+            res = null;
+        }
     }
 }
 

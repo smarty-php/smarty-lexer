@@ -21,6 +21,9 @@ class Smarty_Internal_Templatelexer
     public $taglineno;
     public $state = 1;
     private $heredoc_id_stack = Array();
+    public $yyTraceFILE;
+    public $yyTracePrompt;
+    public $state_name = array (1 => 'TEXT', 2 => 'SMARTY', 3 => 'LITERAL', 4 => 'DOUBLEQUOTEDSTRING', 5 => 'CHILDBODY');
     public $smarty_token_names = array (		// Text for parser error messages
     				'IDENTITY'	=> '===',
     				'NONEIDENTITY'	=> '!==',
@@ -90,6 +93,12 @@ class Smarty_Internal_Templatelexer
         $this->smarty_token_names['RDEL'] =	$this->smarty->right_delimiter;
         $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
      }
+
+    public function PrintTrace()
+    {
+        $this->yyTraceFILE = fopen('php://output', 'w');
+        $this->yyTracePrompt = '<br>';
+    }
 
 /*!lex2php
 %input $this->data
@@ -190,21 +199,21 @@ ldel comment rdel {
   $this->token = Smarty_Internal_Templateparser::TP_COMMENT;
 }
 ldel strip rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_STRIPON;
   }
 }
 ldel slash strip rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_STRIPOFF;
   }
 }
 ldel literal rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LITERALSTART;
@@ -212,7 +221,7 @@ ldel literal rdel {
    }
 }
 ldel if {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELIF;
@@ -221,7 +230,7 @@ ldel if {
   }
 }
 ldel for {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOR;
@@ -230,7 +239,7 @@ ldel for {
   }
 }
 ldel foreach {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOREACH;
@@ -239,7 +248,7 @@ ldel foreach {
   }
 }
 ldel setfilter {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELSETFILTER;
@@ -248,7 +257,7 @@ ldel setfilter {
   }
 }
 ldel slash {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LDELSLASH;
@@ -257,7 +266,7 @@ ldel slash {
   }
 }
 ldel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDEL;
@@ -503,7 +512,7 @@ space {
   $this->token = Smarty_Internal_Templateparser::TP_SPACE;
 }
 ldel if {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELIF;
@@ -512,7 +521,7 @@ ldel if {
   }
 }
 ldel for {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOR;
@@ -521,7 +530,7 @@ ldel for {
   }
 }
 ldel foreach {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOREACH;
@@ -530,7 +539,7 @@ ldel foreach {
   }
 }
 ldel slash {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LDELSLASH;
@@ -539,7 +548,7 @@ ldel slash {
   }
 }
 ldel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDEL;
@@ -555,7 +564,7 @@ text {
 /*!lex2php
 %statename LITERAL
 ldel literal rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LITERALSTART;
@@ -563,7 +572,7 @@ ldel literal rdel {
   }
 }
 ldel slash literal rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LITERALEND;
@@ -610,7 +619,7 @@ text {
 /*!lex2php
 %statename DOUBLEQUOTEDSTRING
 ldel if {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELIF;
@@ -619,7 +628,7 @@ ldel if {
   }
 }
 ldel for {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOR;
@@ -628,7 +637,7 @@ ldel for {
   }
 }
 ldel foreach {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDELFOREACH;
@@ -637,7 +646,7 @@ ldel foreach {
   }
 }
 ldel slash {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_LDELSLASH;
@@ -646,7 +655,7 @@ ldel slash {
   }
 }
 ldel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
     $this->token = Smarty_Internal_Templateparser::TP_TEXT;
   } else {
      $this->token = Smarty_Internal_Templateparser::TP_LDEL;
@@ -691,21 +700,21 @@ text {
 /*!lex2php
 %statename CHILDBODY
 ldel strip rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      return false;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_STRIPON;
   }
 }
 ldel slash strip rdel {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      return false;
   } else {
     $this->token = Smarty_Internal_Templateparser::TP_STRIPOFF;
   }
 }
 ldel block  {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      return false;
   } else {
     $this->yypopstate();
@@ -735,7 +744,7 @@ text {
 %statename CHILDBLOCK
 
 ldel block {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
   } else {
     $this->yypopstate();
@@ -743,7 +752,7 @@ ldel block {
   }
 }
 ldel slash block {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
   } else {
     $this->yypopstate();
@@ -751,7 +760,7 @@ ldel slash block {
   }
 }
 ldel smartyblockchildparent {
-  if ($this->smarty->auto_literal && (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false)) {
+  if ($this->smarty->auto_literal && ($this->mbstring_overload ? (mb_strpos(" \n\t\r",mb_substr($this->value,$this->ldel_length,1,'latin1'),0,'latin1') !== false) : (strpos(" \n\t\r",substr($this->value,$this->ldel_length,1)) !== false))) {
      $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
   } else {
     $this->yypopstate();

@@ -20,6 +20,9 @@ class Smarty_Internal_Configfilelexer
     public $node;
     public $line;
     private $state = 1;
+    public $yyTraceFILE;
+    public $yyTracePrompt;
+    public $state_name = array (1 => 'START', 2 => 'VALUE', 3 => 'NAKED_STRING_VALUE', 4 => 'COMMENT', 5 => 'SECTION', 6 => 'TRIPPLE');
     public $smarty_token_names = array (		// Text for parser error messages
    				);
     				
@@ -41,6 +44,11 @@ class Smarty_Internal_Configfilelexer
             $instance = $new_instance;
         return $instance;
     } 
+    public function PrintTrace()
+    {
+        $this->yyTraceFILE = fopen('php://output', 'w');
+        $this->yyTracePrompt = '<br>';
+    }
 
 
 /*!lex2php

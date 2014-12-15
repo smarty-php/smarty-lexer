@@ -123,7 +123,7 @@ smartyblockchildparent = /[\$]smarty\.block\.(child|parent)/
 integer = /\d+/
 hex =  /0[xX][0-9a-fA-F]+/
 math = /\s*(\*|\/|\%)\s*/
-comment = /\*([\S\s]*?)\*/
+comment = /SMARTYldel\*([\S\s]*?)\*SMARTYrdel/
 incdec = /\+\+|\-\-/
 unimath = /\s*(\+|\-)\s*/
 openP = /\s*\(\s*/
@@ -195,7 +195,7 @@ single_quote = /'/
 emptyjava {
   $this->token = Smarty_Internal_Templateparser::TP_TEXT;
 }
-ldel comment rdel {
+comment {
   $this->token = Smarty_Internal_Templateparser::TP_COMMENT;
 }
 ldel strip rdel {

@@ -814,8 +814,16 @@ variable(res)    ::= HATCH ID(i) HATCH. {
     res = '$_smarty_tpl->getConfigVariable(\''. i .'\')';
 }
 
+variable(res)    ::= HATCH ID(i) HATCH arrayindex(a). {
+    res = '(is_array($tmp = $_smarty_tpl->getConfigVariable(\''. i .'\')) ? $tmp'.a.' :null)';
+}
+
 variable(res)    ::= HATCH variable(v) HATCH. {
     res = '$_smarty_tpl->getConfigVariable('. v .')';
+}
+
+variable(res)    ::= HATCH variable(v) HATCH arrayindex(a). {
+    res = '(is_array($tmp = $_smarty_tpl->getConfigVariable('. v .')) ? $tmp'.a.' : null)';
 }
 
 varindexed(res)  ::= DOLLAR varvar(v) arrayindex(a). {

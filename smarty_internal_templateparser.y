@@ -48,15 +48,6 @@
         $this->current_buffer = $this->root_buffer = new _smarty_template_buffer($this);
     }
 
-    public static function escape_start_tag($tag_text) {
-        $tag = preg_replace(array('/\A<\?(.*)\z/', '/(language\s*=\s*[\"\']?\s*php\s*[\"\']?)/'), array('<<?php ?>?\1', '<?php echo \'\1\'; ?>'), addcslashes($tag_text, "'"), -1 , $count); //Escape tag
-        return $tag;
-    }
-
-    public static function escape_end_tag($tag_text) {
-        return '?<?php ?>>';
-    }
-
     public function compileVariable($variable) {
         if (strpos($variable,'(') == 0) {
             // not a variable variable
@@ -69,7 +60,6 @@
     }
 } 
 
-
 %token_prefix TP_
 
 %parse_accept
@@ -78,6 +68,7 @@
     $this->internalError = false;
     $this->retvalue = $this->_retvalue;
     //echo $this->retvalue."\n\n";
+
 }
 
 %syntax_error
@@ -116,6 +107,7 @@ template       ::= template_element(e). {
                       // loop of elements
 template       ::= template template_element(e). {
     if (e != null) {
+        // because of possible code injection
         $this->current_buffer->append_subtree(e);
     }
 }
@@ -154,33 +146,38 @@ template_element(res)::= PHPSTARTTAG(st). {
         $this->lex->is_phpScript = true;
     }
     if ($this->php_handling == Smarty::PHP_PASSTHRU) {
-        res = new _smarty_text($this, self::escape_start_tag(st));
+        if ($this->lex->is_phpScript) {
+            $s = addcslashes(st, "'");
+            res = new _smarty_text($this, $s);
+        } else {
+            res = new _smarty_text($this, st);
+        }
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
         res = new _smarty_text($this, htmlspecialchars(st, ENT_QUOTES));
     } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
         if (!($this->smarty instanceof SmartyBC)) {
             $this->compiler->trigger_template_error (self::Err3);
         }
-        res = new _smarty_text($this, $this->compiler->processNocacheCode('<?php ', true));
+        res = new _smarty_tag($this, $this->compiler->processNocacheCode('<?php ', true));
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         res = null;
     }
 }
 
                       // '?>' tag
-template_element(res)::= PHPENDTAG. {
+template_element(res)::= PHPENDTAG(st). {
     if ($this->is_xml) {
         $this->compiler->tag_nocache = true; 
         $this->is_xml = false;
         $save = $this->template->has_nocache_code; 
-        res = new _smarty_text($this, $this->compiler->processNocacheCode("<?php echo '?>';?>\n", $this->compiler, true));
-        $this->template->has_nocache_code = $save; 
+        res = new _smarty_tag($this, $this->compiler->processNocacheCode("<?php echo '?>';?>\n", $this->compiler, true));
+        $this->template->has_nocache_code = $save;
     } elseif ($this->php_handling == Smarty::PHP_PASSTHRU) {
-        res = new _smarty_text($this, '?<?php ?>>');
+        res = new _smarty_text($this, st);
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
         res = new _smarty_text($this, htmlspecialchars('?>', ENT_QUOTES));
     } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
-        res = new _smarty_text($this, $this->compiler->processNocacheCode('?>', true));
+        res = new _smarty_tag($this, $this->compiler->processNocacheCode('?>', true));
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         res = null;
     }
@@ -196,7 +193,7 @@ template_element(res)::= PHPENDSCRIPT(st). {
         } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
             res = new _smarty_text($this, htmlspecialchars(st, ENT_QUOTES));
         } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
-            res = new _smarty_text($this, $this->compiler->processNocacheCode('?>', true));
+            res = new _smarty_tag($this, $this->compiler->processNocacheCode('?>', true));
         } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
             res = null;
         }
@@ -206,7 +203,7 @@ template_element(res)::= PHPENDSCRIPT(st). {
                       // '<%' tag
 template_element(res)::= ASPSTARTTAG(st). {
     if ($this->php_handling == Smarty::PHP_PASSTHRU) {
-        res = new _smarty_text($this, '<<?php ?>%');
+        res = new _smarty_text($this, st);
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
         res = new _smarty_text($this, htmlspecialchars(st, ENT_QUOTES));
     } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
@@ -214,15 +211,15 @@ template_element(res)::= ASPSTARTTAG(st). {
             if (!($this->smarty instanceof SmartyBC)) {
                 $this->compiler->trigger_template_error (self::Err3);
             }
-            res = new _smarty_text($this, $this->compiler->processNocacheCode('<%', true));
+            res = new _smarty_tag($this, $this->compiler->processNocacheCode('<%', true));
         } else {
-            res = new _smarty_text($this, '<<?php ?>%');
+            res = new _smarty_text($this, st);
         }
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         if ($this->asp_tags) {
             res = null;
         } else {
-            res = new _smarty_text($this, '<<?php ?>%');
+            res = new _smarty_text($this, st);
         }
     }
 }
@@ -230,38 +227,31 @@ template_element(res)::= ASPSTARTTAG(st). {
                       // '%>' tag
 template_element(res)::= ASPENDTAG(et). {
     if ($this->php_handling == Smarty::PHP_PASSTHRU) {
-        res = new _smarty_text($this, '%<?php ?>>');
+        res = new _smarty_text($this, st);
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
         res = new _smarty_text($this, htmlspecialchars('%>', ENT_QUOTES));
     } elseif ($this->php_handling == Smarty::PHP_ALLOW) {
         if ($this->asp_tags) {
-            res = new _smarty_text($this, $this->compiler->processNocacheCode('%>', true));
+            res = new _smarty_tag($this, $this->compiler->processNocacheCode('%>', true));
         } else {
-            res = new _smarty_text($this, '%<?php ?>>');
+            res = new _smarty_text($this, st);
         }
     } elseif ($this->php_handling == Smarty::PHP_REMOVE) {
         if ($this->asp_tags) {
             res = null;
         } else {
-            res = new _smarty_text($this, '%<?php ?>>');
+            res = new _smarty_text($this, st);
         }
     }
 }
 
-template_element(res)::= FAKEPHPSTARTTAG(o). {
-    if ($this->strip) {
-        res = new _smarty_text($this, preg_replace('![\t ]*[\r\n]+[\t ]*!', '', self::escape_start_tag(o))); 
-    } else {
-        res = new _smarty_text($this, self::escape_start_tag(o));  
-    }
-}
 
                       // XML tag
 template_element(res)::= XMLTAG. {
     $this->compiler->tag_nocache = true;
     $this->is_xml = true; 
     $save = $this->template->has_nocache_code; 
-    res = new _smarty_text($this, $this->compiler->processNocacheCode("<?php echo '<?xml';?>", $this->compiler, true));
+    res = new _smarty_tag($this, $this->compiler->processNocacheCode("<?php echo '<?xml';?>", $this->compiler, true));
     $this->template->has_nocache_code = $save;
 }
 
@@ -314,26 +304,6 @@ literal_element(res) ::= literal(l). {
 
 literal_element(res) ::= LITERAL(l). {
     res = l;
-}
-
-literal_element(res) ::= PHPSTARTTAG(st). {
-    res = self::escape_start_tag(st);
-}
-
-literal_element(res) ::= FAKEPHPSTARTTAG(st). {
-    res = self::escape_start_tag(st);
-}
-
-literal_element(res) ::= PHPENDTAG(et). {
-    res = self::escape_end_tag(et);
-}
-
-literal_element(res) ::= ASPSTARTTAG(st). {
-    res = '<<?php ?>%';
-}
-
-literal_element(res) ::= ASPENDTAG(et). {
-    res = '%<?php ?>>';
 }
 
 //

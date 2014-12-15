@@ -22,6 +22,7 @@
          public $is_phpScript = false;
          public $state = 1;
          public $smarty;
+         public $literal_cnt = 0;
          private $heredoc_id_stack = Array();
          public $yyTraceFILE;
          public $yyTracePrompt;
@@ -280,23 +281,20 @@
        }
      }
      phpstarttag {
-       if (in_array($this->value, Array('<?', '<?=', '<?php')) || $script = strpos($this->value, '<s') === 0) {
-        if ($script) {
+        if (($script = strpos($this->value, '<s') === 0) || in_array($this->value, Array('<?', '<?=', '<?php'))) {
+         if ($script) {
             $this->is_phpScript = true;
-        }
+         }
          $this->token = Smarty_Internal_Templateparser::TP_PHPSTARTTAG;
        } elseif ($this->value == '<?xml') {
            $this->token = Smarty_Internal_Templateparser::TP_XMLTAG;
        } else {
-         $this->token = Smarty_Internal_Templateparser::TP_FAKEPHPSTARTTAG;
-         $this->value = substr($this->value, 0, 2);
+         $this->token = Smarty_Internal_Templateparser::TP_TEXT;
+         //$this->value = substr($this->value, 0, 2);
        }
       }
      phpendtag {
        $this->token = Smarty_Internal_Templateparser::TP_PHPENDTAG;
-     }
-     phpendscript {
-       $this->token = Smarty_Internal_Templateparser::TP_PHPENDSCRIPT;
      }
      phpendscript {
        $this->token = Smarty_Internal_Templateparser::TP_PHPENDSCRIPT;
@@ -571,48 +569,21 @@
      /*!lex2php
      %statename LITERAL
      ldel literal rdel {
-       if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
-          $this->token = Smarty_Internal_Templateparser::TP_TEXT;
-       } else {
-         $this->token = Smarty_Internal_Templateparser::TP_LITERALSTART;
-         $this->yypushstate(self::LITERAL);
-       }
+       $this->literal_cnt++;
+       $this->token = Smarty_Internal_Templateparser::TP_LITERAL;
      }
      ldel slash literal rdel {
-       if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
-          $this->token = Smarty_Internal_Templateparser::TP_TEXT;
+       if ($this->literal_cnt) {
+         $this->literal_cnt--;
+         $this->token = Smarty_Internal_Templateparser::TP_LITERAL;
        } else {
          $this->token = Smarty_Internal_Templateparser::TP_LITERALEND;
          $this->yypopstate();
        }
      }
-     phpstarttag {
-       if (in_array($this->value, Array('<?', '<?=', '<?php')) || $script = strpos($this->value, '<s') === 0) {
-        if ($script) {
-            $this->is_phpScript = true;
-        }
-         $this->token = Smarty_Internal_Templateparser::TP_PHPSTARTTAG;
-        } else {
-         $this->token = Smarty_Internal_Templateparser::TP_FAKEPHPSTARTTAG;
-         $this->value = substr($this->value, 0, 2);
-        }
-     }
-     phpendtag {
-       $this->token = Smarty_Internal_Templateparser::TP_PHPENDTAG;
-     }
-     phpendscript {
-       $this->token = Smarty_Internal_Templateparser::TP_PHPENDSCRIPT;
-     }
-     aspstarttag {
-       $this->token = Smarty_Internal_Templateparser::TP_ASPSTARTTAG;
-     }
-     aspendtag {
-       $this->token = Smarty_Internal_Templateparser::TP_ASPENDTAG;
-     }
      text {
-       $phpEndScript = $this->is_phpScript ? '|<\\/script>' : '';
        $to = strlen($this->data);
-       preg_match("/{$this->ldel}\/?literal{$this->rdel}|<\?|<%|\?>|%>|<script\s+language\s*=\s*[\"\']?\s*php\s*[\"\']?\s*>{$phpEndScript}/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
+       preg_match("/{$this->ldel}\/?literal{$this->rdel}/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
        if (isset($match[0][1])) {
          $to = $match[0][1];
        } else {
@@ -651,6 +622,13 @@
           $this->taglineno = $this->line;
        }
      }
+     ldel literal rdel {
+         $this->token = Smarty_Internal_Templateparser::TP_TEXT;
+     }
+     ldel slash literal rdel {
+         $this->token = Smarty_Internal_Templateparser::TP_TEXT;
+     }
+
      ldel slash {
        if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
          $this->token = Smarty_Internal_Templateparser::TP_TEXT;

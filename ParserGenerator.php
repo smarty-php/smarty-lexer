@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -19,13 +19,13 @@
  * syntax errors simpler.  Detection of expected tokens eliminates some
  * problematic edge cases where an unexpected token could cause the parser
  * to simply accept input.
- * 
+ *
  * Otherwise, the file format is identical to the Lemon parser generator
  *
  * PHP version 5
  *
  * LICENSE:
- * 
+ *
  * Copyright (c) 2006, Gregory Beaver <cellog@php.net>
  * All rights reserved.
  *
@@ -77,7 +77,7 @@ require_once './ParserGenerator/State.php';
 /**#@-*/
 /**
  * The basic home class for the parser generator
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -156,7 +156,7 @@ class PHP_ParserGenerator
      * @param array
      * @return int
      */
-    function handleflags($i, $argv)
+    public function handleflags($i, $argv)
     {
         if (!isset($argv[1]) || !isset(self::$options[$argv[$i][1]])) {
             throw new Exception('Command line syntax error: undefined option "' .  $argv[$i] . '"');
@@ -171,6 +171,7 @@ class PHP_ParserGenerator
         } else {
             throw new Exception('Command line syntax error: missing argument on switch: "' . $argv[$i] . '"');
         }
+
         return 0;
     }
 
@@ -181,7 +182,7 @@ class PHP_ParserGenerator
      * @param array
      * @return int
      */
-    function handleswitch($i, $argv)
+    public function handleswitch($i, $argv)
     {
         $lv = 0;
         $dv = 0.0;
@@ -216,7 +217,7 @@ class PHP_ParserGenerator
                 $sv = $cp;
                 break;
         }
-        switch(self::$options[$argv[$i]]['type']) {
+        switch (self::$options[$argv[$i]]['type']) {
             case self::OPT_FLAG:
             case self::OPT_FFLAG:
                 break;
@@ -239,6 +240,7 @@ class PHP_ParserGenerator
                 $this->{self::$options[$argv[$i]]['arg']}($sv);
                 break;
         }
+
         return 0;
     }
 
@@ -247,13 +249,13 @@ class PHP_ParserGenerator
      * @param array valid options
      * @return int
      */
-    function OptInit($a)
+    public function OptInit($a)
     {
         $errcnt = 0;
         $argv = $a;
         try {
             if (is_array($argv) && count($argv) && self::$options) {
-                for($i = 1; $i < count($argv); $i++) {
+                for ($i = 1; $i < count($argv); $i++) {
                     if ($argv[$i][0] == '+' || $argv[$i][0] == '-') {
                         $errcnt += $this->handleflags($i, $argv);
                     } elseif (strstr($argv[$i],'=')) {
@@ -266,6 +268,7 @@ class PHP_ParserGenerator
             echo $e->getMessage();
             exit(1);
         }
+
         return 0;
     }
 
@@ -293,6 +296,7 @@ class PHP_ParserGenerator
                 $dashdash = 1;
             }
         }
+
         return -1;
     }
 
@@ -300,7 +304,7 @@ class PHP_ParserGenerator
      * Return the value of the non-option argument as indexed by $i
      *
      * @param int
-     * @param array the value of $argv
+     * @param  array the value of $argv
      * @return 0|string
      */
     private function OptArg($i, $a)
@@ -308,17 +312,18 @@ class PHP_ParserGenerator
         if (-1 == ($ind = $this->argindex($i, $a))) {
             return 0;
         }
+
         return $a[$ind];
     }
 
     /**
      * @return int number of arguments
      */
-    function OptNArgs($a)
+    public function OptNArgs($a)
     {
         $cnt = $dashdash = 0;
         if (is_array($a) && count($a)) {
-            for($i = 1; $i < count($a); $i++) {
+            for ($i = 1; $i < count($a); $i++) {
                 if ($dashdash || !($a[$i][0] == '-' || $a[$i][0] == '+' ||
                       strchr($a[$i], '='))) {
                     $cnt++;
@@ -328,13 +333,14 @@ class PHP_ParserGenerator
                 }
             }
         }
+
         return $cnt;
     }
 
     /**
      * Print out command-line options
      */
-    function OptPrint()
+    public function OptPrint()
     {
         $max = 0;
         foreach (self::$options as $label => $info) {
@@ -405,16 +411,15 @@ class PHP_ParserGenerator
 ** Main program file for the LEMON parser generator.
 */
 
-
     /* The main program.  Parse the command line and do it... */
-    function main()
+    public function main()
     {
         $lem = new PHP_ParserGenerator_Data;
 
         $this->OptInit($_SERVER['argv']);
         if ($this->version) {
             echo "Lemon version 1.0/PHP_ParserGenerator port version 0.1.5\n";
-            exit(0); 
+            exit(0);
         }
         if ($this->OptNArgs($_SERVER['argv']) != 1) {
             echo "Exactly one filename argument is required.\n";
@@ -535,10 +540,11 @@ class PHP_ParserGenerator
             printf("%d parsing conflicts.\n", $lem->nconflict);
         }
         exit($lem->errorcnt + $lem->nconflict);
+
         return ($lem->errorcnt + $lem->nconflict);
     }
 
-    function SetSize($n)
+    public function SetSize($n)
     {
         $this->size = $n + 1;
     }
@@ -559,9 +565,9 @@ class PHP_ParserGenerator
      *   The "next" pointers for elements in the lists a and b are
      *   changed.
      */
-    static function merge($a, $b, $cmp, $offset)
+    public static function merge($a, $b, $cmp, $offset)
     {
-        if($a === 0) {
+        if ($a === 0) {
             $head = $b;
         } elseif ($b === 0) {
             $head = $a;
@@ -591,9 +597,10 @@ class PHP_ParserGenerator
                 $ptr->$offset = $b;
             }
         }
+
         return $head;
     }
-    
+
     /*
     ** Inputs:
     **   list:      Pointer to a singly-linked list of structures.
@@ -608,7 +615,7 @@ class PHP_ParserGenerator
     **   The "next" pointers for elements in list are changed.
     */
     #define LISTSIZE 30
-    static function msort($list, $next, $cmp)
+    public static function msort($list, $next, $cmp)
     {
         if ($list === 0) {
             return $list;
@@ -633,13 +640,14 @@ class PHP_ParserGenerator
                 $ep = self::merge($ep, $set[$i], $cmp, $next);
             }
         }
+
         return $ep;
     }
 
     /* Find a good place to break "msg" so that its length is at least "min"
     ** but no more than "max".  Make the point as close to max as possible.
     */
-    static function findbreak($msg, $min, $max)
+    public static function findbreak($msg, $min, $max)
     {
         if ($min >= strlen($msg)) {
             return strlen($msg);
@@ -653,10 +661,11 @@ class PHP_ParserGenerator
                 $spot = $i;
             }
         }
+
         return $spot;
     }
 
-    static function ErrorMsg($filename, $lineno, $format)
+    public static function ErrorMsg($filename, $lineno, $format)
     {
         /* Prepare a prefix to be prepended to every output line */
         if ($lineno > 0) {
@@ -666,7 +675,7 @@ class PHP_ParserGenerator
         }
         $prefixsize = strlen($prefix);
         $availablewidth = 79 - $prefixsize;
-        
+
         /* Generate the error message */
         $ap = func_get_args();
         array_shift($ap); // $filename
@@ -679,7 +688,7 @@ class PHP_ParserGenerator
             --$linewidth;
             $errmsg = substr($errmsg, 0, strlen($errmsg) - 1);
         }
-        
+
         /* Print the error message */
         $base = 0;
         $errmsg = str_replace(array("\r", "\n", "\t"), array(' ', ' ', ' '), $errmsg);
@@ -697,17 +706,17 @@ class PHP_ParserGenerator
     }
 
     /**
-     * Duplicate the input file without comments and without actions 
+     * Duplicate the input file without comments and without actions
      * on rules
      */
-    function Reprint()
+    public function Reprint()
     {
         printf("// Reprint of input file \"%s\".\n// Symbols:\n", $this->filename);
         $maxlen = 10;
         for ($i = 0; $i < $this->nsymbol; $i++) {
             $sp = $this->symbols[$i];
             $len = strlen($sp->name);
-            if ($len > $maxlen ) {
+            if ($len > $maxlen) {
                 $maxlen = $len;
             }
         }

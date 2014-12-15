@@ -1,13 +1,13 @@
 <?php
 /**
  * PHP_LexerGenerator, a php 5 lexer generator.
- * 
+ *
  * Exception classes for the lexer generator
  *
  * PHP version 5
- * 
+ *
  * LICENSE:
- * 
+ *
  * Copyright (c) 2006, Gregory Beaver <cellog@php.net>
  * All rights reserved.
  *
@@ -52,4 +52,3 @@ require_once './Exception.php';
  * @since      File available since Release 0.1.0
  */
 class PHP_LexerGenerator_Exception extends PEAR_Exception {}
-?>

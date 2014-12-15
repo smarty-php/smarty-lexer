@@ -293,7 +293,7 @@ class PHP_LexerGenerator
      * @param string Optional plex file {@see PHP_LexerGenerator::create}.
      * @param string Optional output file {@see PHP_LexerGenerator::create}.
      */
-    function __construct($lexerfile = '', $outfile = '')
+    public function __construct($lexerfile = '', $outfile = '')
     {
         if ($lexerfile) {
             $this -> create($lexerfile, $outfile);
@@ -307,7 +307,7 @@ class PHP_LexerGenerator
      * @param string Optional path to output file. Default is lexerfile with
      * extension of ".php".
      */
-    function create($lexerfile, $outfile = '')
+    public function create($lexerfile, $outfile = '')
     {
         $this->_lex = new PHP_LexerGenerator_Lexer(file_get_contents($lexerfile));
         $info = pathinfo($lexerfile);
@@ -329,4 +329,3 @@ class PHP_LexerGenerator
     }
 }
 //$a = new PHP_LexerGenerator('/development/File_ChessPGN/ChessPGN/Lexer.plex');
-?>

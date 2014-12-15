@@ -13,7 +13,7 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
     public $string = '';
     public $metadata = array();
 
-    function __construct($s, $m = array())
+    public function __construct($s, $m = array())
     {
         if ($s instanceof PHP_LexerGenerator_ParseryyToken) {
             $this->string = $s->string;
@@ -28,28 +28,29 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
         }
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->_string;
     }
 
-    function offsetExists($offset)
+    public function offsetExists($offset)
     {
         return isset($this->metadata[$offset]);
     }
 
-    function offsetGet($offset)
+    public function offsetGet($offset)
     {
         return $this->metadata[$offset];
     }
 
-    function offsetSet($offset, $value)
+    public function offsetSet($offset, $value)
     {
         if ($offset === null) {
             if (isset($value[0])) {
                 $x = ($value instanceof PHP_LexerGenerator_ParseryyToken) ?
                     $value->metadata : $value;
                 $this->metadata = array_merge($this->metadata, $x);
+
                 return;
             }
             $offset = count($this->metadata);
@@ -66,7 +67,7 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
         }
     }
 
-    function offsetUnset($offset)
+    public function offsetUnset($offset)
     {
         unset($this->metadata[$offset]);
     }
@@ -200,7 +201,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         9 => self::PI,
     );
 
-    function __construct($outfile, $lex)
+    public function __construct($outfile, $lex)
     {
         $this->out = fopen($outfile, 'wb');
         if (!$this->out) {
@@ -211,7 +212,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         $this->_regexParser = new PHP_LexerGenerator_Regex_Parser($this->_regexLexer);
     }
 
-    function doLongestMatch($rules, $statename, $ruleindex)
+    public function doLongestMatch($rules, $statename, $ruleindex)
     {
         fwrite($this->out, '
         if (' . $this->counter . ' >= strlen(' . $this->input . ')) {
@@ -311,6 +312,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     // accept
                     ' . $this->counter . ' += strlen(' . $this->value . ');
                     ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
+
                     return true;
                 }
             }
@@ -318,7 +320,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 ');
     }
 
-    function doFirstMatch($rules, $statename, $ruleindex)
+    public function doFirstMatch($rules, $statename, $ruleindex)
     {
         $patterns = array();
         $pattern = '/';
@@ -394,7 +396,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 //                } else {');
 /**        fwrite($this->out, '                    $yy_yymore_patterns = array(' . "\n");
         $extra = 0;
-        for($i = 0; count($patterns); $i++) {
+        for ($i = 0; count($patterns); $i++) {
             unset($patterns[$i]);
             $extra += $tokencount[0];
             array_shift($tokencount);
@@ -443,6 +445,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                         // accept
                         ' . $this->counter . ' += ($this->mbstring_overload ? mb_strlen(' . $this->value . ',\'latin1\'): strlen(' . $this->value . '));
                         ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
+
                         return true;
                     }
                 }
@@ -456,18 +459,18 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 ');
     }
 
-    function makeCaseInsensitve($string)
+    public function makeCaseInsensitve($string)
     {
         return preg_replace('/[a-z]/ie', "'[\\0'.strtoupper('\\0').']'", strtolower($string));
     }
 
-    function outputRules($rules, $statename)
+    public function outputRules($rules, $statename)
     {
         if (!$statename) {
             $statename = $this -> _outRuleIndex;
         }
         fwrite($this->out, '
-    function yylex' . $this -> _outRuleIndex . '()
+    public function yylex' . $this -> _outRuleIndex . '()
     {');
         if ($this->matchlongest) {
             $ruleMap = array();
@@ -504,12 +507,12 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         $this -> _outRuleIndex++; // for next set of rules
     }
 
-    function error($msg)
+    public function error($msg)
     {
         echo 'Error on line ' . $this->lex->line . ': ' , $msg;
     }
 
-    function _validatePattern($pattern, $update = false)
+    public function _validatePattern($pattern, $update = false)
     {
         $this->_regexLexer->reset($pattern, $this->lex->line);
         $this->_regexParser->reset($this->_patternIndex, $update);
@@ -523,6 +526,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
             $this->error($e->getMessage());
             throw new PHP_LexerGenerator_Exception('Invalid pattern "' . $pattern . '"');
         }
+
         return $this->_regexParser->result;
     }
 #line 529 "Parser.php"
@@ -612,7 +616,7 @@ static public $yy_action = array(
  /*    80 */     4,    1,    2,    1,   20,   19,   21,   26,   23,    6,
  /*    90 */     7,
     );
-    static public $yy_lookahead = array(
+    public static $yy_lookahead = array(
  /*     0 */     3,    1,    5,    4,    5,    8,    9,    8,    9,    3,
  /*    10 */    19,    5,   21,    4,    8,    9,    7,    5,    6,   14,
  /*    20 */     8,    9,    3,    5,    6,   20,    8,    9,    3,    7,
@@ -626,7 +630,7 @@ static public $yy_action = array(
 );
     const YY_SHIFT_USE_DFLT = -4;
     const YY_SHIFT_MAX = 35;
-    static public $yy_shift_ofst = array(
+    public static $yy_shift_ofst = array(
  /*     0 */    60,   27,   -1,   45,   45,   62,   67,   84,   80,   80,
  /*    10 */    34,   25,   -3,    6,   51,   51,    9,   88,   12,   18,
  /*    20 */    43,   43,   65,   35,   19,    0,   22,   74,   74,   75,
@@ -634,11 +638,11 @@ static public $yy_action = array(
 );
     const YY_REDUCE_USE_DFLT = -10;
     const YY_REDUCE_MAX = 17;
-    static public $yy_reduce_ofst = array(
+    public static $yy_reduce_ofst = array(
  /*     0 */    33,   28,   -9,   46,   36,   52,   63,   58,   61,    5,
  /*    10 */    64,   64,   64,   64,   66,   68,   70,   76,
 );
-    static public $yyExpectedTokens = array(
+    public static $yyExpectedTokens = array(
         /* 0 */ array(1, 2, ),
         /* 1 */ array(4, 5, 8, 9, ),
         /* 2 */ array(4, 5, 8, 9, ),
@@ -701,7 +705,7 @@ static public $yy_action = array(
         /* 59 */ array(),
         /* 60 */ array(),
 );
-    static public $yy_default = array(
+    public static $yy_default = array(
  /*     0 */    97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
  /*    10 */    97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
  /*    20 */    72,   73,   97,   97,   97,   79,   67,   64,   65,   97,
@@ -742,7 +746,7 @@ static public $yy_action = array(
      * but it does not parse, the type of the token is changed to ID and
      * the parse is retried before an error is thrown.
      */
-    static public $yyFallback = array(
+    public static $yyFallback = array(
     );
     /**
      * Turn parser tracing on by giving a stream to which to write the trace
@@ -763,7 +767,7 @@ static public $yy_action = array(
      * @param resource
      * @param string
      */
-    static function Trace($TraceFILE, $zTracePrompt)
+    public static function Trace($TraceFILE, $zTracePrompt)
     {
         if (!$TraceFILE) {
             $zTracePrompt = 0;
@@ -777,7 +781,7 @@ static public $yy_action = array(
     /**
      * Output debug information to output (php://output stream)
      */
-    static function PrintTrace()
+    public static function PrintTrace()
     {
         self::$yyTraceFILE = fopen('php://output', 'w');
         self::$yyTracePrompt = '';
@@ -786,12 +790,12 @@ static public $yy_action = array(
     /**
      * @var resource|0
      */
-    static public $yyTraceFILE;
+    public static $yyTraceFILE;
     /**
      * String to prepend to debug output
      * @var string|0
      */
-    static public $yyTracePrompt;
+    public static $yyTracePrompt;
     /**
      * @var int
      */
@@ -810,7 +814,7 @@ static public $yy_action = array(
      * are required.  The following table supplies these names
      * @var array
      */
-    static public $yyTokenName = array(
+    public static $yyTokenName = array(
   '$',             'PHPCODE',       'COMMENTSTART',  'COMMENTEND',
   'PI',            'SUBPATTERN',    'CODE',          'PATTERN',
   'QUOTE',         'SINGLEQUOTE',   'error',         'start',
@@ -823,7 +827,7 @@ static public $yy_action = array(
      * For tracing reduce actions, the names of all rules are required.
      * @var array
      */
-    static public $yyRuleName = array(
+    public static $yyRuleName = array(
  /*   0 */ "start ::= lexfile",
  /*   1 */ "lexfile ::= declare rules",
  /*   2 */ "lexfile ::= declare PHPCODE rules",
@@ -868,7 +872,7 @@ static public $yy_action = array(
      * @param int
      * @return string
      */
-    function tokenName($tokenType)
+    public function tokenName($tokenType)
     {
         if ($tokenType === 0) {
             return 'End of Input';
@@ -886,7 +890,7 @@ static public $yy_action = array(
      * @param int the symbol code
      * @param mixed the symbol's value
      */
-    static function yy_destructor($yymajor, $yypminor)
+    public static function yy_destructor($yymajor, $yypminor)
     {
         switch ($yymajor) {
         /* Here is inserted the actions which take place when a
@@ -913,7 +917,7 @@ static public $yy_action = array(
      * @param PHP_LexerGenerator_ParseryyParser
      * @return int
      */
-    function yy_pop_parser_stack()
+    public function yy_pop_parser_stack()
     {
         if (!count($this->yystack)) {
             return;
@@ -927,6 +931,7 @@ static public $yy_action = array(
         $yymajor = $yytos->major;
         self::yy_destructor($yymajor, $yytos->minor);
         $this->yyidx--;
+
         return $yymajor;
     }
 
@@ -934,7 +939,7 @@ static public $yy_action = array(
      * Deallocate and destroy a parser.  Destructors are all called for
      * all stack elements before shutting the parser down.
      */
-    function __destruct()
+    public function __destruct()
     {
         while ($this->yyidx >= 0) {
             $this->yy_pop_parser_stack();
@@ -950,7 +955,7 @@ static public $yy_action = array(
      * @param int
      * @return array
      */
-    function yy_get_expected_tokens($token)
+    public function yy_get_expected_tokens($token)
     {
         $state = $this->yystack[$this->yyidx]->stateno;
         $expected = self::$yyExpectedTokens[$state];
@@ -983,6 +988,7 @@ static public $yy_action = array(
                                   self::$yyExpectedTokens[$nextstate], true)) {
                             $this->yyidx = $yyidx;
                             $this->yystack = $stack;
+
                             return array_unique($expected);
                         }
                     }
@@ -1013,6 +1019,7 @@ static public $yy_action = array(
             }
             break;
         } while (true);
+
         return array_unique($expected);
     }
 
@@ -1025,7 +1032,7 @@ static public $yy_action = array(
      * @param int
      * @return bool
      */
-    function yy_is_expected_token($token)
+    public function yy_is_expected_token($token)
     {
         if ($token === 0) {
             return true; // 0 is not part of this
@@ -1058,6 +1065,7 @@ static public $yy_action = array(
                           in_array($token, self::$yyExpectedTokens[$nextstate], true)) {
                         $this->yyidx = $yyidx;
                         $this->yystack = $stack;
+
                         return true;
                     }
                     if ($nextstate < self::YYNSTATE) {
@@ -1093,6 +1101,7 @@ static public $yy_action = array(
         } while (true);
         $this->yyidx = $yyidx;
         $this->yystack = $stack;
+
         return true;
     }
 
@@ -1105,7 +1114,7 @@ static public $yy_action = array(
      * return YY_NO_ACTION.
      * @param int The look-ahead token
      */
-    function yy_find_shift_action($iLookAhead)
+    public function yy_find_shift_action($iLookAhead)
     {
         $stateno = $this->yystack[$this->yyidx]->stateno;
 
@@ -1131,8 +1140,10 @@ static public $yy_action = array(
                         self::$yyTokenName[$iLookAhead] . " => " .
                         self::$yyTokenName[$iFallback] . "\n");
                 }
+
                 return $this->yy_find_shift_action($iFallback);
             }
+
             return self::$yy_default[$stateno];
         } else {
             return self::$yy_action[$i];
@@ -1149,7 +1160,7 @@ static public $yy_action = array(
      * @param int Current state number
      * @param int The look-ahead token
      */
-    function yy_find_reduce_action($stateno, $iLookAhead)
+    public function yy_find_reduce_action($stateno, $iLookAhead)
     {
         /* $stateno = $this->yystack[$this->yyidx]->stateno; */
 
@@ -1178,7 +1189,7 @@ static public $yy_action = array(
      * @param int The major token to shift in
      * @param mixed the minor token to shift in
      */
-    function yy_shift($yyNewState, $yyMajor, $yypMinor)
+    public function yy_shift($yyNewState, $yyMajor, $yypMinor)
     {
         $this->yyidx++;
         if ($this->yyidx >= self::YYSTACKDEPTH) {
@@ -1191,6 +1202,7 @@ static public $yy_action = array(
             }
             /* Here code is inserted which will execute if the parser
             ** stack ever overflows */
+
             return;
         }
         $yytos = new PHP_LexerGenerator_ParseryyStackEntry;
@@ -1202,7 +1214,7 @@ static public $yy_action = array(
             fprintf(self::$yyTraceFILE, "%sShift %d\n", self::$yyTracePrompt,
                 $yyNewState);
             fprintf(self::$yyTraceFILE, "%sStack:", self::$yyTracePrompt);
-            for($i = 1; $i <= $this->yyidx; $i++) {
+            for ($i = 1; $i <= $this->yyidx; $i++) {
                 fprintf(self::$yyTraceFILE, " %s",
                     self::$yyTokenName[$this->yystack[$i]->major]);
             }
@@ -1223,7 +1235,7 @@ static public $yy_action = array(
      * );
      * </pre>
      */
-    static public $yyRuleInfo = array(
+    public static $yyRuleInfo = array(
   array( 'lhs' => 11, 'rhs' => 1 ),
   array( 'lhs' => 12, 'rhs' => 2 ),
   array( 'lhs' => 12, 'rhs' => 3 ),
@@ -1268,7 +1280,7 @@ static public $yy_action = array(
      *
      * If a rule is not set, it has no handler.
      */
-    static public $yyReduceMap = array(
+    public static $yyReduceMap = array(
         1 => 1,
         2 => 2,
         3 => 3,
@@ -1312,28 +1324,29 @@ static public $yy_action = array(
     **  #line <lineno> <thisfile>
     */
 #line 438 "Parser.y"
-    function yy_r1(){
+    public function yy_r1()
+    {
     fwrite($this->out, '
     private $_yy_state = 1;
     private $_yy_stack = array();
 
-    function yylex()
+    public function yylex()
     {
         return $this->{\'yylex\' . $this->_yy_state}();
     }
 
-    function yypushstate($state)
+    public function yypushstate($state)
     {
         array_push($this->_yy_stack, $this->_yy_state);
         $this->_yy_state = $state;
     }
 
-    function yypopstate()
+    public function yypopstate()
     {
         $this->_yy_state = array_pop($this->_yy_stack);
     }
 
-    function yybegin($state)
+    public function yybegin($state)
     {
         $this->_yy_state = $state;
     }
@@ -1348,28 +1361,29 @@ static public $yy_action = array(
     }
 #line 1352 "Parser.php"
 #line 472 "Parser.y"
-    function yy_r2(){
+    public function yy_r2()
+    {
     fwrite($this->out, '
     private $_yy_state = 1;
     private $_yy_stack = array();
 
-    function yylex()
+    public function yylex()
     {
         return $this->{\'yylex\' . $this->_yy_state}();
     }
 
-    function yypushstate($state)
+    public function yypushstate($state)
     {
         array_push($this->_yy_stack, $this->_yy_state);
         $this->_yy_state = $state;
     }
 
-    function yypopstate()
+    public function yypopstate()
     {
         $this->_yy_state = array_pop($this->_yy_stack);
     }
 
-    function yybegin($state)
+    public function yybegin($state)
     {
         $this->_yy_state = $state;
     }
@@ -1387,7 +1401,8 @@ static public $yy_action = array(
     }
 #line 1391 "Parser.php"
 #line 509 "Parser.y"
-    function yy_r3(){
+    public function yy_r3()
+    {
     if (strlen($this->yystack[$this->yyidx + -2]->minor)) {
         fwrite($this->out, $this->yystack[$this->yyidx + -2]->minor);
     }
@@ -1395,23 +1410,23 @@ static public $yy_action = array(
     private $_yy_state = 1;
     private $_yy_stack = array();
 
-    function yylex()
+    public function yylex()
     {
         return $this->{\'yylex\' . $this->_yy_state}();
     }
 
-    function yypushstate($state)
+    public function yypushstate($state)
     {
         array_push($this->_yy_stack, $this->_yy_state);
         $this->_yy_state = $state;
     }
 
-    function yypopstate()
+    public function yypopstate()
     {
         $this->_yy_state = array_pop($this->_yy_stack);
     }
 
-    function yybegin($state)
+    public function yybegin($state)
     {
         $this->_yy_state = $state;
     }
@@ -1426,7 +1441,8 @@ static public $yy_action = array(
     }
 #line 1430 "Parser.php"
 #line 546 "Parser.y"
-    function yy_r4(){
+    public function yy_r4()
+    {
     if (strlen($this->yystack[$this->yyidx + -3]->minor)) {
         fwrite($this->out, $this->yystack[$this->yyidx + -3]->minor);
     }
@@ -1434,23 +1450,23 @@ static public $yy_action = array(
     private $_yy_state = 1;
     private $_yy_stack = array();
 
-    function yylex()
+    public function yylex()
     {
         return $this->{\'yylex\' . $this->_yy_state}();
     }
 
-    function yypushstate($state)
+    public function yypushstate($state)
     {
         array_push($this->_yy_stack, $this->_yy_state);
         $this->_yy_state = $state;
     }
 
-    function yypopstate()
+    public function yypopstate()
     {
         $this->_yy_state = array_pop($this->_yy_stack);
     }
 
-    function yybegin($state)
+    public function yybegin($state)
     {
         $this->_yy_state = $state;
     }
@@ -1468,14 +1484,16 @@ static public $yy_action = array(
     }
 #line 1472 "Parser.php"
 #line 587 "Parser.y"
-    function yy_r5(){
+    public function yy_r5()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;
     $this->patterns = $this->yystack[$this->yyidx + -1]->minor['patterns'];
     $this->_patternIndex = 1;
     }
 #line 1479 "Parser.php"
 #line 593 "Parser.y"
-    function yy_r6(){
+    public function yy_r6()
+    {
     $expected = array(
         'counter' => true,
         'input' => true,
@@ -1521,25 +1539,29 @@ static public $yy_action = array(
     }
 #line 1525 "Parser.php"
 #line 638 "Parser.y"
-    function yy_r7(){
+    public function yy_r7()
+    {
     $this->_retvalue = array(array('pi' => $this->yystack[$this->yyidx + -1]->minor, 'definition' => $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1530 "Parser.php"
 #line 644 "Parser.y"
-    function yy_r9(){
+    public function yy_r9()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor;
     $this->_retvalue[] = array('pi' => $this->yystack[$this->yyidx + -1]->minor, 'definition' => $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 1536 "Parser.php"
 #line 653 "Parser.y"
-    function yy_r11(){
+    public function yy_r11()
+    {
     $this->_retvalue = array($this->yystack[$this->yyidx + -1]->minor => $this->yystack[$this->yyidx + 0]->minor);
     // reset internal indicator of where we are in a pattern
     $this->_patternIndex = 0;
     }
 #line 1543 "Parser.php"
 #line 658 "Parser.y"
-    function yy_r12(){
+    public function yy_r12()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor;
     if (isset($this->_retvalue[$this->yystack[$this->yyidx + -1]->minor])) {
         throw new Exception('Pattern "' . $this->yystack[$this->yyidx + -1]->minor . '" is already defined as "' .
@@ -1551,12 +1573,14 @@ static public $yy_action = array(
     }
 #line 1555 "Parser.php"
 #line 669 "Parser.y"
-    function yy_r13(){
+    public function yy_r13()
+    {
     $this->_retvalue = array(array('rules' => $this->yystack[$this->yyidx + -1]->minor, 'code' => '', 'statename' => ''));
     }
 #line 1560 "Parser.php"
 #line 672 "Parser.y"
-    function yy_r14(){
+    public function yy_r14()
+    {
     if ($this->yystack[$this->yyidx + -3]->minor != 'statename') {
         throw new Exception('Error: only %statename processing instruction ' .
             'is allowed in rule sections (found ' . $this->yystack[$this->yyidx + -3]->minor . ').');
@@ -1565,12 +1589,14 @@ static public $yy_action = array(
     }
 #line 1569 "Parser.php"
 #line 679 "Parser.y"
-    function yy_r15(){
+    public function yy_r15()
+    {
     $this->_retvalue = array(array('rules' => $this->yystack[$this->yyidx + -2]->minor, 'code' => $this->yystack[$this->yyidx + 0]->minor, 'statename' => ''));
     }
 #line 1574 "Parser.php"
 #line 682 "Parser.y"
-    function yy_r16(){
+    public function yy_r16()
+    {
     if ($this->yystack[$this->yyidx + -4]->minor != 'statename') {
         throw new Exception('Error: only %statename processing instruction ' .
             'is allowed in rule sections (found ' . $this->yystack[$this->yyidx + -4]->minor . ').');
@@ -1580,14 +1606,16 @@ static public $yy_action = array(
     }
 #line 1584 "Parser.php"
 #line 690 "Parser.y"
-    function yy_r17(){
+    public function yy_r17()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor;
     $this->_retvalue[] = array('rules' => $this->yystack[$this->yyidx + -1]->minor, 'code' => '', 'statename' => '');
     $this->_patternIndex = 1;
     }
 #line 1591 "Parser.php"
 #line 695 "Parser.y"
-    function yy_r18(){
+    public function yy_r18()
+    {
     if ($this->yystack[$this->yyidx + -3]->minor != 'statename') {
         throw new Exception('Error: only %statename processing instruction ' .
             'is allowed in rule sections (found ' . $this->yystack[$this->yyidx + -3]->minor . ').');
@@ -1597,13 +1625,15 @@ static public $yy_action = array(
     }
 #line 1601 "Parser.php"
 #line 703 "Parser.y"
-    function yy_r19(){
+    public function yy_r19()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -3]->minor;
     $this->_retvalue[] = array('rules' => $this->yystack[$this->yyidx + -2]->minor, 'code' => $this->yystack[$this->yyidx + 0]->minor, 'statename' => '');
     }
 #line 1607 "Parser.php"
 #line 707 "Parser.y"
-    function yy_r20(){
+    public function yy_r20()
+    {
     if ($this->yystack[$this->yyidx + -4]->minor != 'statename') {
         throw new Exception('Error: only %statename processing instruction ' .
             'is allowed in rule sections (found ' . $this->yystack[$this->yyidx + -4]->minor . ').');
@@ -1613,13 +1643,15 @@ static public $yy_action = array(
     }
 #line 1617 "Parser.php"
 #line 716 "Parser.y"
-    function yy_r21(){
+    public function yy_r21()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;
     $this->_patternIndex = 1;
     }
 #line 1623 "Parser.php"
 #line 721 "Parser.y"
-    function yy_r22(){
+    public function yy_r22()
+    {
     $name = $this->yystack[$this->yyidx + -1]->minor[1];
     $this->yystack[$this->yyidx + -1]->minor = $this->yystack[$this->yyidx + -1]->minor[0];
     $this->yystack[$this->yyidx + -1]->minor = $this->_validatePattern($this->yystack[$this->yyidx + -1]->minor);
@@ -1631,7 +1663,8 @@ static public $yy_action = array(
     }
 #line 1635 "Parser.php"
 #line 731 "Parser.y"
-    function yy_r23(){
+    public function yy_r23()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor;
     $name = $this->yystack[$this->yyidx + -1]->minor[1];
     $this->yystack[$this->yyidx + -1]->minor = $this->yystack[$this->yyidx + -1]->minor[0];
@@ -1644,17 +1677,20 @@ static public $yy_action = array(
     }
 #line 1648 "Parser.php"
 #line 743 "Parser.y"
-    function yy_r24(){
+    public function yy_r24()
+    {
     $this->_retvalue = array(preg_quote($this->yystack[$this->yyidx + 0]->minor, '/'), $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 1653 "Parser.php"
 #line 746 "Parser.y"
-    function yy_r25(){
+    public function yy_r25()
+    {
     $this->_retvalue = array($this->makeCaseInsensitve(preg_quote($this->yystack[$this->yyidx + 0]->minor, '/')), $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 1658 "Parser.php"
 #line 749 "Parser.y"
-    function yy_r26(){
+    public function yy_r26()
+    {
     if (!isset($this->patterns[$this->yystack[$this->yyidx + 0]->minor])) {
         $this->error('Undefined pattern "' . $this->yystack[$this->yyidx + 0]->minor . '" used in rules');
         throw new Exception('Undefined pattern "' . $this->yystack[$this->yyidx + 0]->minor . '" used in rules');
@@ -1663,17 +1699,20 @@ static public $yy_action = array(
     }
 #line 1667 "Parser.php"
 #line 756 "Parser.y"
-    function yy_r27(){
+    public function yy_r27()
+    {
     $this->_retvalue = array($this->yystack[$this->yyidx + -1]->minor[0] . preg_quote($this->yystack[$this->yyidx + 0]->minor, '/'), $this->yystack[$this->yyidx + -1]->minor[1] . ' ' . $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 1672 "Parser.php"
 #line 759 "Parser.y"
-    function yy_r28(){
+    public function yy_r28()
+    {
     $this->_retvalue = array($this->yystack[$this->yyidx + -1]->minor[0] . $this->makeCaseInsensitve(preg_quote($this->yystack[$this->yyidx + 0]->minor, '/')), $this->yystack[$this->yyidx + -1]->minor[1] . ' ' . $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 1677 "Parser.php"
 #line 762 "Parser.y"
-    function yy_r29(){
+    public function yy_r29()
+    {
     if (!isset($this->patterns[$this->yystack[$this->yyidx + 0]->minor])) {
         $this->error('Undefined pattern "' . $this->yystack[$this->yyidx + 0]->minor . '" used in rules');
         throw new Exception('Undefined pattern "' . $this->yystack[$this->yyidx + 0]->minor . '" used in rules');
@@ -1682,17 +1721,20 @@ static public $yy_action = array(
     }
 #line 1686 "Parser.php"
 #line 770 "Parser.y"
-    function yy_r30(){
+    public function yy_r30()
+    {
     $this->_retvalue = preg_quote($this->yystack[$this->yyidx + 0]->minor, '/');
     }
 #line 1691 "Parser.php"
 #line 773 "Parser.y"
-    function yy_r31(){
+    public function yy_r31()
+    {
     $this->_retvalue = $this->makeCaseInsensitve(preg_quote($this->yystack[$this->yyidx + 0]->minor, '/'));
     }
 #line 1696 "Parser.php"
 #line 776 "Parser.y"
-    function yy_r32(){
+    public function yy_r32()
+    {
     // increment internal sub-pattern counter
     // adjust back-references in pattern based on previous pattern
     $test = $this->_validatePattern($this->yystack[$this->yyidx + 0]->minor, true);
@@ -1701,17 +1743,20 @@ static public $yy_action = array(
     }
 #line 1705 "Parser.php"
 #line 783 "Parser.y"
-    function yy_r33(){
+    public function yy_r33()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor . preg_quote($this->yystack[$this->yyidx + 0]->minor, '/');
     }
 #line 1710 "Parser.php"
 #line 786 "Parser.y"
-    function yy_r34(){
+    public function yy_r34()
+    {
     $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor . $this->makeCaseInsensitve(preg_quote($this->yystack[$this->yyidx + 0]->minor, '/'));
     }
 #line 1715 "Parser.php"
 #line 789 "Parser.y"
-    function yy_r35(){
+    public function yy_r35()
+    {
     // increment internal sub-pattern counter
     // adjust back-references in pattern based on previous pattern
     $test = $this->_validatePattern($this->yystack[$this->yyidx + 0]->minor, true);
@@ -1754,7 +1799,7 @@ static public $yy_action = array(
      * file)
      * @param int Number of the rule by which to reduce
      */
-    function yy_reduce($yyruleno)
+    public function yy_reduce($yyruleno)
     {
         //int $yygoto;                     /* The next state */
         //int $yyact;                      /* The next action */
@@ -1779,7 +1824,7 @@ static public $yy_action = array(
         $yygoto = self::$yyRuleInfo[$yyruleno]['lhs'];
         $yysize = self::$yyRuleInfo[$yyruleno]['rhs'];
         $this->yyidx -= $yysize;
-        for($i = $yysize; $i; $i--) {
+        for ($i = $yysize; $i; $i--) {
             // pop all of the right-hand side parameters
             array_pop($this->yystack);
         }
@@ -1809,12 +1854,11 @@ static public $yy_action = array(
      *
      * Code from %parse_fail is inserted here
      */
-    function yy_parse_failed()
+    public function yy_parse_failed()
     {
         if (self::$yyTraceFILE) {
             fprintf(self::$yyTraceFILE, "%sFail!\n", self::$yyTracePrompt);
-        }
-        while ($this->yyidx >= 0) {
+        } while ($this->yyidx >= 0) {
             $this->yy_pop_parser_stack();
         }
         /* Here code is inserted which will be executed whenever the
@@ -1828,7 +1872,7 @@ static public $yy_action = array(
      * @param int The major type of the error token
      * @param mixed The minor type of the error token
      */
-    function yy_syntax_error($yymajor, $TOKEN)
+    public function yy_syntax_error($yymajor, $TOKEN)
     {
 #line 70 "Parser.y"
 
@@ -1850,12 +1894,11 @@ static public $yy_action = array(
      *
      * %parse_accept code is inserted here
      */
-    function yy_accept()
+    public function yy_accept()
     {
         if (self::$yyTraceFILE) {
             fprintf(self::$yyTraceFILE, "%sAccept!\n", self::$yyTracePrompt);
-        }
-        while ($this->yyidx >= 0) {
+        } while ($this->yyidx >= 0) {
             $stack = $this->yy_pop_parser_stack();
         }
         /* Here code is inserted which will be executed whenever the
@@ -1872,7 +1915,7 @@ static public $yy_action = array(
      * @param mixed the token value
      * @param mixed any extra arguments that should be passed to handlers
      */
-    function doParse($yymajor, $yytokenvalue)
+    public function doParse($yymajor, $yytokenvalue)
     {
 //        $yyact;            /* The parser action. */
 //        $yyendofinput;     /* True if we are at the end of input */
@@ -1942,7 +1985,7 @@ static public $yy_action = array(
                         $this->yy_syntax_error($yymajor, $yytokenvalue);
                     }
                     $yymx = $this->yystack[$this->yyidx]->major;
-                    if ($yymx == self::YYERRORSYMBOL || $yyerrorhit ){
+                    if ($yymx == self::YYERRORSYMBOL || $yyerrorhit) {
                         if (self::$yyTraceFILE) {
                             fprintf(self::$yyTraceFILE, "%sDiscard input token %s\n",
                                 self::$yyTracePrompt, self::$yyTokenName[$yymajor]);

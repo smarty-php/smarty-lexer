@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -23,7 +23,7 @@
  */
 /**
  * The grammar parser for lemon grammar files.
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -140,7 +140,7 @@ class PHP_ParserGenerator_Parser
     public $prevrule;
     /**
      * Keyword of a declaration
-     * 
+     *
      * This is one of the %keyword keywords in the grammar file
      * @var string
      */
@@ -154,7 +154,7 @@ class PHP_ParserGenerator_Parser
     public $declargslot = array();
     /**
      * Where the declaration linenumber is put
-     * 
+     *
      * This is assigned as a reference to an internal variable
      * @var mixed
      */
@@ -176,7 +176,7 @@ class PHP_ParserGenerator_Parser
      */
     private $lemon;
 
-    function __construct(PHP_ParserGenerator $lem)
+    public function __construct(PHP_ParserGenerator $lem)
     {
         $this->lemon = $lem;
     }
@@ -247,38 +247,40 @@ class PHP_ParserGenerator_Parser
 
     /**
      * In spite of its name, this function is really a scanner.
-     * 
+     *
      * It reads in the entire input file (all at once) then tokenizes it.
      * Each token is passed to the function "parseonetoken" which builds all
      * the appropriate data structures in the global state vector "gp".
      * @param PHP_ParserGenerator_Data
      */
-    function Parse(PHP_ParserGenerator_Data $gp)
+    public function Parse(PHP_ParserGenerator_Data $gp)
     {
         $startline = 0;
-    
+
         $this->gp = $gp;
         $this->filename = $gp->filename;
         $this->errorcnt = 0;
         $this->state = self::INITIALIZE;
-    
+
         /* Begin by reading the input file */
         $filebuf = file_get_contents($this->filename);
         if (!$filebuf) {
             PHP_ParserGenerator::ErrorMsg($this->filename, 0, "Can't open this file for reading.");
             $gp->errorcnt++;
+
             return;
         }
         if (filesize($this->filename) != strlen($filebuf)) {
             ErrorMsg($this->filename, 0, "Can't read in all %d bytes of this file.",
                 filesize($this->filename));
             $gp->errorcnt++;
+
             return;
         }
 
         /* Make an initial pass through the file to handle %ifdef and %ifndef */
         $this->preprocess_input($filebuf);
-    
+
         /* Now scan the text of the input file */
         $lineno = 1;
         for ($cp = 0, $c = $filebuf[0]; $cp < strlen($filebuf); $cp++) {
@@ -410,7 +412,7 @@ class PHP_ParserGenerator_Parser
      * Parse a single token
      * @param string token
      */
-    function parseonetoken($token)
+    public function parseonetoken($token)
     {
         $x = $token;
         $this->a = 0; // for referencing in WAITING_FOR_DECL_KEYWORD
@@ -544,7 +546,7 @@ class PHP_ParserGenerator_Parser
                                 continue;
                             }
                             if (isset($used[$symbol])) {
-                                PHP_ParserGenerator::ErrorMsg($this->filename, 
+                                PHP_ParserGenerator::ErrorMsg($this->filename,
                                     $this->tokenlineno,
                                     "RHS symbol \"%s\" used multiple times.",
                                     $symbol);
@@ -646,7 +648,7 @@ class PHP_ParserGenerator_Parser
                 }
                 break;
             case self::WAITING_FOR_DECL_KEYWORD:
-                if(preg_match('/[A-Za-z]/', $x[0])) {
+                if (preg_match('/[A-Za-z]/', $x[0])) {
                     $this->declkeyword = $x;
                     $this->declargslot = &$this->a;
                     $this->decllnslot = &$this->a;
@@ -830,8 +832,8 @@ class PHP_ParserGenerator_Parser
     /**
      * return a descriptive string for a multi-terminal token.
      *
-     * @param string $a
-     * @param string $b
+     * @param  string $a
+     * @param  string $b
      * @return string
      */
     private function _printmulti($a, $b)
@@ -840,6 +842,7 @@ class PHP_ParserGenerator_Parser
             $a = '';
         }
         $a .= $b->name . '|';
+
         return $a;
     }
 }

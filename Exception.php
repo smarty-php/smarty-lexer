@@ -24,7 +24,6 @@
  * @since      File available since Release 1.3.3
  */
 
-
 /**
  * Base PEAR_Exception Class
  *
@@ -152,11 +151,11 @@ class PEAR_Exception extends Exception
     }
 
     /**
-     * @param mixed $callback  - A valid php callback, see php func is_callable()
+     * @param mixed $callback - A valid php callback, see php func is_callable()
      *                         - A PEAR_Exception::OBSERVER_* constant
      *                         - An array(const PEAR_Exception::OBSERVER_*,
      *                           mixed $options)
-     * @param string $label    The name of the observer. Use this if you want
+     * @param string $label The name of the observer. Use this if you want
      *                         to remove it later with removeObserver()
      */
     public static function addObserver($callback, $label = 'default')
@@ -295,7 +294,7 @@ class PEAR_Exception extends Exception
     }
 
     public function getTraceSafe()
-    {   
+    {
         if (!isset($this->_trace)) {
             $this->_trace = $this->getTrace();
             if (empty($this->_trace)) {
@@ -303,18 +302,21 @@ class PEAR_Exception extends Exception
                 $this->_trace = array($backtrace[count($backtrace)-1]);
             }
         }
+
         return $this->_trace;
     }
 
     public function getErrorClass()
     {
         $trace = $this->getTraceSafe();
+
         return $trace[0]['class'];
     }
 
     public function getErrorMethod()
     {
         $trace = $this->getTraceSafe();
+
         return $trace[0]['function'];
     }
 
@@ -323,6 +325,7 @@ class PEAR_Exception extends Exception
         if (isset($_SERVER['REQUEST_URI'])) {
             return $this->toHtml();
         }
+
         return $this->toText();
     }
 
@@ -360,7 +363,7 @@ class PEAR_Exception extends Exception
                     elseif (is_bool($arg)) $args[] = $arg ? 'true' : 'false';
                     elseif (is_int($arg) || is_double($arg)) $args[] = $arg;
                     else {
-                        $arg = (string)$arg;
+                        $arg = (string) $arg;
                         $str = htmlspecialchars(substr($arg, 0, 16));
                         if (strlen($arg) > 16) $str .= '&hellip;';
                         $args[] = "'" . $str . "'";
@@ -377,6 +380,7 @@ class PEAR_Exception extends Exception
                . '<td>{main}</td>'
                . '<td>&nbsp;</td></tr>' . "\n"
                . '</table>';
+
         return $html;
     }
 
@@ -390,8 +394,7 @@ class PEAR_Exception extends Exception
                    . $cause['message'] . ' in ' . $cause['file']
                    . ' on line ' . $cause['line'] . "\n";
         }
+
         return $causeMsg . $this->getTraceAsString();
     }
 }
-
-?>

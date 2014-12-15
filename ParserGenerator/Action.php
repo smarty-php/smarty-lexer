@@ -1,14 +1,14 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
  * PHP version 5
  *
  * LICENSE:
- * 
+ *
  * Copyright (c) 2006, Gregory Beaver <cellog@php.net>
  * All rights reserved.
  *
@@ -47,7 +47,7 @@
  */
 /**
  * Every shift or reduce operation is stored as one of the following objects.
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -55,7 +55,8 @@
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Action {
+class PHP_ParserGenerator_Action
+{
     const SHIFT = 1,
     ACCEPT = 2,
     REDUCE = 3,
@@ -111,10 +112,10 @@ class PHP_ParserGenerator_Action {
 
     /**
      * Compare two actions
-     * 
+     *
      * This is used by {@link Action_sort()} to compare actions
      */
-    static function actioncmp(PHP_ParserGenerator_Action $ap1,
+    public static function actioncmp(PHP_ParserGenerator_Action $ap1,
                               PHP_ParserGenerator_Action $ap2)
     {
         $rc = $ap1->sp->index - $ap2->sp->index;
@@ -149,10 +150,11 @@ class PHP_ParserGenerator_Action {
             }
             $rc = $ap1->x->index - $ap2->x->index;
         }
+
         return $rc;
     }
 
-    function display($processed = false)
+    public function display($processed = false)
     {
         $map = array(
             self::ACCEPT => 'ACCEPT',
@@ -179,7 +181,7 @@ class PHP_ParserGenerator_Action {
      * @param PHP_ParserGenerator_Symbol
      * @param PHP_ParserGenerator_State|PHP_ParserGenerator_Rule
      */
-    static function Action_add(&$app, $type, PHP_ParserGenerator_Symbol $sp, $arg)
+    public static function Action_add(&$app, $type, PHP_ParserGenerator_Symbol $sp, $arg)
     {
         $new = new PHP_ParserGenerator_Action;
         $new->next = $app;
@@ -195,9 +197,10 @@ class PHP_ParserGenerator_Action {
      * Sort parser actions
      * @see PHP_ParserGenerator_Data::FindActions()
      */
-    static function Action_sort(PHP_ParserGenerator_Action $ap)
+    public static function Action_sort(PHP_ParserGenerator_Action $ap)
     {
         $ap = PHP_ParserGenerator::msort($ap, 'next', array('PHP_ParserGenerator_Action', 'actioncmp'));
+
         return $ap;
     }
 
@@ -206,14 +209,13 @@ class PHP_ParserGenerator_Action {
      * nothing was actually printed.
      * @see PHP_ParserGenerator_Data::ReportOutput()
      */
-    function PrintAction($fp, $indent)
+    public function PrintAction($fp, $indent)
     {
         if (!$fp) {
             $fp = STDOUT;
         }
         $result = 1;
-        switch ($this->type)
-        {
+        switch ($this->type) {
             case self::SHIFT:
                 fprintf($fp, "%${indent}s shift  %d", $this->sp->name, $this->x->statenum);
                 break;
@@ -235,7 +237,7 @@ class PHP_ParserGenerator_Action {
                 $result = 0;
                 break;
         }
+
         return $result;
     }
 }
-?>

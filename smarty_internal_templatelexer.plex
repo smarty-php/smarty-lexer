@@ -91,7 +91,6 @@
              $this->rdel_length = strlen($this->smarty->right_delimiter);
              $this->smarty_token_names['LDEL'] =	$this->smarty->left_delimiter;
              $this->smarty_token_names['RDEL'] =	$this->smarty->right_delimiter;
-             $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
           }
 
          public function PrintTrace()
@@ -297,20 +296,12 @@
        $this->token = Smarty_Internal_Templateparser::TP_ASPENDTAG;
      }
      text {
-       if ($this->mbstring_overload) {
-         $to = mb_strlen($this->data,'latin1');
-       } else {
-         $to = strlen($this->data);
-       }
+       $to = strlen($this->data);
        preg_match("/{$this->ldel}|<\?|\?>|<%|%>/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
        if (isset($match[0][1])) {
          $to = $match[0][1];
        }
-       if ($this->mbstring_overload) {
-         $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-       } else {
-         $this->value = substr($this->data,$this->counter,$to-$this->counter);
-       }
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
        $this->token = Smarty_Internal_Templateparser::TP_TEXT;
      }
 
@@ -597,22 +588,14 @@
        $this->token = Smarty_Internal_Templateparser::TP_ASPENDTAG;
      }
      text {
-       if ($this->mbstring_overload) {
-         $to = mb_strlen($this->data,'latin1');
-       } else {
-         $to = strlen($this->data);
-       }
+       $to = strlen($this->data);
        preg_match("/{$this->ldel}\/?literal{$this->rdel}|<\?|<%|\?>|%>/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
        if (isset($match[0][1])) {
          $to = $match[0][1];
        } else {
          $this->compiler->trigger_template_error ("missing or misspelled literal closing tag");
        }
-       if ($this->mbstring_overload) {
-         $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-       } else {
-         $this->value = substr($this->data,$this->counter,$to-$this->counter);
-       }
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
        $this->token = Smarty_Internal_Templateparser::TP_LITERAL;
      }
      */
@@ -684,16 +667,8 @@
        $this->token = Smarty_Internal_Templateparser::TP_TEXT;
      }
      text {
-       if ($this->mbstring_overload) {
-         $to = mb_strlen($this->data,'latin1');
-       } else {
-         $to = strlen($this->data);
-       }
-       if ($this->mbstring_overload) {
-         $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-       } else {
-         $this->value = substr($this->data,$this->counter,$to-$this->counter);
-       }
+       $to = strlen($this->data);
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
        $this->token = Smarty_Internal_Templateparser::TP_TEXT;
      }
      */
@@ -722,27 +697,26 @@
        }
      }
      text {
-       if ($this->mbstring_overload) {
-         $to = mb_strlen($this->data,'latin1');
-       } else {
-         $to = strlen($this->data);
-       }
+       $to = strlen($this->data);
        preg_match("/SMARTYldel\s*((\/)?strip\s*SMARTYrdel|block\s+)/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
        if (isset($match[0][1])) {
          $to = $match[0][1];
        }
-       if ($this->mbstring_overload) {
-         $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-       } else {
-         $this->value = substr($this->data,$this->counter,$to-$this->counter);
-       }
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
        return false;
      }
 
      */
      /*!lex2php
      %statename CHILDBLOCK
-
+     ldel literal rdel {
+       if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
+          $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+       } else {
+         $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+         $this->yypushstate(self::CHILDLITERAL);
+        }
+     }
      ldel block {
        if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
           $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
@@ -768,23 +742,45 @@
        }
      }
      text {
-       if ($this->mbstring_overload) {
-         $to = mb_strlen($this->data,'latin1');
-       } else {
-         $to = strlen($this->data);
-       }
-       preg_match("/SMARTYldel\s*((\/)?block(\s|SMARTYrdel)|[\$]smarty\.block\.(child|parent)\s*SMARTYrdel)/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
+       $to = strlen($this->data);
+       preg_match("/SMARTYldel\s*(literal\s*SMARTYrdel|(\/)?block(\s|SMARTYrdel)|[\$]smarty\.block\.(child|parent))/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
        if (isset($match[0][1])) {
          $to = $match[0][1];
        }
-       if ($this->mbstring_overload) {
-         $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-       } else {
-         $this->value = substr($this->data,$this->counter,$to-$this->counter);
-       }
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
        $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
      }
      */
+     /*!lex2php
+     %statename CHILDLITERAL
+     ldel literal rdel {
+       if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
+          $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+       } else {
+         $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+         $this->yypushstate(self::CHILDLITERAL);
+       }
      }
+     ldel slash literal rdel {
+       if ($this->smarty->auto_literal && isset($this->value[$this->ldel_length]) ? strpos(" \n\t\r", $this->value[$this->ldel_length]) !== false : false) {
+          $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+       } else {
+         $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+         $this->yypopstate();
+       }
+     }
+     text {
+       $to = strlen($this->data);
+       preg_match("/{$this->ldel}\/?literal\s*{$this->rdel}/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
+       if (isset($match[0][1])) {
+         $to = $match[0][1];
+       } else {
+         $this->compiler->trigger_template_error ("missing or misspelled literal closing tag");
+       }
+       $this->value = substr($this->data,$this->counter,$to-$this->counter);
+       $this->token = Smarty_Internal_Templateparser::TP_BLOCKSOURCE;
+     }
+     */
+ }
 
      

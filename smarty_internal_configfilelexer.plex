@@ -27,15 +27,15 @@ class Smarty_Internal_Configfilelexer
    				);
     				
     				
-    function __construct($data, $smarty)
+    function __construct($data, $compiler)
     {
         // set instance object
         self::instance($this); 
         $this->data = $data . "\n"; //now all lines are \n-terminated
         $this->counter = 0;
         $this->line = 1;
-        $this->smarty = $smarty; 
-        $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
+        $this->compiler = $compiler;
+        $this->smarty = $compiler->smarty;
     }
     public static function &instance($new_instance = null)
     {
@@ -205,25 +205,16 @@ tripple_quotes_end {
     $this->yypushstate(self::START);
 }
 text {
-  if ($this->mbstring_overload) {
-    $to = mb_strlen($this->data,'latin1');
-  } else {
-    $to = strlen($this->data);
-  }
+  $to = strlen($this->data);
   preg_match("/\"\"\"[ \t\r]*[\n#;]/",$this->data,$match,PREG_OFFSET_CAPTURE,$this->counter);
   if (isset($match[0][1])) {
     $to = $match[0][1];
   } else {
     $this->compiler->trigger_template_error ("missing or misspelled literal closing tag");
   }  
-  if ($this->mbstring_overload) {
-    $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
-  } else {
-    $this->value = substr($this->data,$this->counter,$to-$this->counter);
-  }
+  $this->value = substr($this->data,$this->counter,$to-$this->counter);
   $this->token = Smarty_Internal_Configfileparser::TPC_TRIPPLE_TEXT;
 }
 */
 
 }
-?>

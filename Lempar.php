@@ -21,7 +21,7 @@ class ParseyyToken implements ArrayAccess
 
     public function __toString()
     {
-        return $this->_string;
+        return $this->string;
     }
 
     public function offsetExists($offset)
@@ -471,7 +471,7 @@ class ParseyyStackEntry
         if ($this->yyTraceFILE) {
             fprintf($this->yyTraceFILE, "%sAccept!\n", $this->yyTracePrompt);
         } while ($this->yyidx >= 0) {
-            $stack = $this->yy_pop_parser_stack();
+            $this->yy_pop_parser_stack();
         }
 %%
     }

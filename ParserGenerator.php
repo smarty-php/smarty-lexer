@@ -412,24 +412,27 @@ class PHP_ParserGenerator
 */
 
     /* The main program.  Parse the command line and do it... */
-    public function main()
+    public function main($filename = null)
     {
         $lem = new PHP_ParserGenerator_Data;
+        if (!isset($filename)) {
+            $this->OptInit($_SERVER['argv']);
+            if ($this->version) {
+                echo "Lemon version 1.0/PHP_ParserGenerator port version 0.1.5\n";
+                exit(0);
+            }
+            if ($this->OptNArgs($_SERVER['argv']) != 1) {
+                echo "Exactly one filename argument is required.\n";
+                exit(1);
+            }
 
-        $this->OptInit($_SERVER['argv']);
-        if ($this->version) {
-            echo "Lemon version 1.0/PHP_ParserGenerator port version 0.1.5\n";
-            exit(0);
-        }
-        if ($this->OptNArgs($_SERVER['argv']) != 1) {
-            echo "Exactly one filename argument is required.\n";
-            exit(1);
+            /* Initialize the machine */
+            $lem->argv0 = $_SERVER['argv'][0];
+            $lem->filename = $this->OptArg(0, $_SERVER['argv']);
+        } else {
+            $lem->filename = $filename;
         }
         $lem->errorcnt = 0;
-
-        /* Initialize the machine */
-        $lem->argv0 = $_SERVER['argv'][0];
-        $lem->filename = $this->OptArg(0, $_SERVER['argv']);
         $a = pathinfo($lem->filename);
         if (isset($a['extension'])) {
             $ext = '.' . $a['extension'];
@@ -539,7 +542,7 @@ class PHP_ParserGenerator
         if ($lem->nconflict) {
             printf("%d parsing conflicts.\n", $lem->nconflict);
         }
-        exit($lem->errorcnt + $lem->nconflict);
+        //exit($lem->errorcnt + $lem->nconflict);
 
         return ($lem->errorcnt + $lem->nconflict);
     }

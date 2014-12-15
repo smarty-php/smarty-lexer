@@ -30,7 +30,7 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
 
     public function __toString()
     {
-        return $this->_string;
+        return $this->string;
     }
 
     public function offsetExists($offset)
@@ -280,7 +280,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     foreach ($yy_yymore_patterns[' . $this->token . '] as $index => $rule) {
                         if (preg_match(\'/\' . $rule . \'/' . $this->patternFlags . '\',
                                 ' . $this->input . ', $yymatches, null, ' . $this->counter . ')) {
-                            $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
+                            $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
                             if ($match) {
                                 if (strlen($yymatches[0]) > strlen($match[0][0])) {
                                     $match = array($yymatches, $index); // matches, token
@@ -356,7 +356,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
              $this->counter .
                     ')) {
                 $yysubmatches = $yymatches;
-                $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
+                $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
                 if (!count($yymatches)) {
                     throw new Exception(\'Error: lexing failed because a rule matched\' .
                         \' an empty string.  Input "\' . substr(' . $this->input . ',

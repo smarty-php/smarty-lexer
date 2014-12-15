@@ -285,7 +285,8 @@ class PHP_ParserGenerator_Parser
         $lineno = 1;
         for ($cp = 0, $c = $filebuf[0]; $cp < strlen($filebuf); $cp++) {
             $c = $filebuf[$cp];
-            if ($c == "\n") $lineno++;              /* Keep track of the line number */
+            $lineno = substr_count(substr($filebuf, 0, $cp), "\n")+1;
+            //if ($c == "\n") $lineno++;              /* Keep track of the line number */
             if (trim($c) === '') {
                 continue;
             }  /* Skip all white space */

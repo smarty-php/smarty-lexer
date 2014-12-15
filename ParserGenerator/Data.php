@@ -1049,7 +1049,7 @@ class PHP_ParserGenerator_Data
         $lineno++;
         fwrite($out, $str);
         $lineno += count(explode("\n", $str)) - 1;
-        $this->tplt_linedir($out, $lineno + 2, $this->outname);
+        //$this->tplt_linedir($out, $lineno + 2, $this->outname);
         $lineno += 2;
     }
     /**#@-*/
@@ -1640,6 +1640,7 @@ class PHP_ParserGenerator_Data
         $this->tplt_print($out, $this->extracode, $this->extracodeln, $lineno);
 
         fclose($in);
+        fwrite($out, "\n");
         fclose($out);
     }
 
@@ -1654,11 +1655,11 @@ class PHP_ParserGenerator_Data
         /* Generate code to do the reduce action */
         if ($rp->code) {
             $this->tplt_linedir($out, $rp->line, $this->filename);
-            fwrite($out, "    function yy_r$rp->index(){" . $rp->code);
+            fwrite($out, "    function yy_r$rp->index()".'{' . $rp->code);
             $linecnt += count(explode("\n", $rp->code)) - 1;
             $lineno += 3 + $linecnt;
             fwrite($out, "    }\n");
-            $this->tplt_linedir($out, $lineno, $this->outname);
+            //$this->tplt_linedir($out, $lineno, $this->outname);
         } /* End if( rp->code ) */
     }
 
@@ -1844,7 +1845,7 @@ class PHP_ParserGenerator_Data
         }
         $lineno += 3 + $linecnt;
         fwrite($out, "}\n");
-        $this->tplt_linedir($out, $lineno, $this->outname);
+        //$this->tplt_linedir($out, $lineno, $this->outname);
     }
 
     /**

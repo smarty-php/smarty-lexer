@@ -4,7 +4,10 @@
 The "smarty/smarty-lexer" package is used to generate the lexer and parser class files.
 
 
-**NOTE: The "smarty/smarty-lexer" version must be identical with the target "smarty/smarty" version**
+**For Smarty versions >= 3.1.22 require "smarty/smarty-lexer": "~3.1" to get the latest version of the package**
+
+
+**For Smarty versions <= 3.1.21 The "smarty/smarty-lexer" version must be identical with the target Smarty version**
 
 Use for example 
 
@@ -13,7 +16,9 @@ Use for example
 	}
 
 in your composer.json file to get the generator for Smarty 3.1.8.
- 
+
+
+
 To generate the template lexer and parser run Create_Template_Parser.php.
 It will create
    smarty_internal_templatelexer.php from smarty_internal_templatelexer.plex

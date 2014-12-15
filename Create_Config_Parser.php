@@ -1,29 +1,28 @@
 <?php
+$smartyPath = '../smarty/libs/sysplugins/';
+$lexerPath = '../smarty/lexer/';
+if (!is_dir($lexerPath)) {
+    echo '<br><br>Fatal error: Missing lexer / parser definition folder \'lexer\' in distribution <br>';
+    exit(1);
+}
+copy("{$smartyPath}smarty_internal_configfilelexer.php", "{$lexerPath}smarty_internal_configfilelexer.php.bak");
+copy("{$smartyPath}smarty_internal_configfileparser.php", "{$lexerPath}smarty_internal_configfileparser.php.bak");
+
 // Create Lexer
 require_once './LexerGenerator.php';
-$lex = new PHP_LexerGenerator('smarty_internal_configfilelexer.plex');
-$contents = file_get_contents('smarty_internal_configfilelexer.php');
-file_put_contents('smarty_internal_configfilelexer.php', $contents."\n");
-
+$lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_configfilelexer.plex");
+unset($lex);
 
 // Create Parser
-passthru("php ./ParserGenerator/cli.php smarty_internal_configfileparser.y");
+require_once './ParserGenerator.php';
+$parser = new PHP_ParserGenerator();
+$parser->main("{$lexerPath}smarty_internal_configfileparser.y");
+unset($parser);
 
-$contents = file_get_contents('smarty_internal_configfileparser.php');
-$contents = '<?php
-/**
-* Smarty Internal Plugin Configfileparser
-*
-* This is the config file parser.
-* It is generated from the internal.configfileparser.y file
-* @package Smarty
-* @subpackage Compiler
-* @author Uwe Tews
-*/
-'.substr($contents,6);
-file_put_contents('smarty_internal_configfileparser.php', $contents."\n");
+$content = file_get_contents("{$lexerPath}smarty_internal_configfileparser.php");
+$content = preg_replace(array('#/\*\s*\d+\s*\*/#', "#'lhs'#", "#'rhs'#"), array('', 0, 1), $content);
+file_put_contents("{$lexerPath}smarty_internal_configfileparser.php", $content);
 
-if (is_dir('../smarty/libs/sysplugins')) {
-    copy('smarty_internal_configfilelexer.php', '../smarty/libs/sysplugins/smarty_internal_configfilelexer.php');
-    copy('smarty_internal_configfileparser.php', '../smarty/libs/sysplugins/smarty_internal_configfileparser.php');
-}
+copy("{$lexerPath}smarty_internal_configfilelexer.php", "{$smartyPath}smarty_internal_configfilelexer.php");
+copy("{$lexerPath}smarty_internal_configfileparser.php", "{$smartyPath}smarty_internal_configfileparser.php");
+

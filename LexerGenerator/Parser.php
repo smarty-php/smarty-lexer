@@ -343,36 +343,29 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         $pattern .= implode('|', $patterns);
         $pattern .= '/' . $this->patternFlags;
         fwrite($this->out, '
-        $tokenMap = ' . $tokenindex . ';
+        if (!isset($this->yy_global_pattern' . $ruleindex . ')) {
+            $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'iS";
+        }
         if (' . $this->counter . ' >=  strlen(' . $this->input . ')) {
             return false; // end of input
         }
         ');
-        fwrite($this->out, '$yy_global_pattern = "' .
-            $pattern . 'iS";' . "\n");
         fwrite($this->out, '
         do {
-            if (preg_match($yy_global_pattern,' . $this->input . ', $yymatches, null, ' .
+            if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, null, ' .
              $this->counter .
                     ')) {
                 $yysubmatches = $yymatches;
                 $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
-                if (!count($yymatches)) {
+                if (empty($yymatches)) {
                     throw new Exception(\'Error: lexing failed because a rule matched\' .
                         \' an empty string.  Input "\' . substr(' . $this->input . ',
                         ' . $this->counter . ', 5) . \'... state ' . $statename . '\');
                 }
                 next($yymatches); // skip global match
                 ' . $this->token . ' = key($yymatches); // token number
-                if ($tokenMap[' . $this->token . ']) {
-                    // extract sub-patterns for passing to lex function
-                    $yysubmatches = array_slice($yysubmatches, ' . $this->token . ' + 1,
-                        $tokenMap[' . $this->token . ']);
-                } else {
-                    $yysubmatches = array();
-                }
                 ' . $this->value . ' = current($yymatches); // token value
-                $r = $this->{\'yy_r' . $ruleindex . '_\' . ' . $this->token . '}($yysubmatches);
+                $r = $this->{\'yy_r' . $ruleindex . '_\' . ' . $this->token . '}();
                 if ($r === null) {
                     ' . $this->counter . ' += strlen(' . $this->value . ');
                     ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
@@ -496,7 +489,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 ');
         }
         foreach ($rules as $i => $rule) {
-            fwrite($this->out, '    function yy_r' . $this -> _outRuleIndex . '_' . $ruleMap[$i] . '($yy_subpatterns)
+            fwrite($this->out, '    function yy_r' . $this -> _outRuleIndex . '_' . $ruleMap[$i] . '()
     {
 ' . $rule['code'] .
 '    }
@@ -917,7 +910,7 @@ static public $yy_action = array(
      */
     public function yy_pop_parser_stack()
     {
-        if (!count($this->yystack)) {
+        if (empty($this->yystack)) {
             return;
         }
         $yytos = array_pop($this->yystack);
@@ -1868,7 +1861,6 @@ static public $yy_action = array(
         //mixed $yygotominor;        /* The LHS of the rule reduced */
         //PHP_LexerGenerator_ParseryyStackEntry $yymsp;            /* The top of the parser's stack */
         //int $yysize;                     /* Amount to pop the stack */
-        $yymsp = $this->yystack[$this->yyidx];
         if ($this->yyTraceFILE && $yyruleno >= 0
               && $yyruleno < count(self::$yyRuleName)) {
             fprintf($this->yyTraceFILE, "%sReduce (%d) [%s].\n",
@@ -1877,7 +1869,7 @@ static public $yy_action = array(
         }
 
         $this->_retvalue = $yy_lefthand_side = null;
-        if (array_key_exists($yyruleno, self::$yyReduceMap)) {
+        if (isset(self::$yyReduceMap[$yyruleno])) {
             // call the action
             $this->_retvalue = null;
             $this->{'yy_r' . self::$yyReduceMap[$yyruleno]}();

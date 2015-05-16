@@ -1484,7 +1484,7 @@ class PHP_ParserGenerator_Data
                 throw new Exception('rp->index != i and should be');
             }
             // change next line
-            fprintf($out, " /* %3d */ \"%s ::=", $i, $rp->lhs->name);
+            fprintf($out, " /* %3d */ '%s ::=", $i, $rp->lhs->name);
             for ($j = 0; $j < $rp->nrhs; $j++) {
                 $sp = $rp->rhs[$j];
                 fwrite($out,' ' . $sp->name);
@@ -1494,7 +1494,7 @@ class PHP_ParserGenerator_Data
                     }
                 }
             }
-            fwrite($out, "\",\n");
+            fwrite($out, "',\n");
             $lineno++;
         }
         $this->tplt_xfer($this->name, $in, $out, $lineno);

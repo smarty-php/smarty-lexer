@@ -706,7 +706,6 @@ class ParseyyStackEntry
         //mixed $yygotominor;        /* The LHS of the rule reduced */
         //ParseyyStackEntry $yymsp;            /* The top of the parser's stack */
         //int $yysize;                     /* Amount to pop the stack */
-        $yymsp = $this->yystack[$this->yyidx];
         if (self::$yyTraceFILE && $yyruleno >= 0
               && $yyruleno < count(self::$yyRuleName)) {
             fprintf(self::$yyTraceFILE, "%sReduce (%d) [%s].\n",
@@ -715,7 +714,7 @@ class ParseyyStackEntry
         }
 
         $this->_retvalue = $yy_lefthand_side = null;
-        if (array_key_exists($yyruleno, self::$yyReduceMap)) {
+        if (isset(self::$yyReduceMap[$yyruleno])) {
             // call the action
             $this->_retvalue = null;
             $this->{'yy_r' . self::$yyReduceMap[$yyruleno]}();

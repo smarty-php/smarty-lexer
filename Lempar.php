@@ -139,7 +139,7 @@ class ParseyyStackEntry
 
     public function yy_pop_parser_stack()
     {
-        if (!count($this->yystack)) {
+        if (empty($this->yystack)) {
             return;
         }
         $yytos = array_pop($this->yystack);
@@ -167,10 +167,18 @@ class ParseyyStackEntry
 
     public function yy_get_expected_tokens($token)
     {
+        static $res3 = array();
+        static $res4 = array();
         $state = $this->yystack[$this->yyidx]->stateno;
         $expected = self::$yyExpectedTokens[$state];
-        if (in_array($token, self::$yyExpectedTokens[$state], true)) {
-            return $expected;
+        if (isset($res3[$state][$token])) {
+            if ($res3[$state][$token]) {
+                return $expected;
+            }
+        } else {
+            if ($res3[$state][$token] = in_array($token, self::$yyExpectedTokens[$state], true)) {
+                return $expected;
+            }
         }
         $stack = $this->yystack;
         $yyidx = $this->yyidx;
@@ -194,12 +202,18 @@ class ParseyyStackEntry
                         self::$yyRuleInfo[$yyruleno]['lhs']);
                     if (isset(self::$yyExpectedTokens[$nextstate])) {
                 $expected = array_merge($expected, self::$yyExpectedTokens[$nextstate]);
-                            if (in_array($token,
-                                  self::$yyExpectedTokens[$nextstate], true)) {
-                            $this->yyidx = $yyidx;
-                            $this->yystack = $stack;
-
-                            return array_unique($expected);
+                        if (isset($res4[$nextstate][$token])) {
+                            if ($res4[$nextstate][$token]) {
+                                $this->yyidx = $yyidx;
+                                $this->yystack = $stack;
+                                return array_unique($expected);
+                            }
+                        } else {
+                            if ($res4[$nextstate][$token] = in_array($token, self::$yyExpectedTokens[$nextstate], true)) {
+                                $this->yyidx = $yyidx;
+                                $this->yystack = $stack;
+                                return array_unique($expected);
+                            }
                         }
                     }
                     if ($nextstate < self::YYNSTATE) {
@@ -237,13 +251,21 @@ class ParseyyStackEntry
 
     public function yy_is_expected_token($token)
     {
+        static $res = array();
+        static $res2 = array();
         if ($token === 0) {
             return true; // 0 is not part of this
         }
         $state = $this->yystack[$this->yyidx]->stateno;
-        if (in_array($token, self::$yyExpectedTokens[$state], true)) {
-            return true;
-        }
+        if (isset($res[$state][$token])) {
+            if ($res[$state][$token]) {
+                return true;
+            }
+        } else {
+            if ($res[$state][$token] = in_array($token, self::$yyExpectedTokens[$state], true)) {
+                return true;
+            }
+       }
         $stack = $this->yystack;
         $yyidx = $this->yyidx;
         do {
@@ -264,12 +286,18 @@ class ParseyyStackEntry
                     $nextstate = $this->yy_find_reduce_action(
                         $this->yystack[$this->yyidx]->stateno,
                         self::$yyRuleInfo[$yyruleno]['lhs']);
-                    if (isset(self::$yyExpectedTokens[$nextstate]) &&
-                          in_array($token, self::$yyExpectedTokens[$nextstate], true)) {
-                        $this->yyidx = $yyidx;
-                        $this->yystack = $stack;
-
-                        return true;
+                    if (isset($res2[$nextstate][$token])) {
+                        if ($res2[$nextstate][$token]) {
+                            $this->yyidx = $yyidx;
+                            $this->yystack = $stack;
+                            return true;
+                        }
+                    } else {
+                        if ($res2[$nextstate][$token] = (isset(self::$yyExpectedTokens[$nextstate]) && in_array($token, self::$yyExpectedTokens[$nextstate], true))) {
+                            $this->yyidx = $yyidx;
+                            $this->yystack = $stack;
+                            return true;
+                        }
                     }
                     if ($nextstate < self::YYNSTATE) {
                         // we need to shift a non-terminal
@@ -386,7 +414,7 @@ class ParseyyStackEntry
         $yytos->stateno = $yyNewState;
         $yytos->major = $yyMajor;
         $yytos->minor = $yypMinor;
-        array_push($this->yystack, $yytos);
+        $this->yystack[] = $yytos;
         if ($this->yyTraceFILE && $this->yyidx > 0) {
             fprintf($this->yyTraceFILE, "%sShift %d\n", $this->yyTracePrompt,
                 $yyNewState);
@@ -412,7 +440,6 @@ class ParseyyStackEntry
 
     public function yy_reduce($yyruleno)
     {
-        $yymsp = $this->yystack[$this->yyidx];
         if ($this->yyTraceFILE && $yyruleno >= 0
               && $yyruleno < count(self::$yyRuleName)) {
             fprintf($this->yyTraceFILE, "%sReduce (%d) [%s].\n",
@@ -421,7 +448,7 @@ class ParseyyStackEntry
         }
 
         $this->_retvalue = $yy_lefthand_side = null;
-        if (array_key_exists($yyruleno, self::$yyReduceMap)) {
+        if (isset(self::$yyReduceMap[$yyruleno])) {
             // call the action
             $this->_retvalue = null;
             $this->{'yy_r' . self::$yyReduceMap[$yyruleno]}();
@@ -487,7 +514,7 @@ class ParseyyStackEntry
             $x->stateno = 0;
             $x->major = 0;
             $this->yystack = array();
-            array_push($this->yystack, $x);
+            $this->yystack[] = $x;
         }
         $yyendofinput = ($yymajor==0);
 

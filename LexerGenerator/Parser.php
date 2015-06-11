@@ -280,7 +280,11 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     foreach ($yy_yymore_patterns[' . $this->token . '] as $index => $rule) {
                         if (preg_match(\'/\' . $rule . \'/' . $this->patternFlags . '\',
                                 ' . $this->input . ', $yymatches, null, ' . $this->counter . ')) {
-                            $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
+                            if (strlen($yysubmatches[0]) < 200) {
+                                $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
+                            } else {
+                                $yymatches = array_filter($yymatches, \'strlen\');
+                            }
                             if ($match) {
                                 if (strlen($yymatches[0]) > strlen($match[0][0])) {
                                     $match = array($yymatches, $index); // matches, token
@@ -344,7 +348,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         $pattern .= '/' . $this->patternFlags;
         fwrite($this->out, '
         if (!isset($this->yy_global_pattern' . $ruleindex . ')) {
-            $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'iS";
+            $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'isS";
         }
         if (' . $this->counter . ' >=  strlen(' . $this->input . ')) {
             return false; // end of input
@@ -356,7 +360,11 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
              $this->counter .
                     ')) {
                 $yysubmatches = $yymatches;
-                $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
+                if (strlen($yysubmatches[0]) < 200) {
+                    $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
+                } else {
+                    $yymatches = array_filter($yymatches, \'strlen\');
+                }
                 if (empty($yymatches)) {
                     throw new Exception(\'Error: lexing failed because a rule matched\' .
                         \' an empty string.  Input "\' . substr(' . $this->input . ',

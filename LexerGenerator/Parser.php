@@ -350,7 +350,10 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         if (!isset($this->yy_global_pattern' . $ruleindex . ')) {
             $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'isS";
         }
-        if (' . $this->counter . ' >=  strlen(' . $this->input . ')) {
+        if (!isset($this->dataLenght)) {
+            $this->dataLenght = strlen(' . $this->input . ');
+        }
+        if (' . $this->counter . ' >=  $this->dataLenght) {
             return false; // end of input
         }
         ');
@@ -359,13 +362,8 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
             if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, null, ' .
              $this->counter .
                     ')) {
-                $yysubmatches = $yymatches;
-                if (strlen($yysubmatches[0]) < 200) {
-                    $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
-                } else {
-                    $yymatches = array_filter($yymatches, \'strlen\');
-                }
-                if (empty($yymatches)) {
+                 $yymatches = array_filter($yymatches);
+                 if (empty($yymatches)) {
                     throw new Exception(\'Error: lexing failed because a rule matched\' .
                         \' an empty string.  Input "\' . substr(' . $this->input . ',
                         ' . $this->counter . ', 5) . \'... state ' . $statename . '\');
@@ -386,7 +384,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                 } elseif ($r === false) {
                     ' . $this->counter . ' += strlen(' . $this->value . ');
                     ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
-                    if (' . $this->counter . ' >=  strlen(' . $this->input . ')) {
+                    if (' . $this->counter . ' >=  $this->dataLenght) {
                         return false; // end of input
                     }
                     // skip this token
@@ -435,7 +433,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     } elseif ($r === false) {
                         ' . $this->counter . ' += strlen(' . $this->value . ');
                         ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
-                        if (' . $this->counter . ' >=  strlen(' . $this->input . ')) {
+                        if (' . $this->counter . ' >=  $this->dataLenght) {
                             return false; // end of input
                         }
                         // skip this token

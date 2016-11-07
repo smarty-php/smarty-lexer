@@ -362,8 +362,12 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
             if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, null, ' .
              $this->counter .
                     ')) {
-                 $yymatches = array_filter($yymatches);
-                 if (empty($yymatches)) {
+                if (!isset($yymatches[ 0 ][1])) {
+                   $yymatches = preg_grep("/(.|\s)+/", $yymatches);
+                } else {
+                    $yymatches = array_filter($yymatches);
+                }
+                if (empty($yymatches)) {
                     throw new Exception(\'Error: lexing failed because a rule matched\' .
                         \' an empty string.  Input "\' . substr(' . $this->input . ',
                         ' . $this->counter . ', 5) . \'... state ' . $statename . '\');

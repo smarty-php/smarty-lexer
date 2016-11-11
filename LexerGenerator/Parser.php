@@ -350,10 +350,10 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         if (!isset($this->yy_global_pattern' . $ruleindex . ')) {
             $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'isS";
         }
-        if (!isset($this->dataLenght)) {
-            $this->dataLenght = strlen(' . $this->input . ');
+        if (!isset($this->dataLength)) {
+            $this->dataLength = strlen(' . $this->input . ');
         }
-        if (' . $this->counter . ' >=  $this->dataLenght) {
+        if (' . $this->counter . ' >=  $this->dataLength) {
             return false; // end of input
         }
         ');
@@ -388,7 +388,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                 } elseif ($r === false) {
                     ' . $this->counter . ' += strlen(' . $this->value . ');
                     ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
-                    if (' . $this->counter . ' >=  $this->dataLenght) {
+                    if (' . $this->counter . ' >=  $this->dataLength) {
                         return false; // end of input
                     }
                     // skip this token
@@ -437,7 +437,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     } elseif ($r === false) {
                         ' . $this->counter . ' += strlen(' . $this->value . ');
                         ' . $this->line . ' += substr_count(' . $this->value . ', "\n");
-                        if (' . $this->counter . ' >=  $this->dataLenght) {
+                        if (' . $this->counter . ' >=  $this->dataLength) {
                             return false; // end of input
                         }
                         // skip this token

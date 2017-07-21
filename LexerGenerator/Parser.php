@@ -279,7 +279,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     $match = false;
                     foreach ($yy_yymore_patterns[' . $this->token . '] as $index => $rule) {
                         if (preg_match(\'/\' . $rule . \'/' . $this->patternFlags . '\',
-                                ' . $this->input . ', $yymatches, null, ' . $this->counter . ')) {
+                                ' . $this->input . ', $yymatches, 0, ' . $this->counter . ')) {
                             if (strlen($yysubmatches[0]) < 200) {
                                 $yymatches = preg_grep("/(.|\s)+/", $yysubmatches);
                             } else {
@@ -359,7 +359,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         ');
         fwrite($this->out, '
         do {
-            if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, null, ' .
+            if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, 0, ' .
              $this->counter .
                     ')) {
                 if (!isset($yymatches[ 0 ][1])) {

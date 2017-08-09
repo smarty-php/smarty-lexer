@@ -16,10 +16,6 @@ require_once './LexerGenerator.php';
 $lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_templatelexer.plex");
 unset($lex);
 
-$content = file_get_contents("{$lexerPath}smarty_internal_templatelexer.php");
-$content = str_replace(array('SMARTYldel','SMARTYrdel'),array('".$this->ldel."','".$this->rdel."'),$content);
-file_put_contents("{$lexerPath}smarty_internal_templatelexer.php", $content);
-
 // Create Parser
 require_once './ParserGenerator.php';
 $parser = new PHP_ParserGenerator();

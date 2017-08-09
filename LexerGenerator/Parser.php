@@ -348,7 +348,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
         $pattern .= '/' . $this->patternFlags;
         fwrite($this->out, '
         if (!isset($this->yy_global_pattern' . $ruleindex . ')) {
-            $this->yy_global_pattern' . $ruleindex . ' = "' . $pattern . 'isS";
+            $this->yy_global_pattern' . $ruleindex . ' = $this->replace("' . $pattern . 'isS");
         }
         if (!isset($this->dataLength)) {
             $this->dataLength = strlen(' . $this->input . ');

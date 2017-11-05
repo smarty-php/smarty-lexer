@@ -1,68 +1,4 @@
 <?php
-class ParseyyToken implements ArrayAccess
-{
-    public $string = '';
-    public $metadata = array();
-
-    public function __construct($s, $m = array())
-    {
-        if ($s instanceof ParseyyToken) {
-            $this->string = $s->string;
-            $this->metadata = $s->metadata;
-        } else {
-            $this->string = (string) $s;
-            if ($m instanceof ParseyyToken) {
-                $this->metadata = $m->metadata;
-            } elseif (is_array($m)) {
-                $this->metadata = $m;
-            }
-        }
-    }
-
-    public function __toString()
-    {
-        return $this->string;
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->metadata[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->metadata[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        if ($offset === null) {
-            if (isset($value[0])) {
-                $x = ($value instanceof ParseyyToken) ?
-                    $value->metadata : $value;
-                $this->metadata = array_merge($this->metadata, $x);
-
-                return;
-            }
-            $offset = count($this->metadata);
-        }
-        if ($value === null) {
-            return;
-        }
-        if ($value instanceof ParseyyToken) {
-            if ($value->metadata) {
-                $this->metadata[$offset] = $value->metadata;
-            }
-        } elseif ($value) {
-            $this->metadata[$offset] = $value;
-        }
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->metadata[$offset]);
-    }
-}
 
 class ParseyyStackEntry
 {
@@ -188,7 +124,7 @@ class ParseyyStackEntry
                 // reduce action
                 $done = 0;
                 do {
-                    if ($done++ == 100) {
+                    if ($done++ === 100) {
                         $this->yyidx = $yyidx;
                         $this->yystack = $stack;
                         // too much recursion prevents proper detection
@@ -224,7 +160,7 @@ class ParseyyStackEntry
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
                         continue 2;
-                    } elseif ($nextstate == self::YYNSTATE + self::YYNRULE + 1) {
+                    } elseif ($nextstate === self::YYNSTATE + self::YYNRULE + 1) {
                         $this->yyidx = $yyidx;
                         $this->yystack = $stack;
                         // the last token was just ignored, we can't accept
@@ -274,7 +210,7 @@ class ParseyyStackEntry
                 // reduce action
                 $done = 0;
                 do {
-                    if ($done++ == 100) {
+                    if ($done++ === 100) {
                         $this->yyidx = $yyidx;
                         $this->yystack = $stack;
                         // too much recursion prevents proper detection
@@ -307,7 +243,7 @@ class ParseyyStackEntry
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
                         continue 2;
-                    } elseif ($nextstate == self::YYNSTATE + self::YYNRULE + 1) {
+                    } elseif ($nextstate === self::YYNSTATE + self::YYNRULE + 1) {
                         $this->yyidx = $yyidx;
                         $this->yystack = $stack;
                         if (!$token) {
@@ -349,7 +285,7 @@ class ParseyyStackEntry
         if ($i === self::YY_SHIFT_USE_DFLT) {
             return self::$yy_default[$stateno];
         }
-        if ($iLookAhead == self::YYNOCODE) {
+        if ($iLookAhead === self::YYNOCODE) {
             return self::YY_NO_ACTION;
         }
         $i += $iLookAhead;
@@ -380,10 +316,10 @@ class ParseyyStackEntry
             return self::$yy_default[$stateno];
         }
         $i = self::$yy_reduce_ofst[$stateno];
-        if ($i == self::YY_REDUCE_USE_DFLT) {
+        if ($i === self::YY_REDUCE_USE_DFLT) {
             return self::$yy_default[$stateno];
         }
-        if ($iLookAhead == self::YYNOCODE) {
+        if ($iLookAhead === self::YYNOCODE) {
             return self::YY_NO_ACTION;
         }
         $i += $iLookAhead;
@@ -473,7 +409,7 @@ class ParseyyStackEntry
             } else {
                 $this->yy_shift($yyact, $yygoto, $yy_lefthand_side);
             }
-        } elseif ($yyact == self::YYNSTATE + self::YYNRULE + 1) {
+        } elseif ($yyact === self::YYNSTATE + self::YYNRULE + 1) {
             $this->yy_accept();
         }
     }
@@ -540,7 +476,7 @@ class ParseyyStackEntry
                 }
             } elseif ($yyact < self::YYNSTATE + self::YYNRULE) {
                 $this->yy_reduce($yyact - self::YYNSTATE);
-            } elseif ($yyact == self::YY_ERROR_ACTION) {
+            } elseif ($yyact === self::YY_ERROR_ACTION) {
                 if ($this->yyTraceFILE) {
                     fprintf($this->yyTraceFILE, "%sSyntax Error!\n",
                         $this->yyTracePrompt);
@@ -550,7 +486,7 @@ class ParseyyStackEntry
                         $this->yy_syntax_error($yymajor, $yytokenvalue);
                     }
                     $yymx = $this->yystack[$this->yyidx]->major;
-                    if ($yymx == self::YYERRORSYMBOL || $yyerrorhit) {
+                    if ($yymx === self::YYERRORSYMBOL || $yyerrorhit) {
                         if ($this->yyTraceFILE) {
                             fprintf($this->yyTraceFILE, "%sDiscard input token %s\n",
                                 $this->yyTracePrompt, $this->yyTokenName[$yymajor]);
@@ -559,7 +495,7 @@ class ParseyyStackEntry
                         $yymajor = self::YYNOCODE;
                     } else {
                         while ($this->yyidx >= 0 &&
-                                 $yymx != self::YYERRORSYMBOL &&
+                                 $yymx !== self::YYERRORSYMBOL &&
         ($yyact = $this->yy_find_shift_action(self::YYERRORSYMBOL)) >= self::YYNSTATE
                               ){
                             $this->yy_pop_parser_stack();
@@ -568,7 +504,7 @@ class ParseyyStackEntry
                             $this->yy_destructor($yymajor, $yytokenvalue);
                             $this->yy_parse_failed();
                             $yymajor = self::YYNOCODE;
-                        } elseif ($yymx != self::YYERRORSYMBOL) {
+                        } elseif ($yymx !== self::YYERRORSYMBOL) {
                             $u2 = 0;
                             $this->yy_shift($yyact, self::YYERRORSYMBOL, $u2);
                         }
@@ -590,6 +526,6 @@ class ParseyyStackEntry
                 $this->yy_accept();
                 $yymajor = self::YYNOCODE;
             }
-        } while ($yymajor != self::YYNOCODE && $this->yyidx >= 0);
+        } while ($yymajor !== self::YYNOCODE && $this->yyidx >= 0);
     }
 }

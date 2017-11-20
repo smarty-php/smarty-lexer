@@ -61,7 +61,7 @@ class ParseyyStackEntry
         if ($tokenType > 0 && $tokenType < count($this->yyTokenName)) {
             return $this->yyTokenName[$tokenType];
         } else {
-            return "Unknown";
+            return 'Unknown';
         }
     }
 
@@ -294,8 +294,8 @@ class ParseyyStackEntry
             if (count(self::$yyFallback) && $iLookAhead < count(self::$yyFallback)
                    && ($iFallback = self::$yyFallback[$iLookAhead]) != 0) {
                 if ($this->yyTraceFILE) {
-                    fwrite($this->yyTraceFILE, $this->yyTracePrompt . "FALLBACK " .
-                        $this->yyTokenName[$iLookAhead] . " => " .
+                    fwrite($this->yyTraceFILE, $this->yyTracePrompt . 'FALLBACK ' .
+                        $this->yyTokenName[$iLookAhead] . ' => ' .
                         $this->yyTokenName[$iFallback] . "\n");
                 }
 

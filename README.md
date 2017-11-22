@@ -1,5 +1,5 @@
-#Smarty 3 template engine
-##Lexer/Parser generator repository
+# Smarty 3 template engine
+## Lexer/Parser generator repository
 
 The "smarty/smarty-lexer" package is used to generate the lexer and parser class files.
 
@@ -15,7 +15,7 @@ Use for example
 	   "smarty/smarty-lexer": "3.1.18"
 	}
 
-in your composer.json file to get the generator for Smarty 3.1.8.
+in your composer.json file to get the generator for Smarty 3.1.18.
 
 
 

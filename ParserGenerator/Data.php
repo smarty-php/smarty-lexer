@@ -1034,7 +1034,7 @@ class PHP_ParserGenerator_Data
      */
     private function tplt_linedir($out, $lineno, $filename)
     {
-        fwrite($out, '#line ' . $lineno . ' "' . $filename . "\"\n");
+        fwrite($out, '// line ' . $lineno . ' "' . $filename . "\"\n");
     }
 
     /**

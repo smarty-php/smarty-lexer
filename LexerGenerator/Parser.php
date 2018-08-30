@@ -499,7 +499,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 ');
         }
         foreach ($rules as $i => $rule) {
-            fwrite($this->out, '    function yy_r' . $this -> _outRuleIndex . '_' . $ruleMap[$i] . '()
+            fwrite($this->out, '    public function yy_r' . $this -> _outRuleIndex . '_' . $ruleMap[$i] . '()
     {
 ' . $rule['code'] .
 '    }
@@ -605,7 +605,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
 **  self::$yy_default       Default action for each state.
 */
     const YY_SZ_ACTTAB = 91;
-static public $yy_action = array(
+public static $yy_action = array(
  /*     0 */    25,   50,   49,   31,   49,   54,   53,   54,   53,   35,
  /*    10 */    11,   49,   18,   22,   54,   53,   14,   59,   51,   28,
  /*    20 */    55,   57,   58,   59,   47,    1,   55,   57,   32,   15,

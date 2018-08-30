@@ -1246,7 +1246,7 @@ class PHP_ParserGenerator_Data
 
         fprintf($out, "    const YY_SZ_ACTTAB = %d;\n", $pActtab->nAction);
         $lineno++;
-        fwrite($out, "static public \$yy_action = array(\n");
+        fwrite($out, "public static \$yy_action = array(\n");
         $lineno++;
         $n = $pActtab->nAction;
         for ($i = $j = 0; $i < $n; $i++) {
@@ -1271,7 +1271,7 @@ class PHP_ParserGenerator_Data
 
         /* Output the yy_lookahead table */
 
-        fwrite($out, "    static public \$yy_lookahead = array(\n");
+        fwrite($out, "    public static \$yy_lookahead = array(\n");
         $lineno++;
         for ($i = $j = 0; $i < $n; $i++) {
             $la = $pActtab->aAction[$i]['lookahead'];
@@ -1303,7 +1303,7 @@ class PHP_ParserGenerator_Data
         }
         fprintf($out, "    const YY_SHIFT_MAX = %d;\n", $n - 1);
         $lineno++;
-        fwrite($out, "    static public \$yy_shift_ofst = array(\n");
+        fwrite($out, "    public static \$yy_shift_ofst = array(\n");
         $lineno++;
         for ($i = $j = 0; $i < $n; $i++) {
             $stp = $this->sorted[$i];
@@ -1337,7 +1337,7 @@ class PHP_ParserGenerator_Data
         }
         fprintf($out, "    const YY_REDUCE_MAX = %d;\n", $n - 1);
         $lineno++;
-        fwrite($out, "    static public \$yy_reduce_ofst = array(\n");
+        fwrite($out, "    public static \$yy_reduce_ofst = array(\n");
         $lineno++;
         for ($i = $j = 0; $i < $n; $i++) {
             $stp = $this->sorted[$i];
@@ -1363,7 +1363,7 @@ class PHP_ParserGenerator_Data
 
         /* Output the expected tokens table */
 
-        fwrite($out, "    static public \$yyExpectedTokens = array(\n");
+        fwrite($out, "    public static \$yyExpectedTokens = array(\n");
         $lineno++;
         for ($i = 0; $i < $this->nstate; $i++) {
             $stp = $this->sorted[$i];
@@ -1384,7 +1384,7 @@ class PHP_ParserGenerator_Data
 
         /* Output the default action table */
 
-        fwrite($out, "    static public \$yy_default = array(\n");
+        fwrite($out, "    public static \$yy_default = array(\n");
         $lineno++;
         $n = $this->nstate;
         for ($i = $j = 0; $i < $n; $i++) {
@@ -1655,7 +1655,7 @@ class PHP_ParserGenerator_Data
         /* Generate code to do the reduce action */
         if ($rp->code) {
             $this->tplt_linedir($out, $rp->line, $this->filename);
-            fwrite($out, "    function yy_r$rp->index()".'{' . $rp->code);
+            fwrite($out, "    public function yy_r$rp->index()".'{' . $rp->code);
             $linecnt += count(explode("\n", $rp->code)) - 1;
             $lineno += 3 + $linecnt;
             fwrite($out, "    }\n");

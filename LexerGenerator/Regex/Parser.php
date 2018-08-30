@@ -221,7 +221,7 @@ class PHP_LexerGenerator_Regex_Parser#line 107 "Parser.php"
 **  self::$yy_default       Default action for each state.
 */
     const YY_SZ_ACTTAB = 354;
-static public $yy_action = array(
+public static $yy_action = array(
  /*     0 */   229,   45,   15,   23,  104,  106,  107,  109,  108,  118,
  /*    10 */   119,  129,  128,  130,   36,   15,   23,  104,  106,  107,
  /*    20 */   109,  108,  118,  119,  129,  128,  130,   39,   15,   23,

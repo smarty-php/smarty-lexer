@@ -1,6 +1,7 @@
 <?php
+namespace Smarty;
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -38,7 +39,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -55,40 +56,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    CVS: $Id: ParserGenerator.php,v 1.2 2006/12/16 04:01:58 cellog Exp $
  * @since      File available since Release 0.1.0
  */
-/**#@+
- * Basic components of the parser generator
- */
-require_once './ParserGenerator/Action.php';
-require_once './ParserGenerator/ActionTable.php';
-require_once './ParserGenerator/Config.php';
-require_once './ParserGenerator/Data.php';
-require_once './ParserGenerator/Symbol.php';
-require_once './ParserGenerator/Rule.php';
-require_once './ParserGenerator/Parser.php';
-require_once './ParserGenerator/PropagationLink.php';
-require_once './ParserGenerator/State.php';
-/**#@-*/
+
 /**
  * The basic home class for the parser generator
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
- * @example    Lempar.php
- * @example    examples/Parser.y Sample parser file format (PHP_LexerGenerator's parser)
- * @example    examples/Parser.php Sample parser file format PHP code (PHP_LexerGenerator's parser)
+ * @example    Resources/Lempar.lt
+ * @example    examples/Parser.y Sample parser file format (Smarty_LexerGenerator's parser)
+ * @example    examples/Parser.php Sample parser file format PHP code (Smarty_LexerGenerator's parser)
  */
-class PHP_ParserGenerator
+class ParserGenerator
 {
     /**
      * Set this to 1 to turn on debugging of Lemon's parsing of
@@ -174,6 +163,10 @@ class PHP_ParserGenerator
 
         return 0;
     }
+
+	public function setQuiet() {
+		$this->quiet = 1;
+	}
 
     /**
      * Process a command line switch which has an argument.
@@ -412,13 +405,13 @@ class PHP_ParserGenerator
 */
 
     /* The main program.  Parse the command line and do it... */
-    public function main($filename = null)
+    public function main($filename = null, $fileout = null)
     {
-        $lem = new PHP_ParserGenerator_Data;
+        $lem = new ParserGenerator\Data;
         if (!isset($filename)) {
             $this->OptInit($_SERVER['argv']);
             if ($this->version) {
-                echo "Lemon version 1.0/PHP_ParserGenerator port version 0.1.5\n";
+                echo "Lemon version 1.0/\Smarty\ParserGenerator port version 0.1.5\n";
                 exit(0);
             }
             if ($this->OptNArgs($_SERVER['argv']) != 1) {
@@ -440,6 +433,10 @@ class PHP_ParserGenerator
         } else {
             $lem->filenosuffix = $lem->filename;
         }
+	    if (!isset($fileout)) {
+		    $fileout = $lem->filenosuffix . '.php';
+	    }
+
         $lem->basisflag = $this->basisflag;
         $lem->has_fallback = 0;
         $lem->nconflict = 0;
@@ -451,11 +448,11 @@ class PHP_ParserGenerator
           $lem->tokenprefix = $lem->outname = $lem->extracode = 0;
         $lem->vardest = 0;
         $lem->tablesize = 0;
-        PHP_ParserGenerator_Symbol::Symbol_new("$");
-        $lem->errsym = PHP_ParserGenerator_Symbol::Symbol_new("error");
+        ParserGenerator\Symbol::Symbol_new("$");
+        $lem->errsym = ParserGenerator\Symbol::Symbol_new("error");
 
         /* Parse the input file */
-        $parser = new PHP_ParserGenerator_Parser($this);
+        $parser = new ParserGenerator\Parser($this);
         $parser->Parse($lem);
         if ($lem->errorcnt) {
             exit($lem->errorcnt);
@@ -466,13 +463,13 @@ class PHP_ParserGenerator
         }
 
         /* Count and index the symbols of the grammar */
-        $lem->nsymbol = PHP_ParserGenerator_Symbol::Symbol_count();
-        PHP_ParserGenerator_Symbol::Symbol_new("{default}");
-        $lem->symbols = PHP_ParserGenerator_Symbol::Symbol_arrayof();
+        $lem->nsymbol = ParserGenerator\Symbol::Symbol_count();
+        ParserGenerator\Symbol::Symbol_new("{default}");
+        $lem->symbols = ParserGenerator\Symbol::Symbol_arrayof();
         for ($i = 0; $i <= $lem->nsymbol; $i++) {
             $lem->symbols[$i]->index = $i;
         }
-        usort($lem->symbols, array('PHP_ParserGenerator_Symbol', 'sortSymbols'));
+        usort($lem->symbols, array(ParserGenerator\Symbol::class, 'sortSymbols'));
         for ($i = 0; $i <= $lem->nsymbol; $i++) {
             $lem->symbols[$i]->index = $i;
         }
@@ -498,7 +495,7 @@ class PHP_ParserGenerator
             ** links so that the follow-set can be computed later */
             $lem->nstate = 0;
             $lem->FindStates();
-            $lem->sorted = PHP_ParserGenerator_State::State_arrayof();
+            $lem->sorted = ParserGenerator\State::State_arrayof();
 
             /* Tie up loose ends on the propagation links */
             $lem->FindLinks();
@@ -524,7 +521,7 @@ class PHP_ParserGenerator
             }
 
             /* Generate the source code for the parser */
-            $lem->ReportTable($this->mhflag);
+            $lem->ReportTable($this->mhflag, $fileout);
 
     /* Produce a header file for use by the scanner.  (This step is
     ** omitted if the "-m" option is used because makeheaders will
@@ -746,7 +743,7 @@ class PHP_ParserGenerator
             for ($i = 0; $i < $rp->nrhs; $i++) {
                 $sp = $rp->rhs[$i];
                 printf(" %s", $sp->name);
-                if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                if ($sp->type == ParserGenerator\Symbol::MULTITERMINAL) {
                     for ($j = 1; $j < $sp->nsubsym; $j++) {
                         printf("|%s", $sp->subsym[$j]->name);
                     }
@@ -766,7 +763,7 @@ class PHP_ParserGenerator
         }
     }
 }
-//$a = new PHP_ParserGenerator;
+//$a = new \Smarty\ParserGenerator;
 //$_SERVER['argv'] = array('lemon', '-s', '/development/lemon/PHP_Parser.y');
 //$_SERVER['argv'] = array('lemon', '-s', '/development/File_ChessPGN/ChessPGN/Parser.y');
 //$a->main();

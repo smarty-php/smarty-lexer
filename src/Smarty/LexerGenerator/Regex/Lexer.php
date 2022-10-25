@@ -1,34 +1,35 @@
 <?php
-require_once './LexerGenerator/Regex/Parser.php';
-class PHP_LexerGenerator_Regex_Lexer
+namespace Smarty\LexerGenerator\Regex;
+
+class Lexer
 {
-    const MATCHSTART = PHP_LexerGenerator_Regex_Parser::MATCHSTART;
-    const MATCHEND = PHP_LexerGenerator_Regex_Parser::MATCHEND;
-    const CONTROLCHAR = PHP_LexerGenerator_Regex_Parser::CONTROLCHAR;
-    const OPENCHARCLASS = PHP_LexerGenerator_Regex_Parser::OPENCHARCLASS;
-    const FULLSTOP = PHP_LexerGenerator_Regex_Parser::FULLSTOP;
-    const TEXT = PHP_LexerGenerator_Regex_Parser::TEXT;
-    const BACKREFERENCE = PHP_LexerGenerator_Regex_Parser::BACKREFERENCE;
-    const OPENASSERTION = PHP_LexerGenerator_Regex_Parser::OPENASSERTION;
-    const COULDBEBACKREF = PHP_LexerGenerator_Regex_Parser::COULDBEBACKREF;
-    const NEGATE = PHP_LexerGenerator_Regex_Parser::NEGATE;
-    const HYPHEN = PHP_LexerGenerator_Regex_Parser::HYPHEN;
-    const CLOSECHARCLASS = PHP_LexerGenerator_Regex_Parser::CLOSECHARCLASS;
-    const BAR = PHP_LexerGenerator_Regex_Parser::BAR;
-    const MULTIPLIER = PHP_LexerGenerator_Regex_Parser::MULTIPLIER;
-    const INTERNALOPTIONS = PHP_LexerGenerator_Regex_Parser::INTERNALOPTIONS;
-    const COLON = PHP_LexerGenerator_Regex_Parser::COLON;
-    const OPENPAREN = PHP_LexerGenerator_Regex_Parser::OPENPAREN;
-    const CLOSEPAREN = PHP_LexerGenerator_Regex_Parser::CLOSEPAREN;
-    const PATTERNNAME = PHP_LexerGenerator_Regex_Parser::PATTERNNAME;
-    const POSITIVELOOKBEHIND = PHP_LexerGenerator_Regex_Parser::POSITIVELOOKBEHIND;
-    const NEGATIVELOOKBEHIND = PHP_LexerGenerator_Regex_Parser::NEGATIVELOOKBEHIND;
-    const POSITIVELOOKAHEAD = PHP_LexerGenerator_Regex_Parser::POSITIVELOOKAHEAD;
-    const NEGATIVELOOKAHEAD = PHP_LexerGenerator_Regex_Parser::NEGATIVELOOKAHEAD;
-    const ONCEONLY = PHP_LexerGenerator_Regex_Parser::ONCEONLY;
-    const COMMENT = PHP_LexerGenerator_Regex_Parser::COMMENT;
-    const RECUR = PHP_LexerGenerator_Regex_Parser::RECUR;
-    const ESCAPEDBACKSLASH = PHP_LexerGenerator_Regex_Parser::ESCAPEDBACKSLASH;
+    const MATCHSTART = Parser::MATCHSTART;
+    const MATCHEND = Parser::MATCHEND;
+    const CONTROLCHAR = Parser::CONTROLCHAR;
+    const OPENCHARCLASS = Parser::OPENCHARCLASS;
+    const FULLSTOP = Parser::FULLSTOP;
+    const TEXT = Parser::TEXT;
+    const BACKREFERENCE = Parser::BACKREFERENCE;
+    const OPENASSERTION = Parser::OPENASSERTION;
+    const COULDBEBACKREF = Parser::COULDBEBACKREF;
+    const NEGATE = Parser::NEGATE;
+    const HYPHEN = Parser::HYPHEN;
+    const CLOSECHARCLASS = Parser::CLOSECHARCLASS;
+    const BAR = Parser::BAR;
+    const MULTIPLIER = Parser::MULTIPLIER;
+    const INTERNALOPTIONS = Parser::INTERNALOPTIONS;
+    const COLON = Parser::COLON;
+    const OPENPAREN = Parser::OPENPAREN;
+    const CLOSEPAREN = Parser::CLOSEPAREN;
+    const PATTERNNAME = Parser::PATTERNNAME;
+    const POSITIVELOOKBEHIND = Parser::POSITIVELOOKBEHIND;
+    const NEGATIVELOOKBEHIND = Parser::NEGATIVELOOKBEHIND;
+    const POSITIVELOOKAHEAD = Parser::POSITIVELOOKAHEAD;
+    const NEGATIVELOOKAHEAD = Parser::NEGATIVELOOKAHEAD;
+    const ONCEONLY = Parser::ONCEONLY;
+    const COMMENT = Parser::COMMENT;
+    const RECUR = Parser::RECUR;
+    const ESCAPEDBACKSLASH = Parser::ESCAPEDBACKSLASH;
     private $input;
     private $N;
     public $token;

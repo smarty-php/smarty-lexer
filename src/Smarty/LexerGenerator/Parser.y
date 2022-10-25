@@ -1,9 +1,9 @@
-%name PHP_LexerGenerator_Parser
-%declare_class {class PHP_LexerGenerator_Parser}
+%name Smarty\LexerGenerator\Parser
+%declare_class {class Smarty\LexerGenerator\Parser}
 %include {
 /* ?><?php {//*/
 /**
- * PHP_LexerGenerator, a php 5 lexer generator.
+ * Smarty_LexerGenerator, a php 5 lexer generator.
  *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
@@ -24,7 +24,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_LexerGenerator nor the names of its
+ *     * Neither the name of the Smarty_LexerGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -41,7 +41,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_LexerGenerator
+ * @package    Smarty_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -49,17 +49,11 @@
  * @since      File available since Release 0.1.0
  */
 /**
- * For regular expression validation
- */
-require_once 'PHP/LexerGenerator/Regex/Lexer.php';
-require_once 'PHP/LexerGenerator/Regex/Parser.php';
-require_once 'PHP/LexerGenerator/Exception.php';
-/**
  * Token parser for plex files.
  *
- * This parser converts tokens pulled from {@link PHP_LexerGenerator_Lexer}
+ * This parser converts tokens pulled from {@link Smarty\LexerGenerator\Lexer}
  * into abstract patterns and rules, then creates the output file
- * @package    PHP_LexerGenerator
+ * @package    Smarty_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -116,8 +110,8 @@ require_once 'PHP/LexerGenerator/Exception.php';
             throw new Exception('unable to open lexer output file "' . $outfile . '"');
         }
         $this->lex = $lex;
-        $this->_regexLexer = new PHP_LexerGenerator_Regex_Lexer('');
-        $this->_regexParser = new PHP_LexerGenerator_Regex_Parser($this->_regexLexer);
+        $this->_regexLexer = new Smarty\LexerGenerator\Regex\Lexer('');
+        $this->_regexParser = new Smarty\LexerGenerator\Regex\Parser($this->_regexLexer);
     }
 
     function doLongestMatch($rules, $statename, $ruleindex)
@@ -425,9 +419,9 @@ require_once 'PHP/LexerGenerator/Exception.php';
                     $this->_regexLexer->token, $this->_regexLexer->value);
             }
             $this->_regexParser->doParse(0, 0);
-        } catch (PHP_LexerGenerator_Exception $e) {
+        } catch (Smarty\LexerGenerator\Exception $e) {
             $this->error($e->getMessage());
-            throw new PHP_LexerGenerator_Exception('Invalid pattern "' . $pattern . '"');
+            throw new Smarty\LexerGenerator\Exception('Invalid pattern "' . $pattern . '"');
         }
         return $this->_regexParser->result;
     }

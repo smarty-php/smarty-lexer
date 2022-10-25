@@ -1,6 +1,8 @@
 <?php
+namespace Smarty\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -46,45 +48,29 @@
  * @since      File available since Release 0.1.0
  */
 
-/**
- * The structure used to represent a state in the associative array
- * for a PHP_ParserGenerator_Config.
- * @package    PHP_ParserGenerator
- * @author     Gregory Beaver <cellog@php.net>
- * @copyright  2006 Gregory Beaver
- * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version    0.1.5
- * @since      Class available since Release 0.1.0
- */
-class PHP_ParserGenerator_StateNode
-{
-    public $key;
-    public $data;
-    public $from = 0;
-    public $next = 0;
-}
+
 
 /**
  * Each state of the generated parser's finite state machine
  * is encoded as an instance of this class
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_State
+class State
 {
     /**
      * The basis configurations for this state
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public $bp;
     /**
      * All configurations in this state
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public $cfp;
     /**
@@ -95,7 +81,7 @@ class PHP_ParserGenerator_State
     public $statenum;
     /**
      * Linked list of actions for this state.
-     * @var PHP_ParserGenerator_Action
+     * @var Action
      */
     public $ap;
     /**
@@ -129,13 +115,13 @@ class PHP_ParserGenerator_State
      */
     public $iDflt;
     /**
-     * Associative array of PHP_ParserGenerator_State objects
+     * Associative array of State objects
      *
      * @var array
      */
     public static $x3a = array();
     /**
-     * Array of PHP_ParserGenerator_State objects
+     * Array of State objects
      *
      * @var array
      */
@@ -160,8 +146,8 @@ class PHP_ParserGenerator_State
     /**
      * Compare two states based on their configurations
      *
-     * @param  PHP_ParserGenerator_Config|0 $a
-     * @param  PHP_ParserGenerator_Config|0 $b
+     * @param  Config|0 $a
+     * @param  Config|0 $b
      * @return int
      */
     public static function statecmp($a, $b)
@@ -188,7 +174,7 @@ class PHP_ParserGenerator_State
      * Hash a state based on its configuration
      * @return int
      */
-    private static function statehash(PHP_ParserGenerator_Config $a)
+    private static function statehash(Config $a)
     {
         $h = 0;
         while ($a) {
@@ -202,10 +188,10 @@ class PHP_ParserGenerator_State
     /**
      * Return a pointer to data assigned to the given key.  Return NULL
      * if no such key.
-     * @param PHP_ParserGenerator_Config
-     * @return null|PHP_ParserGenerator_State
+     * @param Config
+     * @return null|State
      */
-    public static function State_find(PHP_ParserGenerator_Config $key)
+    public static function State_find(Config $key)
     {
         if (!count(self::$x3a)) {
             return 0;
@@ -229,12 +215,12 @@ class PHP_ParserGenerator_State
      * Insert a new record into the array.  Return TRUE if successful.
      * Prior data with the same key is NOT overwritten
      *
-     * @param  PHP_ParserGenerator_State  $state
-     * @param  PHP_ParserGenerator_Config $key
+     * @param  State  $state
+     * @param  Config $key
      * @return unknown
      */
-    public static function State_insert(PHP_ParserGenerator_State $state,
-                                 PHP_ParserGenerator_Config $key)
+    public static function State_insert(State $state,
+                                 Config $key)
     {
         $h = self::statehash($key);
         if (isset(self::$x3a[$h])) {
@@ -252,7 +238,7 @@ class PHP_ParserGenerator_State
             $np = $np->next;
         }
         /* Insert the new data */
-        $np = new PHP_ParserGenerator_StateNode;
+        $np = new StateNode;
         $np->key = $key;
         $np->data = $state;
         self::$states[] = $np;

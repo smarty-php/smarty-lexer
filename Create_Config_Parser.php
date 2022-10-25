@@ -1,4 +1,9 @@
 <?php
+use Smarty\LexerGenerator;
+use Smarty\ParserGenerator;
+
+require_once 'vendor/autoload.php';
+
 $smartyPath = '../smarty/libs/sysplugins/';
 $lexerPath = '../smarty/lexer/';
 if (!is_dir($lexerPath)) {
@@ -8,14 +13,11 @@ if (!is_dir($lexerPath)) {
 copy("{$smartyPath}smarty_internal_configfilelexer.php", "{$lexerPath}smarty_internal_configfilelexer.php.bak");
 copy("{$smartyPath}smarty_internal_configfileparser.php", "{$lexerPath}smarty_internal_configfileparser.php.bak");
 
-// Create Lexer
-require_once './LexerGenerator.php';
-$lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_configfilelexer.plex");
+$lex = new LexerGenerator();
+$lex->create("{$lexerPath}smarty_internal_configfilelexer.plex");
 unset($lex);
 
-// Create Parser
-require_once './ParserGenerator.php';
-$parser = new PHP_ParserGenerator();
+$parser = new ParserGenerator();
 $parser->main("{$lexerPath}smarty_internal_configfileparser.y");
 unset($parser);
 

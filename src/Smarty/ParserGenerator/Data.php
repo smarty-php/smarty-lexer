@@ -1,6 +1,8 @@
 <?php
+namespace Smarty\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -50,7 +52,7 @@
  * The state vector for the entire parser generator is recorded in
  * this class.
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -58,7 +60,7 @@
  * @since      Class available since Release 0.1.0
  */
 
-class PHP_ParserGenerator_Data
+class Data
 {
     /**
      * Used for terminal and non-terminal offsets into the action table
@@ -67,12 +69,12 @@ class PHP_ParserGenerator_Data
     const NO_OFFSET = -2147483647;
     /**
      * Table of states sorted by state number
-     * @var array array of {@link PHP_ParserGenerator_State} objects
+     * @var array array of {@link State} objects
      */
     public $sorted;
     /**
      * List of all rules
-     * @var PHP_ParserGenerator_Rule
+     * @var Rule
      */
     public $rule;
     /**
@@ -97,7 +99,7 @@ class PHP_ParserGenerator_Data
     public $nterminal;
     /**
      * Sorted array of pointers to symbols
-     * @var array array of {@link PHP_ParserGenerator_Symbol} objects
+     * @var array array of {@link Symbol} objects
      */
     public $symbols = array();
     /**
@@ -107,7 +109,7 @@ class PHP_ParserGenerator_Data
     public $errorcnt;
     /**
      * The error symbol
-     * @var PHP_ParserGenerator_Symbol
+     * @var Symbol
      */
     public $errsym;
     /**
@@ -324,7 +326,7 @@ class PHP_ParserGenerator_Data
             if ($rp->precsym === 0) {
                 for ($i = 0; $i < $rp->nrhs && $rp->precsym === 0; $i++) {
                     $sp = $rp->rhs[$i];
-                    if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                    if ($sp->type == Symbol::MULTITERMINAL) {
                         for ($j = 0; $j < $sp->nsubsym; $j++) {
                             if ($sp->subsym[$j]->prec >= 0) {
                                 $rp->precsym = $sp->subsym[$j];
@@ -363,7 +365,7 @@ class PHP_ParserGenerator_Data
                 }
                 for ($i = 0; $i < $rp->nrhs; $i++) {
                     $sp = $rp->rhs[$i];
-                    if ($sp->type != PHP_ParserGenerator_Symbol::TERMINAL || $sp->lambda === false) {
+                    if ($sp->type != Symbol::TERMINAL || $sp->lambda === false) {
                         break;
                     }
                 }
@@ -381,12 +383,12 @@ class PHP_ParserGenerator_Data
                 $s1 = $rp->lhs;
                 for ($i = 0; $i < $rp->nrhs; $i++) {
                     $s2 = $rp->rhs[$i];
-                    if ($s2->type == PHP_ParserGenerator_Symbol::TERMINAL) {
+                    if ($s2->type == Symbol::TERMINAL) {
                         //progress += SetAdd(s1->firstset,s2->index);
                         $progress += isset($s1->firstset[$s2->index]) ? 0 : 1;
                         $s1->firstset[$s2->index] = 1;
                         break;
-                    } elseif ($s2->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                    } elseif ($s2->type == Symbol::MULTITERMINAL) {
                         for ($j = 0; $j < $s2->nsubsym; $j++) {
                             //progress += SetAdd(s1->firstset,s2->subsym[j]->index);
                             $progress += isset($s1->firstset[$s2->subsym[$j]->index]) ? 0 : 1;
@@ -420,13 +422,13 @@ class PHP_ParserGenerator_Data
      */
     public function FindStates()
     {
-        PHP_ParserGenerator_Config::Configlist_init();
+        Config::Configlist_init();
 
         /* Find the start symbol */
         if ($this->start) {
-            $sp = PHP_ParserGenerator_Symbol::Symbol_find($this->start);
+            $sp = Symbol::Symbol_find($this->start);
             if ($sp == 0) {
-                PHP_ParserGenerator::ErrorMsg($this->filename, 0,
+                \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
                     "The specified start symbol \"%s\" is not " .
                     "in a nonterminal of the grammar.  \"%s\" will be used as the start " .
                     "symbol instead.", $this->start, $this->rule->lhs->name);
@@ -442,10 +444,10 @@ class PHP_ParserGenerator_Data
         ** start symbol in this case.) */
         for ($rp = $this->rule; $rp; $rp = $rp->next) {
             for ($i = 0; $i < $rp->nrhs; $i++) {
-                if ($rp->rhs[$i]->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                if ($rp->rhs[$i]->type == Symbol::MULTITERMINAL) {
                     foreach ($rp->rhs[$i]->subsym as $subsp) {
                         if ($subsp === $sp) {
-                            PHP_ParserGenerator::ErrorMsg($this->filename, 0,
+                            \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
                                 "The start symbol \"%s\" occurs on the " .
                                 "right-hand side of a rule. This will result in a parser which " .
                                 "does not work properly.", $sp->name);
@@ -453,7 +455,7 @@ class PHP_ParserGenerator_Data
                         }
                     }
                 } elseif ($rp->rhs[$i] === $sp) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, 0,
+                    \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
                         "The start symbol \"%s\" occurs on the " .
                         "right-hand side of a rule. This will result in a parser which " .
                         "does not work properly.", $sp->name);
@@ -466,7 +468,7 @@ class PHP_ParserGenerator_Data
         ** is all rules which have the start symbol as their
         ** left-hand side */
         for ($rp = $sp->rule; $rp; $rp = $rp->nextlhs) {
-            $newcfp = PHP_ParserGenerator_Config::Configlist_addbasis($rp, 0);
+            $newcfp = Config::Configlist_addbasis($rp, 0);
             $newcfp->fws[0] = 1;
         }
 
@@ -481,39 +483,39 @@ class PHP_ParserGenerator_Data
     }
 
     /**
-     * @return PHP_ParserGenerator_State
+     * @return State
      */
     private function getstate()
     {
         /* Extract the sorted basis of the new state.  The basis was constructed
         ** by prior calls to "Configlist_addbasis()". */
-        PHP_ParserGenerator_Config::Configlist_sortbasis();
-        $bp = PHP_ParserGenerator_Config::Configlist_basis();
+        Config::Configlist_sortbasis();
+        $bp = Config::Configlist_basis();
 
         /* Get a state with the same basis */
-        $stp = PHP_ParserGenerator_State::State_find($bp);
+        $stp = State::State_find($bp);
         if ($stp) {
             /* A state with the same basis already exists!  Copy all the follow-set
             ** propagation links from the state under construction into the
             ** preexisting state, then return a pointer to the preexisting state */
             for ($x = $bp, $y = $stp->bp; $x && $y; $x = $x->bp, $y = $y->bp) {
-                PHP_ParserGenerator_PropagationLink::Plink_copy($y->bplp, $x->bplp);
-                PHP_ParserGenerator_PropagationLink::Plink_delete($x->fplp);
+                PropagationLink::Plink_copy($y->bplp, $x->bplp);
+                PropagationLink::Plink_delete($x->fplp);
                 $x->fplp = $x->bplp = 0;
             }
-            $cfp = PHP_ParserGenerator_Config::Configlist_return();
-            PHP_ParserGenerator_Config::Configlist_eat($cfp);
+            $cfp = Config::Configlist_return();
+            Config::Configlist_eat($cfp);
         } else {
             /* This really is a new state.  Construct all the details */
-            PHP_ParserGenerator_Config::Configlist_closure($this);    /* Compute the configuration closure */
-            PHP_ParserGenerator_Config::Configlist_sort();           /* Sort the configuration closure */
-            $cfp = PHP_ParserGenerator_Config::Configlist_return();   /* Get a pointer to the config list */
-            $stp = new PHP_ParserGenerator_State;           /* A new state structure */
+            Config::Configlist_closure($this);    /* Compute the configuration closure */
+            Config::Configlist_sort();           /* Sort the configuration closure */
+            $cfp = Config::Configlist_return();   /* Get a pointer to the config list */
+            $stp = new State;           /* A new state structure */
             $stp->bp = $bp;                /* Remember the configuration basis */
             $stp->cfp = $cfp;              /* Remember the configuration closure */
             $stp->statenum = $this->nstate++; /* Every state gets a sequence number */
             $stp->ap = 0;                 /* No actions, yet. */
-            PHP_ParserGenerator_State::State_insert($stp, $stp->bp);   /* Add to the state table */
+            State::State_insert($stp, $stp->bp);   /* Add to the state table */
             // this can't work, recursion is too deep, move it into FindStates()
             //$this->buildshifts($stp);       /* Recursively compute successor states */
             return array($stp);
@@ -525,10 +527,10 @@ class PHP_ParserGenerator_Data
     /**
      * Construct all successor states to the given state.  A "successor"
      * state is any state which can be reached by a shift action.
-     * @param PHP_ParserGenerator_Data
-     * @param PHP_ParserGenerator_State The state from which successors are computed
+     * @param Data
+     * @param State The state from which successors are computed
      */
-    private function buildshifts(PHP_ParserGenerator_State $stp)
+    private function buildshifts(State $stp)
     {
 //    struct config *cfp;  /* For looping thru the config closure of "stp" */
 //    struct config *bcfp; /* For the inner loop on config closure of "stp" */
@@ -541,18 +543,18 @@ class PHP_ParserGenerator_Data
         ** state.  Initially, all configurations are incomplete */
         $cfp = $stp->cfp;
         for ($cfp = $stp->cfp; $cfp; $cfp = $cfp->next) {
-            $cfp->status = PHP_ParserGenerator_Config::INCOMPLETE;
+            $cfp->status = Config::INCOMPLETE;
         }
 
         /* Loop through all configurations of the state "stp" */
         for ($cfp = $stp->cfp; $cfp; $cfp = $cfp->next) {
-            if ($cfp->status == PHP_ParserGenerator_Config::COMPLETE) {
+            if ($cfp->status == Config::COMPLETE) {
                 continue;    /* Already used by inner loop */
             }
             if ($cfp->dot >= $cfp->rp->nrhs) {
                 continue;  /* Can't shift this config */
             }
-            PHP_ParserGenerator_Config::Configlist_reset();                      /* Reset the new config set */
+            Config::Configlist_reset();                      /* Reset the new config set */
             $sp = $cfp->rp->rhs[$cfp->dot];             /* Symbol after the dot */
 
             /* For every configuration in the state "stp" which has the symbol "sp"
@@ -560,19 +562,19 @@ class PHP_ParserGenerator_Data
             ** construction but with the dot shifted one symbol to the right. */
             $bcfp = $cfp;
             for ($bcfp = $cfp; $bcfp; $bcfp = $bcfp->next) {
-                if ($bcfp->status == PHP_ParserGenerator_Config::COMPLETE) {
+                if ($bcfp->status == Config::COMPLETE) {
                     continue;    /* Already used */
                 }
                 if ($bcfp->dot >= $bcfp->rp->nrhs) {
                     continue; /* Can't shift this one */
                 }
                 $bsp = $bcfp->rp->rhs[$bcfp->dot];           /* Get symbol after dot */
-                if (!PHP_ParserGenerator_Symbol::same_symbol($bsp, $sp)) {
+                if (!Symbol::same_symbol($bsp, $sp)) {
                     continue;      /* Must be same as for "cfp" */
                 }
-                $bcfp->status = PHP_ParserGenerator_Config::COMPLETE;             /* Mark this config as used */
-                $new = PHP_ParserGenerator_Config::Configlist_addbasis($bcfp->rp, $bcfp->dot + 1);
-                PHP_ParserGenerator_PropagationLink::Plink_add($new->bplp, $bcfp);
+                $bcfp->status = Config::COMPLETE;             /* Mark this config as used */
+                $new = Config::Configlist_addbasis($bcfp->rp, $bcfp->dot + 1);
+                PropagationLink::Plink_add($new->bplp, $bcfp);
             }
 
             /* Get a pointer to the state described by the basis configuration set
@@ -585,13 +587,13 @@ class PHP_ParserGenerator_Data
 
             /* The state "newstp" is reached from the state "stp" by a shift action
             ** on the symbol "sp" */
-            if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+            if ($sp->type == Symbol::MULTITERMINAL) {
                 for ($i = 0; $i < $sp->nsubsym; $i++) {
-                    PHP_ParserGenerator_Action::Action_add($stp->ap, PHP_ParserGenerator_Action::SHIFT, $sp->subsym[$i],
+                    Action::Action_add($stp->ap, Action::SHIFT, $sp->subsym[$i],
                                             $newstp);
                 }
             } else {
-                PHP_ParserGenerator_Action::Action_add($stp->ap, PHP_ParserGenerator_Action::SHIFT, $sp, $newstp);
+                Action::Action_add($stp->ap, Action::SHIFT, $sp, $newstp);
             }
         }
     }
@@ -615,7 +617,7 @@ class PHP_ParserGenerator_Data
             for ($cfp = $stp->data->cfp; $cfp; $cfp = $cfp->next) {
                 for ($plp = $cfp->bplp; $plp; $plp = $plp->next) {
                     $other = $plp->cfp;
-                    PHP_ParserGenerator_PropagationLink::Plink_add($other->fplp, $cfp);
+                    PropagationLink::Plink_add($other->fplp, $cfp);
                 }
             }
         }
@@ -639,7 +641,7 @@ class PHP_ParserGenerator_Data
                         if (isset($cfp->fws[$j])) {
                             /* Add a reduce action to the state "stp" which will reduce by the
                             ** rule "cfp->rp" if the lookahead symbol is "$this->symbols[j]" */
-                            PHP_ParserGenerator_Action::Action_add($stp->ap, PHP_ParserGenerator_Action::REDUCE,
+                            Action::Action_add($stp->ap, Action::REDUCE,
                                                     $this->symbols[$j], $cfp->rp);
                         }
                     }
@@ -648,8 +650,8 @@ class PHP_ParserGenerator_Data
         }
 
         /* Add the accepting token */
-        if ($this->start instanceof PHP_ParserGenerator_Symbol) {
-            $sp = PHP_ParserGenerator_Symbol::Symbol_find($this->start);
+        if ($this->start instanceof Symbol) {
+            $sp = Symbol::Symbol_find($this->start);
             if ($sp === 0) {
                 $sp = $this->rule->lhs;
             }
@@ -659,7 +661,7 @@ class PHP_ParserGenerator_Data
         /* Add to the first state (which is always the starting state of the
         ** finite state machine) an action to ACCEPT if the lookahead is the
         ** start nonterminal.  */
-        PHP_ParserGenerator_Action::Action_add($this->sorted[0]->data->ap, PHP_ParserGenerator_Action::ACCEPT, $sp, 0);
+        Action::Action_add($this->sorted[0]->data->ap, Action::ACCEPT, $sp, 0);
 
         /* Resolve conflicts */
         for ($i = 0; $i < $this->nstate; $i++) {
@@ -674,7 +676,7 @@ class PHP_ParserGenerator_Data
                 echo '  Action ';
                 $ap->display(true);
             }
-            $stp->ap = PHP_ParserGenerator_Action::Action_sort($stp->ap);
+            $stp->ap = Action::Action_sort($stp->ap);
             for ($ap = $stp->ap; $ap !== 0 && $ap->next !== 0; $ap = $ap->next) {
                 for ($nap = $ap->next; $nap !== 0 && $nap->sp === $ap->sp ; $nap = $nap->next) {
                     /* The two actions "ap" and "nap" have the same lookahead.
@@ -690,7 +692,7 @@ class PHP_ParserGenerator_Data
         }
         for ($i = 0; $i < $this->nstate; $i++) {
             for ($ap = $this->sorted[$i]->data->ap; $ap !== 0; $ap = $ap->next) {
-                if ($ap->type == PHP_ParserGenerator_Action::REDUCE) {
+                if ($ap->type == Action::REDUCE) {
                     $ap->x->canReduce = true;
                 }
             }
@@ -699,7 +701,7 @@ class PHP_ParserGenerator_Data
             if ($rp->canReduce) {
                 continue;
             }
-            PHP_ParserGenerator::ErrorMsg($this->filename, $rp->ruleline, "This rule can not be reduced (is not connected to the start symbol).\n");
+            \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline, "This rule can not be reduced (is not connected to the start symbol).\n");
             $this->errorcnt++;
         }
     }
@@ -716,9 +718,9 @@ class PHP_ParserGenerator_Data
      *
      * If either action is a SHIFT, then it must be apx.  This
      * function won't work if apx->type==REDUCE and apy->type==SHIFT.
-     * @param PHP_ParserGenerator_Action
-     * @param PHP_ParserGenerator_Action
-     * @param PHP_ParserGenerator_Symbol|null The error symbol (if defined.  NULL otherwise)
+     * @param Action
+     * @param Action
+     * @param Symbol|null The error symbol (if defined.  NULL otherwise)
      */
     public function resolve_conflict($apx, $apy, $errsym)
     {
@@ -726,55 +728,55 @@ class PHP_ParserGenerator_Data
         if ($apx->sp !== $apy->sp) {
             throw new Exception('no conflict but resolve_conflict called');
         }
-        if ($apx->type == PHP_ParserGenerator_Action::SHIFT && $apy->type == PHP_ParserGenerator_Action::REDUCE) {
+        if ($apx->type == Action::SHIFT && $apy->type == Action::REDUCE) {
             $spx = $apx->sp;
             $spy = $apy->x->precsym;
             if ($spy === 0 || $spx->prec < 0 || $spy->prec < 0) {
                 /* Not enough precedence information. */
-                $apy->type = PHP_ParserGenerator_Action::CONFLICT;
+                $apy->type = Action::CONFLICT;
                 $errcnt++;
             } elseif ($spx->prec > $spy->prec) {    /* Lower precedence wins */
-                $apy->type = PHP_ParserGenerator_Action::RD_RESOLVED;
+                $apy->type = Action::RD_RESOLVED;
             } elseif ($spx->prec < $spy->prec) {
-                $apx->type = PHP_ParserGenerator_Action::SH_RESOLVED;
-            } elseif ($spx->prec === $spy->prec && $spx->assoc == PHP_ParserGenerator_Symbol::RIGHT) {
+                $apx->type = Action::SH_RESOLVED;
+            } elseif ($spx->prec === $spy->prec && $spx->assoc == Symbol::RIGHT) {
                 /* Use operator */
-                $apy->type = PHP_ParserGenerator_Action::RD_RESOLVED;                       /* associativity */
-            } elseif ($spx->prec === $spy->prec && $spx->assoc == PHP_ParserGenerator_Symbol::LEFT) {
+                $apy->type = Action::RD_RESOLVED;                       /* associativity */
+            } elseif ($spx->prec === $spy->prec && $spx->assoc == Symbol::LEFT) {
                 /* to break tie */
-                $apx->type = PHP_ParserGenerator_Action::SH_RESOLVED;
+                $apx->type = Action::SH_RESOLVED;
             } else {
-                if ($spx->prec !== $spy->prec || $spx->assoc !== PHP_ParserGenerator_Symbol::NONE) {
-                    throw new Exception('$spx->prec !== $spy->prec || $spx->assoc !== PHP_ParserGenerator_Symbol::NONE');
+                if ($spx->prec !== $spy->prec || $spx->assoc !== Symbol::NONE) {
+                    throw new Exception('$spx->prec !== $spy->prec || $spx->assoc !== Symbol::NONE');
                 }
-                $apy->type = PHP_ParserGenerator_Action::CONFLICT;
+                $apy->type = Action::CONFLICT;
                 $errcnt++;
             }
-        } elseif ($apx->type == PHP_ParserGenerator_Action::REDUCE && $apy->type == PHP_ParserGenerator_Action::REDUCE) {
+        } elseif ($apx->type == Action::REDUCE && $apy->type == Action::REDUCE) {
             $spx = $apx->x->precsym;
             $spy = $apy->x->precsym;
             if ($spx === 0 || $spy === 0 || $spx->prec < 0 ||
                   $spy->prec < 0 || $spx->prec === $spy->prec) {
-                $apy->type = PHP_ParserGenerator_Action::CONFLICT;
+                $apy->type = Action::CONFLICT;
                 $errcnt++;
             } elseif ($spx->prec > $spy->prec) {
-                $apy->type = PHP_ParserGenerator_Action::RD_RESOLVED;
+                $apy->type = Action::RD_RESOLVED;
             } elseif ($spx->prec < $spy->prec) {
-                $apx->type = PHP_ParserGenerator_Action::RD_RESOLVED;
+                $apx->type = Action::RD_RESOLVED;
             }
         } else {
-            if ($apx->type!== PHP_ParserGenerator_Action::SH_RESOLVED &&
-                $apx->type!== PHP_ParserGenerator_Action::RD_RESOLVED &&
-                $apx->type!== PHP_ParserGenerator_Action::CONFLICT &&
-                $apy->type!== PHP_ParserGenerator_Action::SH_RESOLVED &&
-                $apy->type!== PHP_ParserGenerator_Action::RD_RESOLVED &&
-                $apy->type!== PHP_ParserGenerator_Action::CONFLICT) {
-                throw new Exception('$apx->type!== PHP_ParserGenerator_Action::SH_RESOLVED &&
-                $apx->type!== PHP_ParserGenerator_Action::RD_RESOLVED &&
-                $apx->type!== PHP_ParserGenerator_Action::CONFLICT &&
-                $apy->type!== PHP_ParserGenerator_Action::SH_RESOLVED &&
-                $apy->type!== PHP_ParserGenerator_Action::RD_RESOLVED &&
-                $apy->type!== PHP_ParserGenerator_Action::CONFLICT');
+            if ($apx->type!== Action::SH_RESOLVED &&
+                $apx->type!== Action::RD_RESOLVED &&
+                $apx->type!== Action::CONFLICT &&
+                $apy->type!== Action::SH_RESOLVED &&
+                $apy->type!== Action::RD_RESOLVED &&
+                $apy->type!== Action::CONFLICT) {
+                throw new Exception('$apx->type!== Action::SH_RESOLVED &&
+                $apx->type!== Action::RD_RESOLVED &&
+                $apx->type!== Action::CONFLICT &&
+                $apy->type!== Action::SH_RESOLVED &&
+                $apy->type!== Action::RD_RESOLVED &&
+                $apy->type!== Action::CONFLICT');
             }
             /* The REDUCE/SHIFT case cannot happen because SHIFTs come before
             ** REDUCEs on the list.  If we reach this point it must be because
@@ -799,7 +801,7 @@ class PHP_ParserGenerator_Data
             $rbest = 0;
 
             for ($ap = $stp->ap; $ap; $ap = $ap->next) {
-                if ($ap->type != PHP_ParserGenerator_Action::REDUCE) {
+                if ($ap->type != Action::REDUCE) {
                     continue;
                 }
                 $rp = $ap->x;
@@ -808,7 +810,7 @@ class PHP_ParserGenerator_Data
                 }
                 $n = 1;
                 for ($ap2 = $ap->next; $ap2; $ap2 = $ap2->next) {
-                    if ($ap2->type != PHP_ParserGenerator_Action::REDUCE) {
+                    if ($ap2->type != Action::REDUCE) {
                         continue;
                     }
                     $rp2 = $ap2->x;
@@ -833,20 +835,20 @@ class PHP_ParserGenerator_Data
 
             /* Combine matching REDUCE actions into a single default */
             for ($ap = $stp->ap; $ap; $ap = $ap->next) {
-                if ($ap->type == PHP_ParserGenerator_Action::REDUCE && $ap->x === $rbest) {
+                if ($ap->type == Action::REDUCE && $ap->x === $rbest) {
                     break;
                 }
             }
             if ($ap === 0) {
                 throw new Exception('$ap is not an object');
             }
-            $ap->sp = PHP_ParserGenerator_Symbol::Symbol_new("{default}");
+            $ap->sp = Symbol::Symbol_new("{default}");
             for ($ap = $ap->next; $ap; $ap = $ap->next) {
-                if ($ap->type == PHP_ParserGenerator_Action::REDUCE && $ap->x === $rbest) {
-                    $ap->type = PHP_ParserGenerator_Action::NOT_USED;
+                if ($ap->type == Action::REDUCE && $ap->x === $rbest) {
+                    $ap->type = Action::NOT_USED;
                 }
             }
-            $stp->ap = PHP_ParserGenerator_Action::Action_sort($stp->ap);
+            $stp->ap = Action::Action_sort($stp->ap);
         }
     }
 
@@ -860,8 +862,8 @@ class PHP_ParserGenerator_Data
             $stp = $this->sorted[$i]->data;
             $stp->nTknAct = $stp->nNtAct = 0;
             $stp->iDflt = $this->nstate + $this->nrule;
-            $stp->iTknOfst = PHP_ParserGenerator_Data::NO_OFFSET;
-            $stp->iNtOfst = PHP_ParserGenerator_Data::NO_OFFSET;
+            $stp->iTknOfst = Data::NO_OFFSET;
+            $stp->iNtOfst = Data::NO_OFFSET;
             for ($ap = $stp->ap; $ap; $ap = $ap->next) {
                 if ($this->compute_action($ap) >= 0) {
                     if ($ap->sp->index < $this->nterminal) {
@@ -877,7 +879,7 @@ class PHP_ParserGenerator_Data
         }
         $save = $this->sorted[0];
         unset($this->sorted[0]);
-        usort($this->sorted, array('PHP_ParserGenerator_State', 'stateResortCompare'));
+        usort($this->sorted, array(State::class, 'stateResortCompare'));
         array_unshift($this->sorted, $save);
         for ($i = 0; $i < $this->nstate; $i++) {
             $this->sorted[$i]->statenum = $i;
@@ -888,21 +890,21 @@ class PHP_ParserGenerator_Data
      * Given an action, compute the integer value for that action
      * which is to be put in the action table of the generated machine.
      * Return negative if no action should be generated.
-     * @param PHP_ParserGenerator_Action
+     * @param Action
      */
     public function compute_action($ap)
     {
         switch ($ap->type) {
-            case PHP_ParserGenerator_Action::SHIFT:
+            case Action::SHIFT:
                 $act = $ap->x->statenum;
                 break;
-            case PHP_ParserGenerator_Action::REDUCE:
+            case Action::REDUCE:
                 $act = $ap->x->index + $this->nstate;
                 break;
-            case PHP_ParserGenerator_Action::ERROR:
+            case Action::ERROR:
                 $act = $this->nstate + $this->nrule;
                 break;
-            case PHP_ParserGenerator_Action::ACCEPT:
+            case Action::ACCEPT:
                 $act = $this->nstate + $this->nrule + 1;
                 break;
             default:
@@ -967,7 +969,7 @@ class PHP_ParserGenerator_Data
      */
     private function tplt_open()
     {
-        $templatename = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "Lempar.php";
+        $templatename = dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . "Resources" . DIRECTORY_SEPARATOR . "Lempar.lt";
         $buf = $this->filenosuffix . '.lt';
         if (file_exists($buf) && is_readable($buf)) {
             $tpltname = $buf;
@@ -1064,7 +1066,7 @@ class PHP_ParserGenerator_Data
     {
         for ($i = 0; $i < $this->nstate; $i++) {
             for ($cfp = $this->sorted[$i]->data->cfp; $cfp; $cfp = $cfp->next) {
-                $cfp->status = PHP_ParserGenerator_Config::INCOMPLETE;
+                $cfp->status = Config::INCOMPLETE;
             }
         }
 
@@ -1072,18 +1074,18 @@ class PHP_ParserGenerator_Data
             $progress = 0;
             for ($i = 0; $i < $this->nstate; $i++) {
                 for ($cfp = $this->sorted[$i]->data->cfp; $cfp; $cfp = $cfp->next) {
-                    if ($cfp->status == PHP_ParserGenerator_Config::COMPLETE) {
+                    if ($cfp->status == Config::COMPLETE) {
                         continue;
                     }
                     for ($plp = $cfp->fplp; $plp; $plp = $plp->next) {
                         $a = array_diff_key($cfp->fws, $plp->cfp->fws);
                         if (count($a)) {
                             $plp->cfp->fws += $a;
-                            $plp->cfp->status = PHP_ParserGenerator_Config::INCOMPLETE;
+                            $plp->cfp->status = Config::INCOMPLETE;
                             $progress = 1;
                         }
                     }
-                    $cfp->status = PHP_ParserGenerator_Config::COMPLETE;
+                    $cfp->status = Config::COMPLETE;
                 }
             }
         } while ($progress);
@@ -1093,7 +1095,7 @@ class PHP_ParserGenerator_Data
      * Generate C source code for the parser
      * @param int Output in makeheaders format if true
      */
-    public function ReportTable($mhflag)
+    public function ReportTable($mhflag, $fileout)
     {
 //        FILE *out, *in;
 //        char line[LINESIZE];
@@ -1112,13 +1114,13 @@ class PHP_ParserGenerator_Data
         if (!$in) {
             return;
         }
-        $out = fopen($this->filenosuffix . ".php", "wb");
+        $out = fopen($fileout, "wb");
         if (!$out) {
             fclose($in);
 
             return;
         }
-        $this->outname = $this->filenosuffix . ".php";
+        $this->outname = $fileout;
         $lineno = 1;
         $this->tplt_xfer($this->name, $in, $out, $lineno);
 
@@ -1197,8 +1199,8 @@ class PHP_ParserGenerator_Data
         ** sets first is used.
         */
 
-        usort($ax, array('PHP_ParserGenerator_Data', 'axset_compare'));
-        $pActtab = new PHP_ParserGenerator_ActionTable;
+        usort($ax, array(Data::class, 'axset_compare'));
+        $pActtab = new ActionTable;
         for ($i = 0; $i < $this->nstate * 2 && $ax[$i]['nAction'] > 0; $i++) {
             $stp = $ax[$i]['stp'];
             if ($ax[$i]['isTkn']) {
@@ -1298,7 +1300,7 @@ class PHP_ParserGenerator_Data
         fprintf($out, "    const YY_SHIFT_USE_DFLT = %d;\n", $mnTknOfst - 1);
         $lineno++;
         $n = $this->nstate;
-        while ($n > 0 && $this->sorted[$n - 1]->iTknOfst == PHP_ParserGenerator_Data::NO_OFFSET) {
+        while ($n > 0 && $this->sorted[$n - 1]->iTknOfst == Data::NO_OFFSET) {
             $n--;
         }
         fprintf($out, "    const YY_SHIFT_MAX = %d;\n", $n - 1);
@@ -1308,7 +1310,7 @@ class PHP_ParserGenerator_Data
         for ($i = $j = 0; $i < $n; $i++) {
             $stp = $this->sorted[$i];
             $ofst = $stp->iTknOfst;
-            if ($ofst === PHP_ParserGenerator_Data::NO_OFFSET) {
+            if ($ofst === Data::NO_OFFSET) {
                 $ofst = $mnTknOfst - 1;
             }
             // change next line
@@ -1332,7 +1334,7 @@ class PHP_ParserGenerator_Data
         fprintf($out, "    const YY_REDUCE_USE_DFLT = %d;\n", $mnNtOfst - 1);
         $lineno++;
         $n = $this->nstate;
-        while ($n > 0 && $this->sorted[$n - 1]->iNtOfst == PHP_ParserGenerator_Data::NO_OFFSET) {
+        while ($n > 0 && $this->sorted[$n - 1]->iNtOfst == Data::NO_OFFSET) {
             $n--;
         }
         fprintf($out, "    const YY_REDUCE_MAX = %d;\n", $n - 1);
@@ -1342,7 +1344,7 @@ class PHP_ParserGenerator_Data
         for ($i = $j = 0; $i < $n; $i++) {
             $stp = $this->sorted[$i];
             $ofst = $stp->iNtOfst;
-            if ($ofst == PHP_ParserGenerator_Data::NO_OFFSET) {
+            if ($ofst == Data::NO_OFFSET) {
                 $ofst = $mnNtOfst - 1;
             }
             // change next line
@@ -1370,8 +1372,8 @@ class PHP_ParserGenerator_Data
             fwrite($out, "        /* $i */ array(");
             for ($ap = $stp->ap; $ap; $ap = $ap->next) {
                 if ($ap->sp->index < $this->nterminal) {
-                    if ($ap->type == PHP_ParserGenerator_Action::SHIFT ||
-                          $ap->type == PHP_ParserGenerator_Action::REDUCE) {
+                    if ($ap->type == Action::SHIFT ||
+                          $ap->type == Action::REDUCE) {
                         fwrite($out, $ap->sp->index . ', ');
                     }
                 }
@@ -1410,7 +1412,7 @@ class PHP_ParserGenerator_Data
         $lineno++;
         if ($this->stacksize) {
             if ($this->stacksize <= 0) {
-                PHP_ParserGenerator::ErrorMsg($this->filename, 0,
+                \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
                     "Illegal stack size: [%s].  The stack size should be an integer constant.",
                     $this->stacksize);
                 $this->errorcnt++;
@@ -1488,7 +1490,7 @@ class PHP_ParserGenerator_Data
             for ($j = 0; $j < $rp->nrhs; $j++) {
                 $sp = $rp->rhs[$j];
                 fwrite($out,' ' . $sp->name);
-                if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                if ($sp->type == Symbol::MULTITERMINAL) {
                     for ($k = 1; $k < $sp->nsubsym; $k++) {
                         fwrite($out, '|' . $sp->subsym[$k]->name);
                     }
@@ -1507,14 +1509,14 @@ class PHP_ParserGenerator_Data
         if ($this->tokendest) {
             for ($i = 0; $i < $this->nsymbol; $i++) {
                 $sp = $this->symbols[$i];
-                if ($sp === 0 || $sp->type != PHP_ParserGenerator_Symbol::TERMINAL) {
+                if ($sp === 0 || $sp->type != Symbol::TERMINAL) {
                     continue;
                 }
                 fprintf($out, "    case %d:\n", $sp->index);
                 $lineno++;
             }
             for ($i = 0; $i < $this->nsymbol &&
-                         $this->symbols[$i]->type != PHP_ParserGenerator_Symbol::TERMINAL; $i++);
+                         $this->symbols[$i]->type != Symbol::TERMINAL; $i++);
             if ($i < $this->nsymbol) {
                 $this->emit_destructor_code($out, $this->symbols[$i], $lineno);
                 fprintf($out, "      break;\n");
@@ -1525,7 +1527,7 @@ class PHP_ParserGenerator_Data
             $dflt_sp = 0;
             for ($i = 0; $i < $this->nsymbol; $i++) {
                 $sp = $this->symbols[$i];
-                if ($sp === 0 || $sp->type == PHP_ParserGenerator_Symbol::TERMINAL ||
+                if ($sp === 0 || $sp->type == Symbol::TERMINAL ||
                       $sp->index <= 0 || $sp->destructor != 0) {
                     continue;
                 }
@@ -1541,7 +1543,7 @@ class PHP_ParserGenerator_Data
         }
         for ($i = 0; $i < $this->nsymbol; $i++) {
             $sp = $this->symbols[$i];
-            if ($sp === 0 || $sp->type == PHP_ParserGenerator_Symbol::TERMINAL ||
+            if ($sp === 0 || $sp->type == Symbol::TERMINAL ||
                   $sp->destructor === 0) {
                 continue;
             }
@@ -1552,7 +1554,7 @@ class PHP_ParserGenerator_Data
 
             for ($j = $i + 1; $j < $this->nsymbol; $j++) {
                 $sp2 = $this->symbols[$j];
-                if ($sp2 && $sp2->type != PHP_ParserGenerator_Symbol::TERMINAL && $sp2->destructor
+                if ($sp2 && $sp2->type != Symbol::TERMINAL && $sp2->destructor
                       && $sp2->dtnum == $sp->dtnum
                       && $sp->destructor == $sp2->destructor) {
                     fprintf($out, "    case %d:\n", $sp2->index);
@@ -1648,7 +1650,7 @@ class PHP_ParserGenerator_Data
      * Generate code which executes when the rule "rp" is reduced.  Write
      * the code to "out".  Make sure lineno stays up-to-date.
      */
-    public function emit_code($out, PHP_ParserGenerator_Rule $rp, &$lineno)
+    public function emit_code($out, Rule $rp, &$lineno)
     {
         $linecnt = 0;
 
@@ -1708,7 +1710,7 @@ class PHP_ParserGenerator_Data
      * the symbols in this string so that the refer to elements of the parser
      * stack.
      */
-    public function translate_code(PHP_ParserGenerator_Rule $rp)
+    public function translate_code(Rule $rp)
     {
         $lhsused = 0;    /* True if the LHS element has been used */
         $used = array();   /* True for each RHS element which is used */
@@ -1744,7 +1746,7 @@ class PHP_ParserGenerator_Data
                                     ($ii - $rp->nrhs + 1) . "]->major", -1);
                             } else {
                                 $sp = $rp->rhs[$ii];
-                                if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                                if ($sp->type == Symbol::MULTITERMINAL) {
                                     $dtnum = $sp->subsym[0]->dtnum;
                                 } else {
                                     $dtnum = $sp->dtnum;
@@ -1765,7 +1767,7 @@ class PHP_ParserGenerator_Data
 
         /* Check to make sure the LHS has been used */
         if ($rp->lhsalias && !$lhsused) {
-            PHP_ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
+            \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
                 "Label \"%s\" for \"%s(%s)\" is never used.",
                 $rp->lhsalias, $rp->lhs->name, $rp->lhsalias);
                 $this->errorcnt++;
@@ -1775,12 +1777,12 @@ class PHP_ParserGenerator_Data
         ** reduce code */
         for ($i = 0; $i < $rp->nrhs; $i++) {
             if ($rp->rhsalias[$i] && !isset($used[$i])) {
-                PHP_ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
+                \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
                     "Label %s for \"%s(%s)\" is never used.",
                     $rp->rhsalias[$i], $rp->rhs[$i]->name, $rp->rhsalias[$i]);
                 $this->errorcnt++;
             } elseif ($rp->rhsalias[$i] == 0) {
-                if ($rp->rhs[$i]->type == PHP_ParserGenerator_Symbol::TERMINAL) {
+                if ($rp->rhs[$i]->type == Symbol::TERMINAL) {
                     $hasdestructor = $this->tokendest != 0;
                 } else {
                     $hasdestructor = $this->vardest !== 0 || $rp->rhs[$i]->destructor !== 0;
@@ -1802,7 +1804,7 @@ class PHP_ParserGenerator_Data
      * The following routine emits code for the destructor for the
      * symbol sp
      */
-    public function emit_destructor_code($out, PHP_ParserGenerator_Symbol $sp, &$lineno)
+    public function emit_destructor_code($out, Symbol $sp, &$lineno)
 //    FILE *out;
 //    struct symbol *sp;
 //    struct lemon *lemp;
@@ -1811,7 +1813,7 @@ class PHP_ParserGenerator_Data
         $cp = 0;
 
         $linecnt = 0;
-        if ($sp->type == PHP_ParserGenerator_Symbol::TERMINAL) {
+        if ($sp->type == Symbol::TERMINAL) {
             $cp = $this->tokendest;
             if ($cp === 0) {
                 return;

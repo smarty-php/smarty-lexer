@@ -1,6 +1,9 @@
 <?php
+
+namespace Smarty\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +24,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +41,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -48,14 +51,14 @@
 /**
  * Every shift or reduce operation is stored as one of the following objects.
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Action
+class Action
 {
     const SHIFT = 1,
     ACCEPT = 2,
@@ -75,38 +78,38 @@ class PHP_ParserGenerator_Action
     RD_RESOLVED = 7,
     /**
            * Deleted by compression
-           * @see PHP_ParserGenerator::CompressTables()
+           * @see \Smarty\ParserGenerator::CompressTables()
            */
     NOT_USED = 8;
     /**
      * The look-ahead symbol that triggers this action
-     * @var PHP_ParserGenerator_Symbol
+     * @var Smarty\ParserGenerator\Symbol
      */
     public $sp;       /* The look-ahead symbol */
     /**
      * This defines the kind of action, and must be one
      * of the class constants.
      *
-     * - {@link PHP_ParserGenerator_Action::SHIFT}
-     * - {@link PHP_ParserGenerator_Action::ACCEPT}
-     * - {@link PHP_ParserGenerator_Action::REDUCE}
-     * - {@link PHP_ParserGenerator_Action::ERROR}
-     * - {@link PHP_ParserGenerator_Action::CONFLICT}
-     * - {@link PHP_ParserGenerator_Action::SH_RESOLVED}
-     * - {@link PHP_ParserGenerator_Action:: RD_RESOLVED}
-     * - {@link PHP_ParserGenerator_Action::NOT_USED}
+     * - {@link Smarty\ParserGenerator\Action::SHIFT}
+     * - {@link Smarty\ParserGenerator\Action::ACCEPT}
+     * - {@link Smarty\ParserGenerator\Action::REDUCE}
+     * - {@link Smarty\ParserGenerator\Action::ERROR}
+     * - {@link Smarty\ParserGenerator\Action::CONFLICT}
+     * - {@link Smarty\ParserGenerator\Action::SH_RESOLVED}
+     * - {@link Smarty\ParserGenerator\Action:: RD_RESOLVED}
+     * - {@link Smarty\ParserGenerator\Action::NOT_USED}
      */
     public $type;
     /**
      * The new state, if this is a shift,
      * the parser rule index, if this is a reduce.
      *
-     * @var PHP_ParserGenerator_State|PHP_ParserGenerator_Rule
+     * @var Smarty\ParserGenerator\State|Smarty\ParserGenerator\Rule
      */
     public $x;
     /**
      * The next action for this state.
-     * @var PHP_ParserGenerator_Action
+     * @var Smarty\ParserGenerator\Action
      */
     public $next;
 
@@ -115,8 +118,8 @@ class PHP_ParserGenerator_Action
      *
      * This is used by {@link Action_sort()} to compare actions
      */
-    public static function actioncmp(PHP_ParserGenerator_Action $ap1,
-                              PHP_ParserGenerator_Action $ap2)
+    public static function actioncmp(Action $ap1,
+                              Action $ap2)
     {
         $rc = $ap1->sp->index - $ap2->sp->index;
         if ($rc === 0) {
@@ -174,16 +177,16 @@ class PHP_ParserGenerator_Action
     }
 
     /**
-     * create linked list of PHP_ParserGenerator_Actions
+     * create linked list of Actions
      *
-     * @param PHP_ParserGenerator_Action|null
-     * @param int one of the class constants from PHP_ParserGenerator_Action
-     * @param PHP_ParserGenerator_Symbol
-     * @param PHP_ParserGenerator_State|PHP_ParserGenerator_Rule
+     * @param Action|null
+     * @param int one of the class constants from Action
+     * @param Symbol
+     * @param State|Rule
      */
-    public static function Action_add(&$app, $type, PHP_ParserGenerator_Symbol $sp, $arg)
+    public static function Action_add(&$app, $type, Symbol $sp, $arg)
     {
-        $new = new PHP_ParserGenerator_Action;
+        $new = new Action;
         $new->next = $app;
         $app = $new;
         $new->type = $type;
@@ -195,11 +198,11 @@ class PHP_ParserGenerator_Action
 
     /**
      * Sort parser actions
-     * @see PHP_ParserGenerator_Data::FindActions()
+     * @see Data::FindActions()
      */
-    public static function Action_sort(PHP_ParserGenerator_Action $ap)
+    public static function Action_sort(Action $ap)
     {
-        $ap = PHP_ParserGenerator::msort($ap, 'next', array('PHP_ParserGenerator_Action', 'actioncmp'));
+        $ap = \Smarty\ParserGenerator::msort($ap, 'next', array(Action::class, 'actioncmp'));
 
         return $ap;
     }
@@ -207,7 +210,7 @@ class PHP_ParserGenerator_Action
     /**
      * Print an action to the given file descriptor.  Return FALSE if
      * nothing was actually printed.
-     * @see PHP_ParserGenerator_Data::ReportOutput()
+     * @see Data::ReportOutput()
      */
     public function PrintAction($fp, $indent)
     {

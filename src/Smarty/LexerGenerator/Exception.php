@@ -1,6 +1,8 @@
 <?php
+namespace Smarty\LexerGenerator;
+
 /**
- * PHP_LexerGenerator, a php 5 lexer generator.
+ * Smarty_LexerGenerator, a php 5 lexer generator.
  *
  * Exception classes for the lexer generator
  *
@@ -20,7 +22,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_LexerGenerator nor the names of its
+ *     * Neither the name of the Smarty_LexerGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -37,18 +39,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_LexerGenerator
+ * @package    Smarty_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
-require_once './Exception.php';
 /**
- * @package    PHP_LexerGenerator
+ * @package    Smarty_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    @package_version@
  * @since      File available since Release 0.1.0
  */
-class PHP_LexerGenerator_Exception extends PEAR_Exception {}
+class Exception extends \Exception {}

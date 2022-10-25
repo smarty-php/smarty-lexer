@@ -1,6 +1,12 @@
 <?php
+
+use Smarty\LexerGenerator;
+use Smarty\ParserGenerator;
+
 ini_set('max_execution_time',300);
 ini_set('xdebug.max_nesting_level',300);
+
+require_once 'vendor/autoload.php';
 
 $smartyPath = '../smarty/libs/sysplugins/';
 $lexerPath = '../smarty/lexer/';
@@ -9,22 +15,16 @@ if (!is_dir($lexerPath)) {
     exit(1);
 }
 
-copy("{$smartyPath}smarty_internal_templatelexer.php", "{$lexerPath}smarty_internal_templatelexer.php.bak");
-copy("{$smartyPath}smarty_internal_templateparser.php", "{$lexerPath}smarty_internal_templateparser.php.bak");
-// Create Lexer
-require_once './LexerGenerator.php';
-$lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_templatelexer.plex");
+$lex = new LexerGenerator();
+$lex->create("{$lexerPath}smarty_internal_templatelexer.plex", "{$smartyPath}smarty_internal_templatelexer.php");
 unset($lex);
 
-// Create Parser
-require_once './ParserGenerator.php';
-$parser = new PHP_ParserGenerator();
-$parser->main("{$lexerPath}smarty_internal_templateparser.y");
+$parser = new ParserGenerator();
+$parser->setQuiet();
+$parser->main("{$lexerPath}smarty_internal_templateparser.y", "{$smartyPath}smarty_internal_templateparser.php");
 unset($parser);
 
-$content = file_get_contents("{$lexerPath}smarty_internal_templateparser.php");
+$content = file_get_contents("{$smartyPath}smarty_internal_templateparser.php");
 $content = preg_replace(array('#/\*\s*\d+\s*\*/#', "#'lhs'#", "#'rhs'#"), array('', 0, 1), $content);
-file_put_contents("{$lexerPath}smarty_internal_templateparser.php", $content);
+file_put_contents("{$smartyPath}smarty_internal_templateparser.php", $content);
 
-copy("{$lexerPath}smarty_internal_templatelexer.php", "{$smartyPath}smarty_internal_templatelexer.php");
-copy("{$lexerPath}smarty_internal_templateparser.php", "{$smartyPath}smarty_internal_templateparser.php");

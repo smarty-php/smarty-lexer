@@ -1,6 +1,7 @@
 <?php
+namespace SmartyGenerator;
 /**
- * PHP_LexerGenerator, a php 5 lexer generator.
+ * Smarty_LexerGenerator, a php 5 lexer generator.
  *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
@@ -21,7 +22,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_LexerGenerator nor the names of its
+ *     * Neither the name of the Smarty_LexerGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,21 +39,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    CVS: $Id: LexerGenerator.php 294970 2010-02-12 03:46:38Z clockwerx $
  * @since      File available since Release 0.1.0
  */
-/**
- * The Lexer generation parser
- */
-require_once './LexerGenerator/Parser.php';
-/**
- * Hand-written lexer for lex2php format files
- */
-require_once './LexerGenerator/Lexer.php';
 
 /**
  * The basic home class for the lexer generator.  A lexer scans text and
@@ -60,8 +53,7 @@ require_once './LexerGenerator/Lexer.php';
  *
  * Sample Usage:
  * <code>
- * require_once 'PHP/LexerGenerator.php';
- * $lex = new PHP_LexerGenerator('/path/to/lexerfile.plex');
+ * $lex = new Smarty_LexerGenerator('/path/to/lexerfile.plex');
  * </code>
  *
  * A file named "/path/to/lexerfile.php" will be created.
@@ -236,7 +228,7 @@ require_once './LexerGenerator/Lexer.php';
  * </code>
  *
  * Note that this procedure is exceptionally inefficient, and it would be far better
- * to take advantage of PHP_LexerGenerator's top-down precedence and instead code:
+ * to take advantage of Smarty_LexerGenerator's top-down precedence and instead code:
  *
  * <code>
  * /*!lex2php
@@ -248,7 +240,7 @@ require_once './LexerGenerator/Lexer.php';
  * }
  * {@*}
  * </code>
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -256,22 +248,22 @@ require_once './LexerGenerator/Lexer.php';
  * @since      Class available since Release 0.1.0
  * @example    TestLexer.plex Example lexer source
  * @example    TestLexer.php  Example lexer generated php code
- * @example    usage.php      Example usage of PHP_LexerGenerator
+ * @example    usage.php      Example usage of Smarty_LexerGenerator
  * @example    Lexer.plex     File_ChessPGN lexer source (complex)
  * @example    Lexer.php      File_ChessPGN lexer generated php code
  */
 
-class PHP_LexerGenerator
+class LexerGenerator
 {
     /**
      * Plex file lexer.
-     * @var PHP_LexerGenerator_Lexer
+     * @var Lexer
      */
     private $_lex;
 
     /**
      * Plex file parser.
-     * @var PHP_LexerGenerator_Parser
+     * @var Parser
      */
     private $_parser;
 
@@ -290,8 +282,8 @@ class PHP_LexerGenerator
     /**
      * Create a lexer generator and optionally generate a lexer file.
      *
-     * @param string Optional plex file {@see PHP_LexerGenerator::create}.
-     * @param string Optional output file {@see PHP_LexerGenerator::create}.
+     * @param string Optional plex file {@see Smarty_LexerGenerator::create}.
+     * @param string Optional output file {@see Smarty_LexerGenerator::create}.
      */
     public function __construct($lexerfile = '', $outfile = '')
     {
@@ -309,7 +301,7 @@ class PHP_LexerGenerator
      */
     public function create($lexerfile, $outfile = '')
     {
-        $this->_lex = new PHP_LexerGenerator_Lexer(file_get_contents($lexerfile));
+        $this->_lex = new LexerGenerator\Lexer(file_get_contents($lexerfile));
         $info = pathinfo($lexerfile);
         if ($outfile) {
             $this->outfile = $outfile;
@@ -318,7 +310,7 @@ class PHP_LexerGenerator
                 substr($info['basename'], 0,
                 strlen($info['basename']) - strlen($info['extension'])) . 'php';
         }
-        $this->_parser = new PHP_LexerGenerator_Parser($this->outfile, $this->_lex);
+        $this->_parser = new LexerGenerator\Parser($this->outfile, $this->_lex);
         if ($this -> debug) {
             $this->_parser->PrintTrace();
         }
@@ -328,4 +320,3 @@ class PHP_LexerGenerator
         $this->_parser->doParse(0, 0);
     }
 }
-//$a = new PHP_LexerGenerator('/development/File_ChessPGN/ChessPGN/Lexer.plex');

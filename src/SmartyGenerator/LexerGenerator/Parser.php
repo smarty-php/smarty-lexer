@@ -1,105 +1,15 @@
 <?php
-/* Driver template for the PHP_PHP_LexerGenerator_ParserrGenerator parser generator. (PHP port of LEMON)
-*/
+namespace SmartyGenerator\LexerGenerator;
 
-/**
- * This can be used to store both the string representation of
- * a token, and any useful meta-data associated with the token.
- *
- * meta-data should be stored as an array
- */
-class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
-{
-    public $string = '';
-    public $metadata = array();
-
-    public function __construct($s, $m = array())
-    {
-        if ($s instanceof PHP_LexerGenerator_ParseryyToken) {
-            $this->string = $s->string;
-            $this->metadata = $s->metadata;
-        } else {
-            $this->string = (string) $s;
-            if ($m instanceof PHP_LexerGenerator_ParseryyToken) {
-                $this->metadata = $m->metadata;
-            } elseif (is_array($m)) {
-                $this->metadata = $m;
-            }
-        }
-    }
-
-    public function __toString()
-    {
-        return $this->string;
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->metadata[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->metadata[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        if ($offset === null) {
-            if (isset($value[0])) {
-                $x = ($value instanceof PHP_LexerGenerator_ParseryyToken) ?
-                    $value->metadata : $value;
-                $this->metadata = array_merge($this->metadata, $x);
-
-                return;
-            }
-            $offset = count($this->metadata);
-        }
-        if ($value === null) {
-            return;
-        }
-        if ($value instanceof PHP_LexerGenerator_ParseryyToken) {
-            if ($value->metadata) {
-                $this->metadata[$offset] = $value->metadata;
-            }
-        } elseif ($value) {
-            $this->metadata[$offset] = $value;
-        }
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->metadata[$offset]);
-    }
-}
-
-/** The following structure represents a single element of the
- * parser's stack.  Information stored includes:
- *
- *   +  The state number for the parser at this level of the stack.
- *
- *   +  The value of the token stored at this level of the stack.
- *      (In other words, the "major" token.)
- *
- *   +  The semantic value stored at this level of the stack.  This is
- *      the information used by the action routines in the grammar.
- *      It is sometimes called the "minor" token.
- */
-class PHP_LexerGenerator_ParseryyStackEntry
-{
-    public $stateno;       /* The state-number */
-    public $major;         /* The major token value.  This is the code
-                     ** number for the token at this stack level */
-    public $minor; /* The user-supplied minor token value.  This
-                     ** is the value of the token  */
-};
+/* Driver template for the ParserrGenerator parser generator. (PHP port of LEMON)
+*/;
 
 // code external to the class is included here
 #line 3 "Parser.y"
 
 /* ?><?php {//*/
 /**
- * PHP_LexerGenerator, a php 5 lexer generator.
+ * Smarty_LexerGenerator, a php 5 lexer generator.
  *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
@@ -120,7 +30,7 @@ class PHP_LexerGenerator_ParseryyStackEntry
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_LexerGenerator nor the names of its
+ *     * Neither the name of the Smarty_LexerGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -137,7 +47,7 @@ class PHP_LexerGenerator_ParseryyStackEntry
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -145,17 +55,11 @@ class PHP_LexerGenerator_ParseryyStackEntry
  * @since      File available since Release 0.1.0
  */
 /**
- * For regular expression validation
- */
-require_once './LexerGenerator/Regex/Lexer.php';
-require_once './LexerGenerator/Regex/Parser.php';
-require_once './LexerGenerator/Exception.php';
-/**
  * Token parser for plex files.
  *
- * This parser converts tokens pulled from {@link PHP_LexerGenerator_Lexer}
+ * This parser converts tokens pulled from {@link Lexer}
  * into abstract patterns and rules, then creates the output file
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -166,7 +70,7 @@ require_once './LexerGenerator/Exception.php';
 
 // declare_class is output here
 #line 2 "Parser.y"
-class PHP_LexerGenerator_Parser#line 171 "Parser.php"
+class Parser #line 171 "Parser.php"
 {
 /* First off, code is included which follows the "include_class" declaration
 ** in the input file. */
@@ -208,8 +112,8 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
             throw new Exception('unable to open lexer output file "' . $outfile . '"');
         }
         $this->lex = $lex;
-        $this->_regexLexer = new PHP_LexerGenerator_Regex_Lexer('');
-        $this->_regexParser = new PHP_LexerGenerator_Regex_Parser($this->_regexLexer);
+        $this->_regexLexer = new Regex\Lexer('');
+        $this->_regexParser = new Regex\Parser($this->_regexLexer);
     }
 
     public function doLongestMatch($rules, $statename, $ruleindex)
@@ -523,9 +427,9 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     $this->_regexLexer->token, $this->_regexLexer->value);
             }
             $this->_regexParser->doParse(0, 0);
-        } catch (PHP_LexerGenerator_Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
-            throw new PHP_LexerGenerator_Exception('Invalid pattern "' . $pattern . '"');
+            throw new Exception('Invalid pattern "' . $pattern . '"');
         }
 
         return $this->_regexParser->result;
@@ -768,7 +672,7 @@ public static $yy_action = array(
      * @param resource
      * @param string
      */
-    public static function Trace($TraceFILE, $zTracePrompt)
+    public function Trace($TraceFILE, $zTracePrompt)
     {
         if (!$TraceFILE) {
             $zTracePrompt = 0;
@@ -782,7 +686,7 @@ public static $yy_action = array(
     /**
      * Output debug information to output (php://output stream)
      */
-    public static function PrintTrace()
+    public function PrintTrace()
     {
         $this->yyTraceFILE = fopen('php://output', 'w');
         $this->yyTracePrompt = '';
@@ -915,7 +819,7 @@ public static $yy_action = array(
      * is popped from the stack, then call it.
      *
      * Return the major token number for the symbol popped.
-     * @param PHP_LexerGenerator_ParseryyParser
+     * @param ParseryyParser
      * @return int
      */
     public function yy_pop_parser_stack()
@@ -942,9 +846,6 @@ public static $yy_action = array(
      */
     public function __destruct()
     {
-        while ($this->yyidx >= 0) {
-            $this->yy_pop_parser_stack();
-        }
         if (is_resource($this->yyTraceFILE)) {
             fclose($this->yyTraceFILE);
         }
@@ -996,7 +897,7 @@ public static $yy_action = array(
                     if ($nextstate < self::YYNSTATE) {
                         // we need to shift a non-terminal
                         $this->yyidx++;
-                        $x = new PHP_LexerGenerator_ParseryyStackEntry;
+                        $x = new ParseryyStackEntry;
                         $x->stateno = $nextstate;
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
@@ -1072,7 +973,7 @@ public static $yy_action = array(
                     if ($nextstate < self::YYNSTATE) {
                         // we need to shift a non-terminal
                         $this->yyidx++;
-                        $x = new PHP_LexerGenerator_ParseryyStackEntry;
+                        $x = new ParseryyStackEntry;
                         $x->stateno = $nextstate;
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
@@ -1206,7 +1107,7 @@ public static $yy_action = array(
 
             return;
         }
-        $yytos = new PHP_LexerGenerator_ParseryyStackEntry;
+        $yytos = new ParseryyStackEntry;
         $yytos->stateno = $yyNewState;
         $yytos->major = $yyMajor;
         $yytos->minor = $yypMinor;
@@ -1869,7 +1770,7 @@ public static $yy_action = array(
         //int $yygoto;                     /* The next state */
         //int $yyact;                      /* The next action */
         //mixed $yygotominor;        /* The LHS of the rule reduced */
-        //PHP_LexerGenerator_ParseryyStackEntry $yymsp;            /* The top of the parser's stack */
+        //ParseryyStackEntry $yymsp;            /* The top of the parser's stack */
         //int $yysize;                     /* Amount to pop the stack */
         if ($this->yyTraceFILE && $yyruleno >= 0
               && $yyruleno < count(self::$yyRuleName)) {
@@ -1900,7 +1801,7 @@ public static $yy_action = array(
             ** That gives a significant speed improvement. */
             if (!$this->yyTraceFILE && $yysize) {
                 $this->yyidx++;
-                $x = new PHP_LexerGenerator_ParseryyStackEntry;
+                $x = new ParseryyStackEntry;
                 $x->stateno = $yyact;
                 $x->major = $yygoto;
                 $x->minor = $yy_lefthand_side;
@@ -1991,7 +1892,7 @@ public static $yy_action = array(
             /* if ($yymajor == 0) return; // not sure why this was here... */
             $this->yyidx = 0;
             $this->yyerrcnt = -1;
-            $x = new PHP_LexerGenerator_ParseryyStackEntry;
+            $x = new ParseryyStackEntry;
             $x->stateno = 0;
             $x->major = 0;
             $this->yystack = array();

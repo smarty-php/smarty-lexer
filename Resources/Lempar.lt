@@ -1,14 +1,4 @@
 <?php
-
-class ParseyyStackEntry
-{
-    public $stateno;       /* The state-number */
-    public $major;         /* The major token value.  This is the code
-                     ** number for the token at this stack level */
-    public $minor; /* The user-supplied minor token value.  This
-                     ** is the value of the token  */
-};
-
 %%
 
 %%
@@ -137,7 +127,7 @@ class ParseyyStackEntry
                         $this->yystack[$this->yyidx]->stateno,
                         self::$yyRuleInfo[$yyruleno]['lhs']);
                     if (isset(self::$yyExpectedTokens[$nextstate])) {
-                $expected = array_merge($expected, self::$yyExpectedTokens[$nextstate]);
+                        $expected = array_merge($expected, self::$yyExpectedTokens[$nextstate]);
                         if (isset($res4[$nextstate][$token])) {
                             if ($res4[$nextstate][$token]) {
                                 $this->yyidx = $yyidx;
@@ -155,7 +145,7 @@ class ParseyyStackEntry
                     if ($nextstate < self::YYNSTATE) {
                         // we need to shift a non-terminal
                         $this->yyidx++;
-                        $x = new ParseyyStackEntry;
+                        $x = (object) ['stateno' => null, 'major' => null, 'minor' => null];
                         $x->stateno = $nextstate;
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
@@ -179,8 +169,8 @@ class ParseyyStackEntry
             }
             break;
         } while (true);
-    $this->yyidx = $yyidx;
-    $this->yystack = $stack;
+        $this->yyidx = $yyidx;
+        $this->yystack = $stack;
 
         return array_unique($expected);
     }
@@ -238,7 +228,7 @@ class ParseyyStackEntry
                     if ($nextstate < self::YYNSTATE) {
                         // we need to shift a non-terminal
                         $this->yyidx++;
-                        $x = new ParseyyStackEntry;
+                        $x = (object) ['stateno' => null, 'major' => null, 'minor' => null];
                         $x->stateno = $nextstate;
                         $x->major = self::$yyRuleInfo[$yyruleno]['lhs'];
                         $this->yystack[$this->yyidx] = $x;
@@ -346,7 +336,7 @@ class ParseyyStackEntry
 
             return;
         }
-        $yytos = new ParseyyStackEntry;
+        $yytos = (object) ['stateno' => null, 'major' => null, 'minor' => null];
         $yytos->stateno = $yyNewState;
         $yytos->major = $yyMajor;
         $yytos->minor = $yypMinor;
@@ -401,7 +391,7 @@ class ParseyyStackEntry
         if ($yyact < self::YYNSTATE) {
             if (!$this->yyTraceFILE && $yysize) {
                 $this->yyidx++;
-                $x = new ParseyyStackEntry;
+                $x = (object) ['stateno' => null, 'major' => null, 'minor' => null];
                 $x->stateno = $yyact;
                 $x->major = $yygoto;
                 $x->minor = $yy_lefthand_side;
@@ -446,7 +436,7 @@ class ParseyyStackEntry
         if ($this->yyidx === null || $this->yyidx < 0) {
             $this->yyidx = 0;
             $this->yyerrcnt = -1;
-            $x = new ParseyyStackEntry;
+            $x = (object) ['stateno' => null, 'major' => null, 'minor' => null];
             $x->stateno = 0;
             $x->major = 0;
             $this->yystack = array();

@@ -1,6 +1,8 @@
 <?php
+namespace SmartyGenerator\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -53,14 +55,14 @@
  * symbols which are allowed to immediately follow the end of the rule.
  * Every configuration is recorded as an instance of the following class.
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Config
+class Config
 {
     const COMPLETE = 1;
     const INCOMPLETE = 2;
@@ -71,7 +73,7 @@ class PHP_ParserGenerator_Config
      * <pre>
      * blah ::= FOO bar.
      * </pre>
-     * @var PHP_ParserGenerator_Rule
+     * @var Rule
      */
     public $rp;
     /**
@@ -105,17 +107,17 @@ class PHP_ParserGenerator_Config
     public $fws;
     /**
      * Follow-set forward propagation links.
-     * @var PHP_ParserGenerator_PropagationLink
+     * @var PropagationLink
      */
     public $fplp;
     /**
      * Follow-set backwards propagation links
-     * @var PHP_ParserGenerator_PropagationLink
+     * @var PropagationLink
      */
     public $bplp;
     /**
      * State that contains this configuration
-     * @var PHP_ParserGenerator_State
+     * @var State
      */
     public $stp;
   /* enum {
@@ -125,43 +127,43 @@ class PHP_ParserGenerator_Config
     /**
      * Status during followset and shift computations.
      *
-     * One of PHP_ParserGenerator_Config::COMPLETE or
-     * PHP_ParserGenerator_Config::INCOMPLETE.
+     * One of Config::COMPLETE or
+     * Config::INCOMPLETE.
      * @var int
      */
     public $status;
     /**
      * Next configuration in the state.
      *
-     * Index of next PHP_ParserGenerator_Config object.
+     * Index of next Config object.
      * @var int
      */
     public $next;
     /**
-     * Index of the next basis configuration PHP_ParserGenerator_Config object
+     * Index of the next basis configuration Config object
      * @var int
      */
     public $bp;
 
     /**
      * Top of the list of configurations for the current state.
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public static $current;
     /**
      * Last on the list of configurations for the current state.
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public static $currentend;
 
     /**
      * Top of the list of basis configurations for the current state.
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public static $basis;
     /**
      * Last on the list of basis configurations for the current state.
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public static $basisend;
 
@@ -175,20 +177,20 @@ class PHP_ParserGenerator_Config
 
     /**
      * Return a pointer to a new configuration
-     * @return PHP_ParserGenerator_Config
+     * @return Config
      */
     private static function newconfig()
     {
-        return new PHP_ParserGenerator_Config;
+        return new Config;
     }
 
     /**
      * Display the current configuration for the .out file
      *
-     * @param PHP_ParserGenerator_Config $cfp
-     * @see PHP_ParserGenerator_Data::ReportOutput()
+     * @param Config $cfp
+     * @see Data::ReportOutput()
      */
-    public static function Configshow(PHP_ParserGenerator_Config $cfp)
+    public static function Configshow(Config $cfp)
     {
         $fp = fopen('php://output', 'w');
         while ($cfp) {
@@ -272,13 +274,13 @@ class PHP_ParserGenerator_Config
 
     /**
      * Add another configuration to the configuration list for this parser state.
-     * @param PHP_ParserGenerator_Rule the rule
+     * @param Rule the rule
      * @param int Index into the right-hand side of the rule where the dot goes
-     * @return PHP_ParserGenerator_Config
+     * @return Config
      */
     public static function Configlist_add($rp, $dot)
     {
-        $model = new PHP_ParserGenerator_Config;
+        $model = new Config;
         $model->rp = $rp;
         $model->dot = $dot;
         $cfp = self::Configtable_find($model);
@@ -305,13 +307,13 @@ class PHP_ParserGenerator_Config
      * Basis configurations are the root for a configuration.  This method also
      * inserts the configuration into the regular list of configurations for this
      * reason.
-     * @param PHP_ParserGenerator_Rule the rule
+     * @param Rule the rule
      * @param int Index into the right-hand side of the rule where the dot goes
-     * @return PHP_ParserGenerator_Config
+     * @return Config
      */
     public static function Configlist_addbasis($rp, $dot)
     {
-        $model = new PHP_ParserGenerator_Config;
+        $model = new Config;
         $model->rp = $rp;
         $model->dot = $dot;
         $cfp = self::Configtable_find($model);
@@ -341,7 +343,7 @@ class PHP_ParserGenerator_Config
      * each configuration, ensuring that each state accounts
      * for every configuration that could arrive at that state.
      */
-    public static function Configlist_closure(PHP_ParserGenerator_Data $lemp)
+    public static function Configlist_closure(Data $lemp)
     {
         for ($cfp = self::$current; $cfp; $cfp = $cfp->next) {
             $rp = $cfp->rp;
@@ -350,9 +352,9 @@ class PHP_ParserGenerator_Config
                 continue;
             }
             $sp = $rp->rhs[$dot];
-            if ($sp->type == PHP_ParserGenerator_Symbol::NONTERMINAL) {
+            if ($sp->type == Symbol::NONTERMINAL) {
                 if ($sp->rule === 0 && $sp !== $lemp->errsym) {
-                    PHP_ParserGenerator::ErrorMsg($lemp->filename, $rp->line,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($lemp->filename, $rp->line,
                         "Nonterminal \"%s\" has no rules.", $sp->name);
                     $lemp->errorcnt++;
                 }
@@ -360,10 +362,10 @@ class PHP_ParserGenerator_Config
                     $newcfp = self::Configlist_add($newrp, 0);
                     for ($i = $dot + 1; $i < $rp->nrhs; $i++) {
                         $xsp = $rp->rhs[$i];
-                        if ($xsp->type == PHP_ParserGenerator_Symbol::TERMINAL) {
+                        if ($xsp->type == Symbol::TERMINAL) {
                             $newcfp->fws[$xsp->index] = 1;
                             break;
-                        } elseif ($xsp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+                        } elseif ($xsp->type == Symbol::MULTITERMINAL) {
                             for ($k = 0; $k < $xsp->nsubsym; $k++) {
                                 $newcfp->fws[$xsp->subsym[$k]->index] = 1;
                             }
@@ -377,7 +379,7 @@ class PHP_ParserGenerator_Config
                         }
                     }
                     if ($i == $rp->nrhs) {
-                        PHP_ParserGenerator_PropagationLink::Plink_add($cfp->fplp, $newcfp);
+                        PropagationLink::Plink_add($cfp->fplp, $newcfp);
                     }
                 }
             }
@@ -392,7 +394,7 @@ class PHP_ParserGenerator_Config
     {
         $a = 0;
         //self::Configshow(self::$current);
-        self::$current = PHP_ParserGenerator::msort(self::$current,'next', array('PHP_ParserGenerator_Config', 'Configcmp'));
+        self::$current = \SmartyGenerator\ParserGenerator::msort(self::$current,'next', array(Config::class, 'Configcmp'));
         //self::Configshow(self::$current);
         self::$currentend = &$a;
         self::$currentend = 0;
@@ -405,7 +407,7 @@ class PHP_ParserGenerator_Config
     public static function Configlist_sortbasis()
     {
         $a = 0;
-        self::$basis = PHP_ParserGenerator::msort(self::$current,'bp', array('PHP_ParserGenerator_Config', 'Configcmp'));
+        self::$basis = \SmartyGenerator\ParserGenerator::msort(self::$current,'bp', array(Config::class, 'Configcmp'));
         self::$basisend = &$a;
         self::$basisend = 0;
     }
@@ -414,7 +416,7 @@ class PHP_ParserGenerator_Config
      * Return a pointer to the head of the configuration list and
      * reset the list
      * @see $current
-     * @return PHP_ParserGenerator_Config
+     * @return Config
      */
     public static function Configlist_return()
     {
@@ -429,7 +431,7 @@ class PHP_ParserGenerator_Config
      * Return a pointer to the head of the basis list and
      * reset the list
      * @see $basis
-     * @return PHP_ParserGenerator_Config
+     * @return Config
      */
     public static function Configlist_basis()
     {
@@ -442,7 +444,7 @@ class PHP_ParserGenerator_Config
 
     /**
      * Free all elements of the given configuration list
-     * @param PHP_ParserGenerator_Config
+     * @param Config
      */
     public static function Configlist_eat($cfp)
     {
@@ -487,7 +489,7 @@ class PHP_ParserGenerator_Config
      * Print out information on this configuration.
      *
      * @param resource $fp
-     * @see PHP_ParserGenerator_Data::ReportOutput()
+     * @see Data::ReportOutput()
      */
     public function ConfigPrint($fp)
     {
@@ -502,7 +504,7 @@ class PHP_ParserGenerator_Config
             }
             $sp = $rp->rhs[$i];
             fprintf($fp,' %s', $sp->name);
-            if ($sp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
+            if ($sp->type == Symbol::MULTITERMINAL) {
                 for ($j = 1; $j < $sp->nsubsym; $j++) {
                     fprintf($fp, '|%s', $sp->subsym[$j]->name);
                 }
@@ -513,7 +515,7 @@ class PHP_ParserGenerator_Config
     /**
      * Hash a configuration for the associative array {@link $x4a}
      */
-    private static function confighash(PHP_ParserGenerator_Config $a)
+    private static function confighash(Config $a)
     {
         $h = 0;
         $h = $h * 571 + $a->rp->index * 37 + $a->dot;
@@ -525,7 +527,7 @@ class PHP_ParserGenerator_Config
      * Insert a new record into the array.  Return TRUE if successful.
      * Prior data with the same key is NOT overwritten
      */
-    public static function Configtable_insert(PHP_ParserGenerator_Config $data)
+    public static function Configtable_insert(Config $data)
     {
         $h = self::confighash($data);
         if (isset(self::$x4a[$h])) {
@@ -544,7 +546,7 @@ class PHP_ParserGenerator_Config
         }
         /* Insert the new data */
         $np = array('data' => $data, 'next' => 0, 'from' => 0);
-        $np = new PHP_ParserGenerator_StateNode;
+        $np = new StateNode;
         $np->data = $data;
         if (isset(self::$x4a[$h])) {
             self::$x4a[$h]->from = $np->next;
@@ -559,9 +561,9 @@ class PHP_ParserGenerator_Config
     /**
      * Return a pointer to data assigned to the given key.  Return NULL
      * if no such key.
-     * @return PHP_ParserGenerator_Config|0
+     * @return Config|0
      */
-    public static function Configtable_find(PHP_ParserGenerator_Config $key)
+    public static function Configtable_find(Config $key)
     {
         $h = self::confighash($key);
         if (!isset(self::$x4a[$h])) {

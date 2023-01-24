@@ -1,6 +1,8 @@
 <?php
+namespace SmartyGenerator\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -48,18 +50,18 @@
 /**
  * Each production rule in the grammar is stored in this class
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Rule
+class Rule
 {
     /**
      * Left-hand side of the rule
-     * @var array an array of {@link PHP_ParserGenerator_Symbol} objects
+     * @var array an array of {@link Symbol} objects
      */
     public $lhs;
     /**
@@ -79,7 +81,7 @@ class PHP_ParserGenerator_Rule
     public $nrhs;
     /**
      * The right-hand side symbols
-     * @var array an array of {@link PHP_ParserGenerator_Symbol} objects
+     * @var array an array of {@link Symbol} objects
      */
     public $rhs;
     /**
@@ -112,7 +114,7 @@ class PHP_ParserGenerator_Rule
     public $code;
     /**
      * Precedence symbol for this rule
-     * @var PHP_ParserGenerator_Symbol
+     * @var Symbol
      */
     public $precsym;
     /**
@@ -130,12 +132,12 @@ class PHP_ParserGenerator_Rule
     public $canReduce;
     /**
      * Next rule with the same left-hand side
-     * @var PHP_ParserGenerator_Rule|0
+     * @var Rule|0
      */
     public $nextlhs;
     /**
      * Next rule in the global list
-     * @var PHP_ParserGenerator_Rule|0
+     * @var Rule|0
      */
     public $next;
 }

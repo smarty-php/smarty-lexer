@@ -1,6 +1,8 @@
 <?php
+namespace SmartyGenerator\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -50,7 +52,7 @@
  * configuration followset should be propagated to another whenever
  * the first changes.
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -58,16 +60,16 @@
  * @since      Class available since Release 0.1.0
  */
 
-class PHP_ParserGenerator_PropagationLink
+class PropagationLink
 {
     /**
      * The configuration that defines this propagation link
-     * @var PHP_ParserGenerator_Config
+     * @var Config
      */
     public $cfp;
     /**
      * The next propagation link
-     * @var PHP_ParserGenerator_PropagationLink|0
+     * @var PropagationLink|0
      */
     public $next = 0;
 
@@ -75,14 +77,14 @@ class PHP_ParserGenerator_PropagationLink
      * Add a propagation link to the current list
      *
      * This prepends the configuration passed in to the first parameter
-     * which is either 0 or a PHP_ParserGenerator_PropagationLink defining
+     * which is either 0 or a PropagationLink defining
      * an existing list.
-     * @param PHP_ParserGenerator_PropagationLink|null
-     * @param PHP_ParserGenerator_Config
+     * @param PropagationLink|null
+     * @param Config
      */
-    public static function Plink_add(&$plpp, PHP_ParserGenerator_Config $cfp)
+    public static function Plink_add(&$plpp, Config $cfp)
     {
-        $new = new PHP_ParserGenerator_PropagationLink;
+        $new = new PropagationLink;
         $new->next = $plpp;
         $plpp = $new;
         $new->cfp = $cfp;
@@ -91,8 +93,8 @@ class PHP_ParserGenerator_PropagationLink
     /**
      * Transfer every propagation link on the list "from" to the list "to"
      */
-    public static function Plink_copy(PHP_ParserGenerator_PropagationLink &$to,
-                               PHP_ParserGenerator_PropagationLink $from)
+    public static function Plink_copy(PropagationLink &$to,
+                               PropagationLink $from)
     {
         while ($from) {
             $nextpl = $from->next;
@@ -104,7 +106,7 @@ class PHP_ParserGenerator_PropagationLink
 
     /**
      * Delete every propagation link on the list
-     * @param PHP_ParserGenerator_PropagationLink|0
+     * @param PropagationLink|0
      */
     public static function Plink_delete($plp)
     {

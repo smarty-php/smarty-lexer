@@ -1,6 +1,8 @@
 <?php
+namespace SmartyGenerator\LexerGenerator;
+
 /**
- * PHP_LexerGenerator, a php 5 lexer generator.
+ * Smarty_LexerGenerator, a php 5 lexer generator.
  *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
@@ -14,28 +16,27 @@
  * send a note to license@php.net so we can mail you a copy immediately.
  *
  * @category   php
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    CVS: $Id: Lexer.php 246683 2007-11-22 04:43:52Z instance $
  * @since      File available since Release 0.1.0
  */
-require_once './LexerGenerator/Parser.php';
 /**
  * Token scanner for plex files.
  *
  * This scanner detects comments beginning with "/*!lex2php" and
  * then returns their components (processing instructions, patterns, strings
  * action code, and regexes)
- * @package    PHP_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    @package_version@
  * @since      Class available since Release 0.1.0
  */
-class PHP_LexerGenerator_Lexer
+class Lexer
 {
     private $data;
     private $N;
@@ -61,15 +62,15 @@ class PHP_LexerGenerator_Lexer
      */
     public $value;
 
-    const CODE = PHP_LexerGenerator_Parser::CODE;
-    const COMMENTEND = PHP_LexerGenerator_Parser::COMMENTEND;
-    const COMMENTSTART = PHP_LexerGenerator_Parser::COMMENTSTART;
-    const PATTERN = PHP_LexerGenerator_Parser::PATTERN;
-    const PHPCODE = PHP_LexerGenerator_Parser::PHPCODE;
-    const PI = PHP_LexerGenerator_Parser::PI;
-    const QUOTE = PHP_LexerGenerator_Parser::QUOTE;
-    const SINGLEQUOTE = PHP_LexerGenerator_Parser::SINGLEQUOTE;
-    const SUBPATTERN = PHP_LexerGenerator_Parser::SUBPATTERN;
+    const CODE = Parser::CODE;
+    const COMMENTEND = Parser::COMMENTEND;
+    const COMMENTSTART = Parser::COMMENTSTART;
+    const PATTERN = Parser::PATTERN;
+    const PHPCODE = Parser::PHPCODE;
+    const PI = Parser::PI;
+    const QUOTE = Parser::QUOTE;
+    const SINGLEQUOTE = Parser::SINGLEQUOTE;
+    const SUBPATTERN = Parser::SUBPATTERN;
 
     /**
      * prepare scanning
@@ -408,7 +409,7 @@ class PHP_LexerGenerator_Lexer
                 if ($next_newline) {
                     $this->N = $next_newline;
                 } else {
-                    $this->N = sizeof($this->data);
+                    $this->N = count($this->data);
                 }
                 $this->line++;
             } else {

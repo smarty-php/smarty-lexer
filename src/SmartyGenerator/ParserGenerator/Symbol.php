@@ -1,6 +1,8 @@
 <?php
+namespace SmartyGenerator\ParserGenerator;
+
 /**
- * PHP_ParserGenerator, a php 5 parser generator.
+ * \Smarty\ParserGenerator, a php 5 parser generator.
  *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
@@ -21,7 +23,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the distribution.
- *     * Neither the name of the PHP_ParserGenerator nor the names of its
+ *     * Neither the name of the \Smarty\ParserGenerator nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -38,7 +40,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -48,14 +50,14 @@
 /**
  * Symbols (terminals and nonterminals) of the grammar are stored in this class
  *
- * @package    PHP_ParserGenerator
+ * @package    \Smarty\ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version    0.1.5
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Symbol
+class Symbol
 {
     /**
      * Symbols that start with a capital letter like FOO.
@@ -101,20 +103,20 @@ class PHP_ParserGenerator_Symbol
     /**
      * Symbol type
      *
-     * One of PHP_ParserGenerator_Symbol::TERMINAL,
-     * PHP_ParserGenerator_Symbol::NONTERMINAL or
-     * PHP_ParserGenerator_Symbol::MULTITERMINAL
+     * One of Symbol::TERMINAL,
+     * Symbol::NONTERMINAL or
+     * Symbol::MULTITERMINAL
      * @var int
      */
     public $type;
     /**
      * Linked list of rules that use this symbol, if it is a non-terminal.
-     * @var PHP_ParserGenerator_Rule
+     * @var Rule
      */
     public $rule;
     /**
      * Fallback token in case this token doesn't parse
-     * @var PHP_ParserGenerator_Symbol
+     * @var Symbol
      */
     public $fallback;
     /**
@@ -127,9 +129,9 @@ class PHP_ParserGenerator_Symbol
     /**
      * Associativity if precedence is defined.
      *
-     * One of PHP_ParserGenerator_Symbol::LEFT,
-     * PHP_ParserGenerator_Symbol::RIGHT, PHP_ParserGenerator_Symbol::NONE
-     * or PHP_ParserGenerator_Symbol::UNK
+     * One of Symbol::LEFT,
+     * Symbol::RIGHT, Symbol::NONE
+     * or Symbol::UNK
      * @var unknown_type
      */
     public $assoc;
@@ -188,14 +190,14 @@ class PHP_ParserGenerator_Symbol
     public $nsubsym;
     /**
      * Array of terminal symbols in the MULTITERMINAL
-     * @var array an array of {@link PHP_ParserGenerator_Symbol} objects
+     * @var array an array of {@link Symbol} objects
      */
     public $subsym = array();
     /**#@-*/
     /**
      * Singleton storage of symbols
      *
-     * @var array an array of PHP_ParserGenerator_Symbol objects
+     * @var array an array of Symbol objects
      */
     private static $symbol_table = array();
     /**
@@ -203,14 +205,14 @@ class PHP_ParserGenerator_Symbol
      * Create a new symbol if this is the first time "x" has been seen.
      * (this is a singleton)
      * @param string
-     * @return PHP_ParserGenerator_Symbol
+     * @return Symbol
      */
     public static function Symbol_new($x)
     {
         if (isset(self::$symbol_table[$x])) {
             return self::$symbol_table[$x];
         }
-        $sp = new PHP_ParserGenerator_Symbol;
+        $sp = new Symbol;
         $sp->name = $x;
         $sp->type = preg_match('/[A-Z]/', $x[0]) ? self::TERMINAL : self::NONTERMINAL;
         $sp->rule = 0;
@@ -259,8 +261,8 @@ class PHP_ParserGenerator_Symbol
      * We find experimentally that leaving the symbols in their original
      * order (the order they appeared in the grammar file) gives the
      * smallest parser tables in SQLite.
-     * @param PHP_ParserGenerator_Symbol
-     * @param PHP_ParserGenerator_Symbol
+     * @param Symbol
+     * @param Symbol
      */
     public static function sortSymbols($a, $b)
     {
@@ -273,7 +275,7 @@ class PHP_ParserGenerator_Symbol
     /**
      * Return true if two symbols are the same.
      */
-    public static function same_symbol(PHP_ParserGenerator_Symbol $a, PHP_ParserGenerator_Symbol $b)
+    public static function same_symbol(Symbol $a, Symbol $b)
     {
         if ($a === $b) return 1;
         if ($a->type != self::MULTITERMINAL) return 0;

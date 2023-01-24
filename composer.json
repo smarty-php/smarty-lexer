@@ -17,6 +17,10 @@
         {
             "name": "Rodney Rehm",
             "email": "rodney.rehm@medialize.de"
+        },
+        {
+            "name": "Simon Wisselink",
+            "homepage": "https://www.iwink.nl/"
         }
     ],
     "support": {
@@ -24,13 +28,12 @@
         "issues": "http://code.google.com/p/smarty-php/issues/list",
         "forum": "http://www.smarty.net/forums/"
     },
-    "require": {
-        "php": ">=5.2"
-    },
-   "extra": {
-        "branch-alias": {
-            "dev-master": "3.1.x-dev"
+    "autoload": {
+        "psr-4": {
+            "SmartyGenerator\\": "src/SmartyGenerator/"
         }
-    }
-
+    },
+    "require": {
+        "php": "^7.1 || ^8.0"
+    },
 }

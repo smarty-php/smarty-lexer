@@ -17,6 +17,10 @@
         {
             "name": "Rodney Rehm",
             "email": "rodney.rehm@medialize.de"
+        },
+        {
+            "name": "Simon Wisselink",
+            "homepage": "https://www.iwink.nl/"
         }
     ],
     "support": {
@@ -26,16 +30,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Smarty\\": "src/Smarty/"
+            "SmartyGenerator\\": "src/SmartyGenerator/"
         }
     },
     "require": {
         "php": "^7.1 || ^8.0"
     },
-   "extra": {
-        "branch-alias": {
-            "dev-master": "3.1.x-dev"
-        }
-    }
-
 }

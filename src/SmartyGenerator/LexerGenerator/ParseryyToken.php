@@ -1,6 +1,6 @@
 <?php
 
-namespace Smarty\LexerGenerator;
+namespace SmartyGenerator\LexerGenerator;
 
 /**
  * This can be used to store both the string representation of

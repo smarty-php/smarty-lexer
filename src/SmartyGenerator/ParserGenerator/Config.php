@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\ParserGenerator;
+namespace SmartyGenerator\ParserGenerator;
 
 /**
  * \Smarty\ParserGenerator, a php 5 parser generator.
@@ -354,7 +354,7 @@ class Config
             $sp = $rp->rhs[$dot];
             if ($sp->type == Symbol::NONTERMINAL) {
                 if ($sp->rule === 0 && $sp !== $lemp->errsym) {
-                    \Smarty\ParserGenerator::ErrorMsg($lemp->filename, $rp->line,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($lemp->filename, $rp->line,
                         "Nonterminal \"%s\" has no rules.", $sp->name);
                     $lemp->errorcnt++;
                 }
@@ -394,7 +394,7 @@ class Config
     {
         $a = 0;
         //self::Configshow(self::$current);
-        self::$current = \Smarty\ParserGenerator::msort(self::$current,'next', array(Config::class, 'Configcmp'));
+        self::$current = \SmartyGenerator\ParserGenerator::msort(self::$current,'next', array(Config::class, 'Configcmp'));
         //self::Configshow(self::$current);
         self::$currentend = &$a;
         self::$currentend = 0;
@@ -407,7 +407,7 @@ class Config
     public static function Configlist_sortbasis()
     {
         $a = 0;
-        self::$basis = \Smarty\ParserGenerator::msort(self::$current,'bp', array(Config::class, 'Configcmp'));
+        self::$basis = \SmartyGenerator\ParserGenerator::msort(self::$current,'bp', array(Config::class, 'Configcmp'));
         self::$basisend = &$a;
         self::$basisend = 0;
     }

@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\LexerGenerator;
+namespace SmartyGenerator\LexerGenerator;
 
 /**
  * Smarty_LexerGenerator, a php 5 lexer generator.
@@ -16,7 +16,7 @@ namespace Smarty\LexerGenerator;
  * send a note to license@php.net so we can mail you a copy immediately.
  *
  * @category   php
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -29,7 +29,7 @@ namespace Smarty\LexerGenerator;
  * This scanner detects comments beginning with "/*!lex2php" and
  * then returns their components (processing instructions, patterns, strings
  * action code, and regexes)
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -409,7 +409,7 @@ class Lexer
                 if ($next_newline) {
                     $this->N = $next_newline;
                 } else {
-                    $this->N = sizeof($this->data);
+                    $this->N = count($this->data);
                 }
                 $this->line++;
             } else {

@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\LexerGenerator\Regex;
+namespace SmartyGenerator\LexerGenerator\Regex;
 
 class Lexer
 {

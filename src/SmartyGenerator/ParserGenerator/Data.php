@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\ParserGenerator;
+namespace SmartyGenerator\ParserGenerator;
 
 /**
  * \Smarty\ParserGenerator, a php 5 parser generator.
@@ -428,7 +428,7 @@ class Data
         if ($this->start) {
             $sp = Symbol::Symbol_find($this->start);
             if ($sp == 0) {
-                \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
+                \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, 0,
                     "The specified start symbol \"%s\" is not " .
                     "in a nonterminal of the grammar.  \"%s\" will be used as the start " .
                     "symbol instead.", $this->start, $this->rule->lhs->name);
@@ -447,7 +447,7 @@ class Data
                 if ($rp->rhs[$i]->type == Symbol::MULTITERMINAL) {
                     foreach ($rp->rhs[$i]->subsym as $subsp) {
                         if ($subsp === $sp) {
-                            \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
+                            \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, 0,
                                 "The start symbol \"%s\" occurs on the " .
                                 "right-hand side of a rule. This will result in a parser which " .
                                 "does not work properly.", $sp->name);
@@ -455,7 +455,7 @@ class Data
                         }
                     }
                 } elseif ($rp->rhs[$i] === $sp) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, 0,
                         "The start symbol \"%s\" occurs on the " .
                         "right-hand side of a rule. This will result in a parser which " .
                         "does not work properly.", $sp->name);
@@ -701,7 +701,7 @@ class Data
             if ($rp->canReduce) {
                 continue;
             }
-            \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline, "This rule can not be reduced (is not connected to the start symbol).\n");
+            \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline, "This rule can not be reduced (is not connected to the start symbol).\n");
             $this->errorcnt++;
         }
     }
@@ -1412,7 +1412,7 @@ class Data
         $lineno++;
         if ($this->stacksize) {
             if ($this->stacksize <= 0) {
-                \Smarty\ParserGenerator::ErrorMsg($this->filename, 0,
+                \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, 0,
                     "Illegal stack size: [%s].  The stack size should be an integer constant.",
                     $this->stacksize);
                 $this->errorcnt++;
@@ -1767,7 +1767,7 @@ class Data
 
         /* Check to make sure the LHS has been used */
         if ($rp->lhsalias && !$lhsused) {
-            \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
+            \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
                 "Label \"%s\" for \"%s(%s)\" is never used.",
                 $rp->lhsalias, $rp->lhs->name, $rp->lhsalias);
                 $this->errorcnt++;
@@ -1777,7 +1777,7 @@ class Data
         ** reduce code */
         for ($i = 0; $i < $rp->nrhs; $i++) {
             if ($rp->rhsalias[$i] && !isset($used[$i])) {
-                \Smarty\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
+                \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $rp->ruleline,
                     "Label %s for \"%s(%s)\" is never used.",
                     $rp->rhsalias[$i], $rp->rhs[$i]->name, $rp->rhsalias[$i]);
                 $this->errorcnt++;

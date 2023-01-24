@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\LexerGenerator\Regex;
+namespace SmartyGenerator\LexerGenerator\Regex;
 
 /* Driver template for the PHP_rGenerator parser generator. (PHP port of LEMON)
 */
@@ -14,7 +14,7 @@ namespace Smarty\LexerGenerator\Regex;
 
 // declare_class is output here
 #line 5 "Parser.y"
-use Smarty\LexerGenerator\ParseryyToken;
+use SmartyGenerator\LexerGenerator\ParseryyToken;
 
 class Parser #line 107 "Parser.php"
 {
@@ -671,9 +671,6 @@ public static $yy_action = array(
      */
     public function __destruct()
     {
-        while ($this->yyidx >= 0) {
-            $this->yy_pop_parser_stack();
-        }
         if (is_resource(self::$yyTraceFILE)) {
             fclose(self::$yyTraceFILE);
         }
@@ -1178,21 +1175,21 @@ public static $yy_action = array(
 #line 56 "Parser.y"
     public function yy_r1()
     {
-    throw new \Smarty\LexerGenerator\Exception('Cannot include start match "' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Cannot include start match "' .
         $this->yystack[$this->yyidx + -2]->minor . '" or end match "' . $this->yystack[$this->yyidx + 0]->minor . '"');
     }
 #line 1265 "Parser.php"
 #line 60 "Parser.y"
     public function yy_r2()
     {
-    throw new \Smarty\LexerGenerator\Exception('Cannot include start match "' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Cannot include start match "' .
         B . '"');
     }
 #line 1271 "Parser.php"
 #line 64 "Parser.y"
     public function yy_r3()
     {
-    throw new \Smarty\LexerGenerator\Exception('Cannot include end match "' . $this->yystack[$this->yyidx + 0]->minor . '"');
+    throw new \SmartyGenerator\LexerGenerator\Exception('Cannot include end match "' . $this->yystack[$this->yyidx + 0]->minor . '"');
     }
 #line 1276 "Parser.php"
 #line 67 "Parser.y"
@@ -1201,77 +1198,77 @@ public static $yy_action = array(
 #line 68 "Parser.y"
     public function yy_r5()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '|' . $this->yystack[$this->yyidx + 0]->minor->string, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '|' . $this->yystack[$this->yyidx + 0]->minor->string, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . '|' . $this->yystack[$this->yyidx + 0]->minor['pattern']));
     }
 #line 1285 "Parser.php"
 #line 84 "Parser.y"
     public function yy_r17()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . $this->yystack[$this->yyidx + 0]->minor->string, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . $this->yystack[$this->yyidx + 0]->minor->string, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . $this->yystack[$this->yyidx + 0]->minor['pattern']));
     }
 #line 1291 "Parser.php"
 #line 123 "Parser.y"
     public function yy_r28()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('[' . $this->yystack[$this->yyidx + -1]->minor->string . ']', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('[' . $this->yystack[$this->yyidx + -1]->minor->string . ']', array(
         'pattern' => '[' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ']'));
     }
 #line 1297 "Parser.php"
 #line 127 "Parser.y"
     public function yy_r29()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('[^' . $this->yystack[$this->yyidx + -1]->minor->string . ']', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('[^' . $this->yystack[$this->yyidx + -1]->minor->string . ']', array(
         'pattern' => '[^' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ']'));
     }
 #line 1303 "Parser.php"
 #line 131 "Parser.y"
     public function yy_r30()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('[' . $this->yystack[$this->yyidx + -2]->minor->string . ']' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('[' . $this->yystack[$this->yyidx + -2]->minor->string . ']' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '[' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ']' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1309 "Parser.php"
 #line 135 "Parser.y"
     public function yy_r31()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('[^' . $this->yystack[$this->yyidx + -2]->minor->string . ']' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('[^' . $this->yystack[$this->yyidx + -2]->minor->string . ']' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '[^' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ']' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1315 "Parser.php"
 #line 140 "Parser.y"
     public function yy_r32()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1321 "Parser.php"
 #line 144 "Parser.y"
     public function yy_r33()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1327 "Parser.php"
 #line 148 "Parser.y"
     public function yy_r34()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1333 "Parser.php"
 #line 152 "Parser.y"
     public function yy_r35()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1339 "Parser.php"
 #line 156 "Parser.y"
     public function yy_r36()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor . '-\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor . '-\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1345 "Parser.php"
@@ -1279,12 +1276,12 @@ public static $yy_action = array(
     public function yy_r37()
     {
     if (((int) substr($this->yystack[$this->yyidx + 0]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception('Back-reference refers to non-existent ' .
+        throw new \SmartyGenerator\LexerGenerator\Exception('Back-reference refers to non-existent ' .
             'sub-pattern ' . substr($this->yystack[$this->yyidx + 0]->minor, 1));
     }
     $this->yystack[$this->yyidx + 0]->minor = substr($this->yystack[$this->yyidx + 0]->minor, 1);
     // adjust back-reference for containing ()
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
         'pattern' => '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + 0]->minor)));
     }
 #line 1357 "Parser.php"
@@ -1292,60 +1289,60 @@ public static $yy_action = array(
     public function yy_r38()
     {
     if (((int) substr($this->yystack[$this->yyidx + 0]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception($this->yystack[$this->yyidx + 0]->minor . ' will be interpreted as an invalid' .
+        throw new \SmartyGenerator\LexerGenerator\Exception($this->yystack[$this->yyidx + 0]->minor . ' will be interpreted as an invalid' .
             ' back-reference, use "\\0' . substr($this->yystack[$this->yyidx + 0]->minor, 1) . ' for octal');
     }
     $this->yystack[$this->yyidx + 0]->minor = substr($this->yystack[$this->yyidx + 0]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
         'pattern' => '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + 0]->minor)));
     }
 #line 1368 "Parser.php"
 #line 179 "Parser.y"
     public function yy_r39()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1374 "Parser.php"
 #line 183 "Parser.y"
     public function yy_r40()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1380 "Parser.php"
 #line 187 "Parser.y"
     public function yy_r41()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1386 "Parser.php"
 #line 191 "Parser.y"
     public function yy_r42()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -3]->minor['pattern'] . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1392 "Parser.php"
 #line 195 "Parser.y"
     public function yy_r43()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -3]->minor['pattern'] . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1398 "Parser.php"
 #line 199 "Parser.y"
     public function yy_r44()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor . '-\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor . '-\\\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -3]->minor['pattern'] . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1404 "Parser.php"
 #line 203 "Parser.y"
     public function yy_r45()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -3]->minor['pattern'] . $this->yystack[$this->yyidx + -2]->minor . '-' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1410 "Parser.php"
@@ -1353,11 +1350,11 @@ public static $yy_action = array(
     public function yy_r46()
     {
     if (((int) substr($this->yystack[$this->yyidx + 0]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception('Back-reference refers to non-existent ' .
+        throw new \SmartyGenerator\LexerGenerator\Exception('Back-reference refers to non-existent ' .
             'sub-pattern ' . substr($this->yystack[$this->yyidx + 0]->minor, 1));
     }
     $this->yystack[$this->yyidx + 0]->minor = substr($this->yystack[$this->yyidx + 0]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + 0]->minor)));
     }
 #line 1421 "Parser.php"
@@ -1365,39 +1362,39 @@ public static $yy_action = array(
     public function yy_r47()
     {
     if (((int) substr($this->yystack[$this->yyidx + 0]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception($this->yystack[$this->yyidx + 0]->minor . ' will be interpreted as an invalid' .
+        throw new \SmartyGenerator\LexerGenerator\Exception($this->yystack[$this->yyidx + 0]->minor . ' will be interpreted as an invalid' .
             ' back-reference, use "\\0' . substr($this->yystack[$this->yyidx + 0]->minor, 1) . ' for octal');
     }
     $this->yystack[$this->yyidx + 0]->minor = substr($this->yystack[$this->yyidx + 0]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex), array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor['pattern'] . '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + 0]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + 0]->minor)));
     }
 #line 1432 "Parser.php"
 #line 230 "Parser.y"
     public function yy_r49()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1438 "Parser.php"
 #line 242 "Parser.y"
     public function yy_r52()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1444 "Parser.php"
 #line 246 "Parser.y"
     public function yy_r53()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1450 "Parser.php"
 #line 254 "Parser.y"
     public function yy_r55()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1456 "Parser.php"
@@ -1405,12 +1402,12 @@ public static $yy_action = array(
     public function yy_r57()
     {
     if (((int) substr($this->yystack[$this->yyidx + -1]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception('Back-reference refers to non-existent ' .
+        throw new \SmartyGenerator\LexerGenerator\Exception('Back-reference refers to non-existent ' .
             'sub-pattern ' . substr($this->yystack[$this->yyidx + -1]->minor, 1));
     }
     $this->yystack[$this->yyidx + -1]->minor = substr($this->yystack[$this->yyidx + -1]->minor, 1);
     // adjust back-reference for containing ()
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + -1]->minor) . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1468 "Parser.php"
@@ -1418,32 +1415,32 @@ public static $yy_action = array(
     public function yy_r59()
     {
     if (((int) substr($this->yystack[$this->yyidx + -1]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception($this->yystack[$this->yyidx + -1]->minor . ' will be interpreted as an invalid' .
+        throw new \SmartyGenerator\LexerGenerator\Exception($this->yystack[$this->yyidx + -1]->minor . ' will be interpreted as an invalid' .
             ' back-reference, use "\\0' . substr($this->yystack[$this->yyidx + -1]->minor, 1) . ' for octal');
     }
     $this->yystack[$this->yyidx + -1]->minor = substr($this->yystack[$this->yyidx + -1]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + -1]->minor) . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1479 "Parser.php"
 #line 300 "Parser.y"
     public function yy_r61()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1485 "Parser.php"
 #line 316 "Parser.y"
     public function yy_r65()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1491 "Parser.php"
 #line 324 "Parser.y"
     public function yy_r67()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1497 "Parser.php"
@@ -1451,11 +1448,11 @@ public static $yy_action = array(
     public function yy_r69()
     {
     if (((int) substr($this->yystack[$this->yyidx + -1]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception('Back-reference refers to non-existent ' .
+        throw new \SmartyGenerator\LexerGenerator\Exception('Back-reference refers to non-existent ' .
             'sub-pattern ' . substr($this->yystack[$this->yyidx + -1]->minor, 1));
     }
     $this->yystack[$this->yyidx + -1]->minor = substr($this->yystack[$this->yyidx + -1]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + -1]->minor) . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1508 "Parser.php"
@@ -1463,39 +1460,39 @@ public static $yy_action = array(
     public function yy_r71()
     {
     if (((int) substr($this->yystack[$this->yyidx + -1]->minor, 1)) > $this->_subpatterns) {
-        throw new \Smarty\LexerGenerator\Exception($this->yystack[$this->yyidx + -1]->minor . ' will be interpreted as an invalid' .
+        throw new \SmartyGenerator\LexerGenerator\Exception($this->yystack[$this->yyidx + -1]->minor . ' will be interpreted as an invalid' .
             ' back-reference, use "\\0' . substr($this->yystack[$this->yyidx + -1]->minor, 1) . ' for octal');
     }
     $this->yystack[$this->yyidx + -1]->minor = substr($this->yystack[$this->yyidx + -1]->minor, 1);
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken($this->yystack[$this->yyidx + -2]->minor->string . '\\\\' . ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => $this->yystack[$this->yyidx + -2]->minor['pattern'] . '\\' . ($this->_updatePattern ? ($this->yystack[$this->yyidx + -1]->minor + $this->_patternIndex) : $this->yystack[$this->yyidx + -1]->minor) . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1519 "Parser.php"
 #line 365 "Parser.y"
     public function yy_r72()
     {
-    throw new \Smarty\LexerGenerator\Exception('Error: cannot set preg options directly with "' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Error: cannot set preg options directly with "' .
         $this->yystack[$this->yyidx + -2]->minor . $this->yystack[$this->yyidx + -1]->minor . $this->yystack[$this->yyidx + 0]->minor . '"');
     }
 #line 1525 "Parser.php"
 #line 369 "Parser.y"
     public function yy_r73()
     {
-    throw new \Smarty\LexerGenerator\Exception('Error: cannot set preg options directly with "' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Error: cannot set preg options directly with "' .
         $this->yystack[$this->yyidx + -4]->minor . $this->yystack[$this->yyidx + -3]->minor . $this->yystack[$this->yyidx + -2]->minor . $this->yystack[$this->yyidx + -1]->minor['pattern'] . $this->yystack[$this->yyidx + 0]->minor . '"');
     }
 #line 1531 "Parser.php"
 #line 374 "Parser.y"
     public function yy_r74()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?:' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?:' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(?:' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1537 "Parser.php"
 #line 378 "Parser.y"
     public function yy_r75()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?:' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?:' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '(?:' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1543 "Parser.php"
@@ -1504,15 +1501,15 @@ public static $yy_action = array(
     {
     if ($this->yystack[$this->yyidx + -4]->minor != 'R') {
         if (!preg_match('/[1-9][0-9]*/', $this->yystack[$this->yyidx + -4]->minor)) {
-            throw new \Smarty\LexerGenerator\Exception('Invalid sub-pattern conditional: "(?(' . $this->yystack[$this->yyidx + -4]->minor . ')"');
+            throw new \SmartyGenerator\LexerGenerator\Exception('Invalid sub-pattern conditional: "(?(' . $this->yystack[$this->yyidx + -4]->minor . ')"');
         }
         if ($this->yystack[$this->yyidx + -4]->minor > $this->_subpatterns) {
-            throw new \Smarty\LexerGenerator\Exception('sub-pattern conditional . "' . $this->yystack[$this->yyidx + -4]->minor . '" refers to non-existent sub-pattern');
+            throw new \SmartyGenerator\LexerGenerator\Exception('sub-pattern conditional . "' . $this->yystack[$this->yyidx + -4]->minor . '" refers to non-existent sub-pattern');
         }
     } else {
-        throw new \Smarty\LexerGenerator\Exception('Recursive conditional (?(' . $this->yystack[$this->yyidx + -4]->minor . ')" cannot work in this lexer');
+        throw new \SmartyGenerator\LexerGenerator\Exception('Recursive conditional (?(' . $this->yystack[$this->yyidx + -4]->minor . ')" cannot work in this lexer');
     }
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?(' . $this->yystack[$this->yyidx + -4]->minor . ')' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?(' . $this->yystack[$this->yyidx + -4]->minor . ')' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '(?(' . $this->yystack[$this->yyidx + -4]->minor . ')' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1559 "Parser.php"
@@ -1521,78 +1518,78 @@ public static $yy_action = array(
     {
     if ($this->yystack[$this->yyidx + -3]->minor != 'R') {
         if (!preg_match('/[1-9][0-9]*/', $this->yystack[$this->yyidx + -3]->minor)) {
-            throw new \Smarty\LexerGenerator\Exception('Invalid sub-pattern conditional: "(?(' . $this->yystack[$this->yyidx + -3]->minor . ')"');
+            throw new \SmartyGenerator\LexerGenerator\Exception('Invalid sub-pattern conditional: "(?(' . $this->yystack[$this->yyidx + -3]->minor . ')"');
         }
         if ($this->yystack[$this->yyidx + -3]->minor > $this->_subpatterns) {
-            throw new \Smarty\LexerGenerator\Exception('sub-pattern conditional . "' . $this->yystack[$this->yyidx + -3]->minor . '" refers to non-existent sub-pattern');
+            throw new \SmartyGenerator\LexerGenerator\Exception('sub-pattern conditional . "' . $this->yystack[$this->yyidx + -3]->minor . '" refers to non-existent sub-pattern');
         }
     } else {
-        throw new \Smarty\LexerGenerator\Exception('Recursive conditional (?(' . $this->yystack[$this->yyidx + -3]->minor . ')" cannot work in this lexer');
+        throw new \SmartyGenerator\LexerGenerator\Exception('Recursive conditional (?(' . $this->yystack[$this->yyidx + -3]->minor . ')" cannot work in this lexer');
     }
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?(' . $this->yystack[$this->yyidx + -3]->minor . ')' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?(' . $this->yystack[$this->yyidx + -3]->minor . ')' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(?(' . $this->yystack[$this->yyidx + -3]->minor . ')' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1575 "Parser.php"
 #line 411 "Parser.y"
     public function yy_r78()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?' . $this->yystack[$this->yyidx + -2]->minor->string . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?' . $this->yystack[$this->yyidx + -2]->minor->string . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(?' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1581 "Parser.php"
 #line 415 "Parser.y"
     public function yy_r79()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?' . $this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?' . $this->yystack[$this->yyidx + -3]->minor->string . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '(?' . $this->yystack[$this->yyidx + -3]->minor['pattern'] . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1587 "Parser.php"
 #line 419 "Parser.y"
     public function yy_r80()
     {
-    throw new \Smarty\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<=' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<=' .
         $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')');
     }
 #line 1593 "Parser.php"
 #line 423 "Parser.y"
     public function yy_r81()
     {
-    throw new \Smarty\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<=' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<=' .
         $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')');
     }
 #line 1599 "Parser.php"
 #line 428 "Parser.y"
     public function yy_r82()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?=' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?=' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern'=> '(?=' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1605 "Parser.php"
 #line 432 "Parser.y"
     public function yy_r83()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?!' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?!' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(?!' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1611 "Parser.php"
 #line 441 "Parser.y"
     public function yy_r85()
     {
-    throw new \Smarty\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<!' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Look-behind assertions cannot be used: "(?<!' .
         $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')');
     }
 #line 1617 "Parser.php"
 #line 446 "Parser.y"
     public function yy_r86()
     {
-    throw new \Smarty\LexerGenerator\Exception('Cannot use named sub-patterns: "(' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Cannot use named sub-patterns: "(' .
         $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')');
     }
 #line 1623 "Parser.php"
 #line 450 "Parser.y"
     public function yy_r87()
     {
-    throw new \Smarty\LexerGenerator\Exception('Cannot use named sub-patterns: "(' .
+    throw new \SmartyGenerator\LexerGenerator\Exception('Cannot use named sub-patterns: "(' .
         $this->yystack[$this->yyidx + -3]->minor['pattern'] . ')');
     }
 #line 1629 "Parser.php"
@@ -1600,7 +1597,7 @@ public static $yy_action = array(
     public function yy_r88()
     {
     $this->_subpatterns++;
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1636 "Parser.php"
@@ -1608,21 +1605,21 @@ public static $yy_action = array(
     public function yy_r89()
     {
     $this->_subpatterns++;
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -2]->minor->string . ')' . $this->yystack[$this->yyidx + 0]->minor, array(
         'pattern' => '(' . $this->yystack[$this->yyidx + -2]->minor['pattern'] . ')' . $this->yystack[$this->yyidx + 0]->minor));
     }
 #line 1643 "Parser.php"
 #line 465 "Parser.y"
     public function yy_r90()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(?>' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(?>' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(?>' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1649 "Parser.php"
 #line 470 "Parser.y"
     public function yy_r91()
     {
-    $this->_retvalue = new \Smarty\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
+    $this->_retvalue = new \SmartyGenerator\LexerGenerator\ParseryyToken('(' . $this->yystack[$this->yyidx + -1]->minor->string . ')', array(
         'pattern' => '(' . $this->yystack[$this->yyidx + -1]->minor['pattern'] . ')'));
     }
 #line 1655 "Parser.php"

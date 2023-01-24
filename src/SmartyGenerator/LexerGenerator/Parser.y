@@ -41,7 +41,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -53,7 +53,7 @@
  *
  * This parser converts tokens pulled from {@link Smarty\LexerGenerator\Lexer}
  * into abstract patterns and rules, then creates the output file
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01

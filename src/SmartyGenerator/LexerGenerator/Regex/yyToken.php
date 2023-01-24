@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\LexerGenerator\Regex;
+namespace SmartyGenerator\LexerGenerator\Regex;
 
 /**
  * This can be used to store both the string representation of
@@ -14,7 +14,7 @@ class yyToken implements \ArrayAccess
 
 	public function __construct($s, $m = array())
 	{
-		if ($s instanceof \Smarty\LexerGenerator\Regex\yyToken) {
+		if ($s instanceof \SmartyGenerator\LexerGenerator\Regex\yyToken) {
 			$this->string = $s->string;
 			$this->metadata = $s->metadata;
 		} else {

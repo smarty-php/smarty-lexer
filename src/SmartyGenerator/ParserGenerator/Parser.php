@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\ParserGenerator;
+namespace SmartyGenerator\ParserGenerator;
 
 /**
  * \Smarty\ParserGenerator, a php 5 parser generator.
@@ -174,11 +174,11 @@ class Parser
     public $lastrule;     /* Pointer to the most recently parsed rule */
 
     /**
-     * @var \Smarty\ParserGenerator
+     * @var \SmartyGenerator\ParserGenerator
      */
     private $lemon;
 
-    public function __construct(\Smarty\ParserGenerator $lem)
+    public function __construct(\SmartyGenerator\ParserGenerator $lem)
     {
         $this->lemon = $lem;
     }
@@ -267,7 +267,7 @@ class Parser
         /* Begin by reading the input file */
         $filebuf = file_get_contents($this->filename);
         if (!$filebuf) {
-            \Smarty\ParserGenerator::ErrorMsg($this->filename, 0, "Can't open this file for reading.");
+            \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, 0, "Can't open this file for reading.");
             $gp->errorcnt++;
 
             return;
@@ -321,7 +321,7 @@ class Parser
                 $oldcp = $cp;
                 $test = strpos(substr($filebuf, $cp), '"');
                 if ($test === false) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $startline,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $startline,
                     "String starting on this line is not terminated before the end of the file.");
                     $this->errorcnt++;
                     $nextcp = $cp = strlen($filebuf);
@@ -375,7 +375,7 @@ class Parser
                     }
                 }
                 if ($cp >= strlen($filebuf)) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "PHP code starting on this line is not terminated before the end of the file.");
                     $this->errorcnt++;
                     $nextcp = $cp;
@@ -419,7 +419,7 @@ class Parser
     {
         $x = $token;
         $this->a = 0; // for referencing in WAITING_FOR_DECL_KEYWORD
-        if (\Smarty\ParserGenerator::DEBUG) {
+        if (\SmartyGenerator\ParserGenerator::DEBUG) {
             printf("%s:%d: Token=[%s] state=%d\n",
                 $this->filename, $this->tokenlineno, $token, $this->state);
         }
@@ -440,12 +440,12 @@ class Parser
                     $this->state = self::WAITING_FOR_ARROW;
                 } elseif ($x[0] == '{') {
                     if ($this->prevrule === 0) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                             "There is no prior rule opon which to attach the code
                              fragment which begins on this line.");
                         $this->errorcnt++;
                     } elseif ($this->prevrule->code != 0) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                             "Code fragment beginning on this line is not the first \
                              to follow the previous rule.");
                         $this->errorcnt++;
@@ -456,7 +456,7 @@ class Parser
                 } elseif ($x[0] == '[') {
                     $this->state = self::PRECEDENCE_MARK_1;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                     "Token \"%s\" should be either \"%%\" or a nonterminal name.",
                     $x);
                     $this->errorcnt++;
@@ -464,15 +464,15 @@ class Parser
                 break;
             case self::PRECEDENCE_MARK_1:
                 if (!preg_match('/[A-Z]/', $x[0])) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "The precedence symbol must be a terminal.");
                     $this->errorcnt++;
                 } elseif ($this->prevrule === 0) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "There is no prior rule to assign precedence \"[%s]\".", $x);
                     $this->errorcnt++;
                 } elseif ($this->prevrule->precsym != 0) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Precedence mark on this line is not the first to follow the previous rule.");
                     $this->errorcnt++;
                 } else {
@@ -482,7 +482,7 @@ class Parser
                 break;
             case self::PRECEDENCE_MARK_2:
                 if ($x[0] != ']') {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Missing \"]\" on precedence mark.");
                     $this->errorcnt++;
                 }
@@ -494,7 +494,7 @@ class Parser
                 } elseif ($x[0] == '(') {
                     $this->state = self::LHS_ALIAS_1;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Expected to see a \":\" following the LHS symbol \"%s\".",
                     $this->lhs->name);
                     $this->errorcnt++;
@@ -506,7 +506,7 @@ class Parser
                     $this->lhsalias = $x;
                     $this->state = self::LHS_ALIAS_2;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "\"%s\" is not a valid alias for the LHS \"%s\"\n",
                         $x, $this->lhs->name);
                     $this->errorcnt++;
@@ -517,7 +517,7 @@ class Parser
                 if ($x[0] == ')') {
                     $this->state = self::LHS_ALIAS_3;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Missing \")\" following LHS alias name \"%s\".",$this->lhsalias);
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
@@ -527,7 +527,7 @@ class Parser
                 if ($x == '::=') {
                     $this->state = self::IN_RHS;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Missing \"->\" following: \"%s(%s)\".",
                     $this->lhs->name, $this->lhsalias);
                     $this->errorcnt++;
@@ -549,7 +549,7 @@ class Parser
                                 continue;
                             }
                             if (isset($used[$symbol])) {
-                                \Smarty\ParserGenerator::ErrorMsg($this->filename,
+                                \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename,
                                     $this->tokenlineno,
                                     "RHS symbol \"%s\" used multiple times.",
                                     $symbol);
@@ -577,8 +577,8 @@ class Parser
                     $this->prevrule = $rp;
                     $this->state = self::WAITING_FOR_DECL_OR_RULE;
                 } elseif (preg_match('/[a-zA-Z]/', $x[0])) {
-                    if ($this->nrhs >= \Smarty\ParserGenerator::MAXRHS) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    if ($this->nrhs >= \SmartyGenerator\ParserGenerator::MAXRHS) {
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                             "Too many symbols on RHS or rule beginning at \"%s\".",
                             $x);
                         $this->errorcnt++;
@@ -589,7 +589,7 @@ class Parser
                             if ($msp->type == Symbol::MULTITERMINAL) {
                                 $inf = array_reduce($msp->subsym,
                                     array($this, '_printmulti'), '');
-                                \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                                \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                                     'WARNING: symbol ' . $x . ' will not' .
                                     ' be part of previous multiterminal %s',
                                     substr($inf, 0, strlen($inf) - 1)
@@ -615,14 +615,14 @@ class Parser
                     $msp->subsym[$msp->nsubsym - 1] = Symbol::Symbol_new(substr($x, 1));
                     if (preg_match('/[a-z]/', $x[1]) ||
                           preg_match('/[a-z]/', $msp->subsym[0]->name[0])) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Cannot form a compound containing a non-terminal");
                         $this->errorcnt++;
                     }
                 } elseif ($x[0] == '(' && $this->nrhs > 0) {
                     $this->state = self::RHS_ALIAS_1;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Illegal character on RHS of rule: \"%s\".", $x);
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
@@ -633,7 +633,7 @@ class Parser
                     $this->alias[$this->nrhs - 1] = $x;
                     $this->state = self::RHS_ALIAS_2;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "\"%s\" is not a valid alias for the RHS symbol \"%s\"\n",
                         $x, $this->rhs[$this->nrhs - 1]->name);
                     $this->errorcnt++;
@@ -644,7 +644,7 @@ class Parser
                 if ($x[0] == ')') {
                     $this->state = self::IN_RHS;
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Missing \")\" following LHS alias name \"%s\".", $this->lhsalias);
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
@@ -718,13 +718,13 @@ class Parser
                         $this->fallback = 0;
                         $this->state = self::WAITING_FOR_FALLBACK_ID;
                     } else {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Unknown declaration keyword: \"%%%s\".", $x);
                         $this->errorcnt++;
                         $this->state = self::RESYNC_AFTER_DECL_ERROR;
                     }
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Illegal declaration keyword: \"%s\".", $x);
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
@@ -732,7 +732,7 @@ class Parser
                 break;
             case self::WAITING_FOR_DESTRUCTOR_SYMBOL:
                 if (!preg_match('/[A-Za-z]/', $x[0])) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Symbol name missing after %destructor keyword");
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
@@ -745,7 +745,7 @@ class Parser
                 break;
             case self::WAITING_FOR_DATATYPE_SYMBOL:
                 if (!preg_match('/[A-Za-z]/', $x[0])) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Symbol name missing after %destructor keyword");
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
@@ -761,7 +761,7 @@ class Parser
                 } elseif (preg_match('/[A-Z]/', $x[0])) {
                     $sp = Symbol::Symbol_new($x);
                     if ($sp->prec >= 0) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                             "Symbol \"%s\" has already been given a precedence.", $x);
                         $this->errorcnt++;
                     } else {
@@ -769,7 +769,7 @@ class Parser
                         $sp->assoc = $this->declassoc;
                     }
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Can't assign a precedence to \"%s\".", $x);
                     $this->errorcnt++;
                 }
@@ -777,7 +777,7 @@ class Parser
             case self::WAITING_FOR_DECL_ARG:
                 if (preg_match('/[A-Za-z0-9{"]/', $x[0])) {
                     if ($this->declargslot != 0) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                             "The argument \"%s\" to declaration \"%%%s\" is not the first.",
                             $x[0] == '"' ? substr($x, 1) : $x, $this->declkeyword);
                         $this->errorcnt++;
@@ -791,7 +791,7 @@ class Parser
                         $this->state = self::WAITING_FOR_DECL_OR_RULE;
                     }
                 } else {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "Illegal argument to %%%s: %s",$this->declkeyword, $x);
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
@@ -801,7 +801,7 @@ class Parser
                 if ($x[0] == '.') {
                     $this->state = self::WAITING_FOR_DECL_OR_RULE;
                 } elseif (!preg_match('/[A-Z]/', $x[0])) {
-                    \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                     "%%fallback argument \"%s\" should be a token", $x);
                     $this->errorcnt++;
                 } else {
@@ -809,7 +809,7 @@ class Parser
                     if ($this->fallback === 0) {
                         $this->fallback = $sp;
                     } elseif (is_object($sp->fallback)) {
-                        \Smarty\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        \SmartyGenerator\ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
                         "More than one fallback assigned to token %s", $x);
                         $this->errorcnt++;
                     } else {

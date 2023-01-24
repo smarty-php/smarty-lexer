@@ -1,5 +1,6 @@
 <?php
-namespace Smarty\LexerGenerator\Regex;
+
+namespace SmartyGenerator\LexerGenerator;
 
 /** The following structure represents a single element of the
  * parser's stack.  Information stored includes:
@@ -13,11 +14,11 @@ namespace Smarty\LexerGenerator\Regex;
  *      the information used by the action routines in the grammar.
  *      It is sometimes called the "minor" token.
  */
-class yyStackEntry
-{
+class ParseryyStackEntry {
+
 	public $stateno;       /* The state-number */
 	public $major;         /* The major token value.  This is the code
                      ** number for the token at this stack level */
 	public $minor; /* The user-supplied minor token value.  This
                      ** is the value of the token  */
-};
+}

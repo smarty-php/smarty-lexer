@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\ParserGenerator;
+namespace SmartyGenerator\ParserGenerator;
 
 /**
  * The structure used to represent a state in the associative array

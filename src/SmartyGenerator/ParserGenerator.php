@@ -1,5 +1,5 @@
 <?php
-namespace Smarty;
+namespace SmartyGenerator;
 /**
  * \Smarty\ParserGenerator, a php 5 parser generator.
  *

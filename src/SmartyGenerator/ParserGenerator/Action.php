@@ -1,6 +1,6 @@
 <?php
 
-namespace Smarty\ParserGenerator;
+namespace SmartyGenerator\ParserGenerator;
 
 /**
  * \Smarty\ParserGenerator, a php 5 parser generator.
@@ -78,7 +78,8 @@ class Action
     RD_RESOLVED = 7,
     /**
            * Deleted by compression
-           * @see \Smarty\ParserGenerator::CompressTables()
+           *
+     * @see \SmartyGenerator\ParserGenerator::CompressTables()
            */
     NOT_USED = 8;
     /**
@@ -202,7 +203,7 @@ class Action
      */
     public static function Action_sort(Action $ap)
     {
-        $ap = \Smarty\ParserGenerator::msort($ap, 'next', array(Action::class, 'actioncmp'));
+	    $ap = \SmartyGenerator\ParserGenerator::msort($ap, 'next', array(Action::class, 'actioncmp'));
 
         return $ap;
     }

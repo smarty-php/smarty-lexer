@@ -1,5 +1,5 @@
 <?php
-namespace Smarty\LexerGenerator;
+namespace SmartyGenerator\LexerGenerator;
 
 /* Driver template for the ParserrGenerator parser generator. (PHP port of LEMON)
 */;
@@ -47,7 +47,7 @@ namespace Smarty\LexerGenerator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category   php
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
@@ -59,7 +59,7 @@ namespace Smarty\LexerGenerator;
  *
  * This parser converts tokens pulled from {@link Lexer}
  * into abstract patterns and rules, then creates the output file
- * @package    Smarty_LexerGenerator
+
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -846,9 +846,6 @@ public static $yy_action = array(
      */
     public function __destruct()
     {
-        while ($this->yyidx >= 0) {
-            $this->yy_pop_parser_stack();
-        }
         if (is_resource($this->yyTraceFILE)) {
             fclose($this->yyTraceFILE);
         }

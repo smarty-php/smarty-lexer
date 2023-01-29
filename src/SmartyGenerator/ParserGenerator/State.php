@@ -89,25 +89,25 @@ class State
      *
      * @var int
      */
-    public $nTknAct,
+    public $nTknAct;
     /**
      * Number of non-terminal actions
      *
      * @var int
      */
-    $nNtAct;
+	public $nNtAct;
     /**
      * The offset into the $yy_action table for terminal tokens.
      *
      * @var int
      */
-    public $iTknOfst,
+    public $iTknOfst;
     /**
      * The offset into the $yy_action table for non-terminals.
      *
      * @var int
      */
-    $iNtOfst;
+    public $iNtOfst;
     /**
      * Default action
      *

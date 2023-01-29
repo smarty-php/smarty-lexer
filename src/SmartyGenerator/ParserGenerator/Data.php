@@ -589,11 +589,10 @@ class Data
             ** on the symbol "sp" */
             if ($sp->type == Symbol::MULTITERMINAL) {
                 for ($i = 0; $i < $sp->nsubsym; $i++) {
-                    Action::Action_add($stp->ap, Action::SHIFT, $sp->subsym[$i],
-                                            $newstp);
+	                $stp->ap = Action::Action_add($stp->ap, Action::SHIFT, $sp->subsym[$i], $newstp);
                 }
             } else {
-                Action::Action_add($stp->ap, Action::SHIFT, $sp, $newstp);
+	            $stp->ap = Action::Action_add($stp->ap, Action::SHIFT, $sp, $newstp);
             }
         }
     }
@@ -641,7 +640,7 @@ class Data
                         if (isset($cfp->fws[$j])) {
                             /* Add a reduce action to the state "stp" which will reduce by the
                             ** rule "cfp->rp" if the lookahead symbol is "$this->symbols[j]" */
-                            Action::Action_add($stp->ap, Action::REDUCE,
+	                        $stp->ap = Action::Action_add($stp->ap, Action::REDUCE,
                                                     $this->symbols[$j], $cfp->rp);
                         }
                     }
@@ -661,7 +660,7 @@ class Data
         /* Add to the first state (which is always the starting state of the
         ** finite state machine) an action to ACCEPT if the lookahead is the
         ** start nonterminal.  */
-        Action::Action_add($this->sorted[0]->data->ap, Action::ACCEPT, $sp, 0);
+	    $this->sorted[0]->data->ap = Action::Action_add($this->sorted[0]->data->ap, Action::ACCEPT, $sp, 0);
 
         /* Resolve conflicts */
         for ($i = 0; $i < $this->nstate; $i++) {
@@ -879,6 +878,12 @@ class Data
         }
         $save = $this->sorted[0];
         unset($this->sorted[0]);
+
+		/*
+		 * The usort may cause the order of sorted to differ when compiled with PHP >=8.0, as compared to PHP <8.0.
+		 * If two members compare as equal, they retain their original order. Prior to PHP 8.0.0, their relative
+		 * order in the sorted array was undefined.
+		 */
         usort($this->sorted, array(State::class, 'stateResortCompare'));
         array_unshift($this->sorted, $save);
         for ($i = 0; $i < $this->nstate; $i++) {
@@ -1044,7 +1049,7 @@ class Data
      */
     private function tplt_print($out, $str, $strln, &$lineno)
     {
-        if ($str == '' || $str == 0) {
+        if ($str === '' || $str === 0) {
             return;
         }
         $this->tplt_linedir($out, $strln, $this->filename);

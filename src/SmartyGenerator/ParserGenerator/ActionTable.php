@@ -163,7 +163,7 @@ class ActionTable
     public function acttab_insert()
     {
         if ($this->nLookahead <= 0) {
-            throw new Exception('nLookahead is not set up?');
+            throw new \Exception('nLookahead is not set up?');
         }
 
         /* Scan the existing action table looking for an offset where we can

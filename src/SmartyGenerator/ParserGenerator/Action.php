@@ -166,7 +166,7 @@ class Action
             self::REDUCE => 'REDUCE',
             self::SHIFT => 'SHIFT'
         );
-       $sep = isset($_SERVER['_']) ? "\n" : "<br>";
+       $sep = "\n";
         echo $map[$this->type] . ' for ' . $this->sp->name;
         if ($this->type == self::REDUCE) {
             echo ' - rule ' . $this->x->lhs->name . $sep;
@@ -189,12 +189,12 @@ class Action
     {
         $new = new Action;
         $new->next = $app;
-        $app = $new;
         $new->type = $type;
         $new->sp = $sp;
         $new->x = $arg;
         echo ' Adding ';
         $new->display();
+		return $new;
     }
 
     /**

@@ -185,15 +185,15 @@ class Action
      * @param Symbol
      * @param State|Rule
      */
-    public static function Action_add(&$app, $type, Symbol $sp, $arg)
+    public static function Action_add($app, $type, Symbol $sp, $arg)
     {
         $new = new Action;
         $new->next = $app;
         $new->type = $type;
         $new->sp = $sp;
         $new->x = $arg;
-        echo ' Adding ';
-        $new->display();
+//        echo ' Adding ';
+//        $new->display();
 		return $new;
     }
 
